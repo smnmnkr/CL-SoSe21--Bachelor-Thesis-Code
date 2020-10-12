@@ -57,15 +57,12 @@ class FastText(Interface):
     def load_model(self, file_path):
         return fasttext.load_model(file_path)
 
+    #  -------- dimension -----------
     #
-    #
-    #  -------- embedding_dim -----------
-    #
-    def embedding_dim(self) -> int:
+    @property
+    def dimension(self) -> int:
         return self.model.get_dimension()
 
-    #
-    #
     #  -------- embedding_num -----------
     #
     def __len__(self) -> int:

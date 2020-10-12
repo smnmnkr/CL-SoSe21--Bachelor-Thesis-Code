@@ -51,17 +51,14 @@ class Interface(ABC):
         """Return the loaded model."""
         raise NotImplementedError
 
-    #
-    #
-    #  -------- embedding_dim -----------
+    #  -------- dimension -----------
     #
     @abstractmethod
-    def embedding_dim(self) -> int:
+    @property
+    def dimension(self) -> int:
         """Return the dimensionality of the embedding vectors."""
         raise NotImplementedError
 
-    #
-    #
     #  -------- __len__ -----------
     #
     @abstractmethod
