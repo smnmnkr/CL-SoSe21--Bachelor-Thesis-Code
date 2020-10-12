@@ -2,4 +2,5 @@ black>=20.8b1
 pre-commit>=2.7.1
 pytest>=6.1.1
 fasttext>=0.9.2
+conllu>=4.2.0
 torch>=1.6.0
