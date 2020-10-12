@@ -7,11 +7,6 @@ class Interface(ABC):
     """
     Abstract embedder interface for word vector representations.
 
-    Parameters
-    ----------
-    - data_path: path to word list or pretrained word vectors
-    - dropout: applied dropout on training
-
     Methods
     ----------
     - forward(self, word: str) -> TT
@@ -26,11 +21,7 @@ class Interface(ABC):
     #  -------- __init__ -----------
     #
     @abstractmethod
-    def __init__(
-        self,
-        data_path: str,
-        dropout: float,
-    ):
+    def __init__():
         raise NotImplementedError
 
     #
@@ -71,9 +62,9 @@ class Interface(ABC):
 
     #
     #
-    #  -------- embedding_dim -----------
+    #  -------- __len__ -----------
     #
     @abstractmethod
-    def embedding_num(self) -> int:
+    def __len__(self) -> int:
         """Return the count of the embedded words."""
         raise NotImplementedError

@@ -68,5 +68,5 @@ class FastText(Interface):
     #
     #  -------- embedding_num -----------
     #
-    def embedding_num(self) -> int:
+    def __len__(self) -> int:
         return len(self.model.get_words())
