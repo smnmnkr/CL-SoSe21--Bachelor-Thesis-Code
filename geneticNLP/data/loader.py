@@ -1,4 +1,4 @@
-from conllu import parse
+from conllu import parse_incr
 
 
 class Loader:
@@ -11,18 +11,19 @@ class Loader:
     def __init__(self, data_path):
 
         # save data
-        self.data = self.load_data(data_path)
+        self.data = list(self.load_data(data_path))
 
     #
     #
-    #  -------- load_model -----------
+    #  -------- load_data -----------
     #
     def load_data(self, data_path):
-        return parse(data_path)
+        data_file = open(data_path, encoding="utf-8")
+        yield from parse_incr(data_file)
 
     #
     #
-    #  -------- embedding_dim -----------
+    #  -------- data_quantity -----------
     #
     def data_quantity(self) -> int:
-        return self.model.get_dimension()
+        return len(self.data)
