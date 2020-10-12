@@ -31,7 +31,6 @@ class FastText(Interface):
     #  -------- forward -----------
     #
     def forward(self, word: str) -> TT:
-        """Embed single given word."""
 
         emb = torch.tensor(self.model[word], dtype=torch.float)
         return self.dropout(emb)
@@ -41,7 +40,6 @@ class FastText(Interface):
     #  -------- forwards -----------
     #
     def forwards(self, words: list) -> TT:
-        """Embed multiply given words."""
 
         emb: list = []
 

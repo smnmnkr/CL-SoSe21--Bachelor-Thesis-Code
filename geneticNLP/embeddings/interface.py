@@ -11,9 +11,9 @@ class Interface(ABC):
     ----------
     - forward(self, word: str) -> TT
     - forwards(self, words: list) -> TT
-    - load_model(self, data_path: str)
-    - embedding_dim(self) -> int
-    - embedding_num(self) -> int
+    - load_model(self, *data_path: str) -> Model
+    - dimension(self)@property -> int
+    - __len__(self) -> int
     """
 
     #

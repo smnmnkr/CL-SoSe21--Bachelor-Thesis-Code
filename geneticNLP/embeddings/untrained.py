@@ -19,12 +19,15 @@ class Untrained(nn.Module):
     ):
         super().__init__()
 
+        # save dimension and create lookup table
         self.dimension: int = dimension
         self.lookup: dict = {}
 
+        # fill lookup table with data
         for ix, obj in enumerate(data):
             self.lookup[obj] = ix
 
+        # create padding token
         self.padding_idx: int = len(self.lookup)
 
         # save model
@@ -38,10 +41,10 @@ class Untrained(nn.Module):
     #  -------- forward -----------
     #
     def forward(self, word: str) -> TT:
-        """Embed single given word."""
 
         try:
             idx = self.lookup[word]
+
         except KeyError:
             idx = self.padding_idx
 
@@ -53,7 +56,6 @@ class Untrained(nn.Module):
     #  -------- forwards -----------
     #
     def forwards(self, words: list) -> TT:
-        """Embed multiply given words."""
 
         emb: list = []
 
