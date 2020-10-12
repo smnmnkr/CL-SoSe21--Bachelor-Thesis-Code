@@ -53,7 +53,6 @@ class Interface(ABC):
 
     #  -------- dimension -----------
     #
-    @abstractmethod
     @property
     def dimension(self) -> int:
         """Return the dimensionality of the embedding vectors."""
