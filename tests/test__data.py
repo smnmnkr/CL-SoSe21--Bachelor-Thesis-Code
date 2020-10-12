@@ -12,5 +12,3 @@ def test_loader():
     loader = Loader(conllu_file)
 
     assert loader.data_quantity() == data_quantity
-
-    assert loader.get1() == ""
