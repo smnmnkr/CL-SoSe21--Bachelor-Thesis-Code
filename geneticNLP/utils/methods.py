@@ -1,6 +1,11 @@
 from functools import wraps
 from time import time
 
+import torch
+
+
+#
+#
 # -------- time_track -----------
 #
 def time_track(func):
@@ -16,3 +21,11 @@ def time_track(func):
         return result, duration
 
     return wrap
+
+
+#
+#
+#  -------- get_device -----------
+#
+def get_device() -> str:
+    return "cuda" if torch.cuda.is_available() else "cpu"
