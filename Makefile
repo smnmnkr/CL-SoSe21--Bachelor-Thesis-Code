@@ -2,7 +2,7 @@ test:
 	@python3 -m pytest -s -v
 
 install:
-	@pip install requirements.txt.
+	@pip3 install -r requirements.txt
 
 lint:
 	@pre-commit run --all-files
