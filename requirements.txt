@@ -1,0 +1,4 @@
+pytorch>=1.6.0
+pytest>=6.0.1
+flake8>=3.8.3
+pre-commit>=2.7.1
