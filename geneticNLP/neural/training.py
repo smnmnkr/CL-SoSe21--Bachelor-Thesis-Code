@@ -16,12 +16,12 @@ def train(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     batch_loss: callable,
-    accuracies: List[callable],
+    accuracy: callable,
     learning_rate: float = 2e-3,
     weight_decay: float = 0.01,
     clip: float = 5.0,
     epoch_num: int = 60,
-    batch_size: int = 64,
+    batch_size: int = 16,
     report_rate: int = 10,
 ):
     """Train the model on the given dataset w.r.t. the batch_loss function.
@@ -57,7 +57,7 @@ def train(
     batches = batch_loader(
         train_set,
         batch_size=batch_size,
-        num_workers=4,
+        num_workers=0,
     )
 
     # activate gpu usage for the model if possible, else nothing will change
@@ -102,13 +102,13 @@ def train(
                 train_loss /= len(train_set)
 
                 # get train acc
-                train_acc = [acc(model, train_set) for acc in accuracies]
+                train_acc = accuracy(model, train_set)
 
                 # get dev accurracy if given
                 if dev_set:
-                    dev_acc = [acc(model, dev_set) for acc in accuracies]
+                    dev_acc = accuracy(model, dev_set)
                 else:
-                    dev_acc = [0.0]
+                    dev_acc = 0.0
 
                 # create message object
                 msg = (
@@ -124,8 +124,8 @@ def train(
                     msg.format(
                         k=t + 1,
                         tl=format(train_loss),
-                        ta=list(map(format, train_acc)),
-                        da=list(map(format, dev_acc)),
+                        ta=format(train_acc),
+                        da=format(dev_acc),
                         ti=datetime.now() - time_begin,
                     )
                 )
