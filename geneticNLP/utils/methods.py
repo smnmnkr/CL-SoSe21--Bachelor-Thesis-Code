@@ -1,8 +1,12 @@
+from typing import List
+
 from functools import wraps
 from time import time
 
 import torch
+import torch.nn.utils.rnn as rnn
 
+from geneticNLP.utils.types import TT
 
 #
 #
@@ -29,3 +33,27 @@ def time_track(func):
 #
 def get_device() -> str:
     return "cuda" if torch.cuda.is_available() else "cpu"
+
+
+#
+#
+#  -------- unpack -----------
+#
+def unpack(pack: rnn.PackedSequence) -> List[TT]:
+    """Convert the given packaged sequence into a list of vectors."""
+    padded_pack, padded_len = rnn.pad_packed_sequence(
+        pack, batch_first=True
+    )
+    return unpad(padded_pack, padded_len)
+
+
+#
+#
+#  -------- unpad -----------
+#
+def unpad(padded: TT, length: TT) -> List[TT]:
+    """Convert the given packaged sequence into a list of vectors."""
+    output = []
+    for v, n in zip(padded, length):
+        output.append(v[:n])
+    return output
