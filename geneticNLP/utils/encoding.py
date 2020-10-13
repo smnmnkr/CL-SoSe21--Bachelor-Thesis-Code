@@ -36,4 +36,4 @@ class Encoding:
         return self.ix_to_obj[ix]
 
     def __len__(self) -> int:
-        return len(self.obj_set)
+        return len(self.obj_to_ix)
