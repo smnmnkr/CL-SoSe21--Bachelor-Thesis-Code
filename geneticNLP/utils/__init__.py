@@ -1,2 +1,4 @@
 # __init__.py
-from .methods import time_track, get_device, unpack, unpad, encode
+
+from .encoding import Encoding
+from .methods import time_track, get_device, unpack, unpad

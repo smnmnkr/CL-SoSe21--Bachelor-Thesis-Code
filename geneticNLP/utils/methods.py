@@ -57,11 +57,3 @@ def unpad(padded: TT, length: TT) -> List[TT]:
     for v, n in zip(padded, length):
         output.append(v[:n])
     return output
-
-
-#
-#
-#  -------- encode -----------
-#
-def encode(data: Generator) -> dict:
-    return dict(enumerate(set(data)))
