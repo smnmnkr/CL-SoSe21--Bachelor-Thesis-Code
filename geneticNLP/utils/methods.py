@@ -1,6 +1,9 @@
-from typing import Generator, List
+from typing import List
 
+import operator
+import functools
 from functools import wraps
+
 from time import time
 
 import torch
@@ -57,3 +60,11 @@ def unpad(padded: TT, length: TT) -> List[TT]:
     for v, n in zip(padded, length):
         output.append(v[:n])
     return output
+
+
+#
+#
+#  -------- flatten -----------
+#
+def flatten(l: list):
+    return functools.reduce(operator.iconcat, l, [])
