@@ -61,7 +61,7 @@ class FastText(Interface):
     def dimension(self) -> int:
         return self.model.get_dimension()
 
-    #  -------- embedding_num -----------
+    #  -------- __len__ -----------
     #
     def __len__(self) -> int:
         return len(self.model.get_words())
