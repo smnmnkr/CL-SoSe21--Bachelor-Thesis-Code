@@ -17,9 +17,9 @@ def train(
     dev_set: IterableDataset,
     batch_loss: callable,
     accuracy: callable,
-    learning_rate: float = 2e-3,
-    weight_decay: float = 0.01,
-    clip: float = 5.0,
+    learning_rate: float = 1e-2,
+    weight_decay: float = 1e-6,
+    clip: float = 60.0,
     epoch_num: int = 60,
     batch_size: int = 16,
     report_rate: int = 10,
@@ -42,8 +42,6 @@ def train(
         report_rate: how often to report the loss/accuracy on train/dev
         shuffle: shuffled data from dataloader
     """
-    # internal config
-    round_decimals: int = 4
 
     # choose Adam for optimization
     # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
@@ -66,6 +64,8 @@ def train(
 
     # Perform SGD in a loop
     for t in range(epoch_num):
+        model.train()
+
         time_begin = datetime.now()
         train_loss: float = 0.0
 
@@ -96,6 +96,7 @@ def train(
 
         # reporting (every `report_rate` epochs)
         if (t + 1) % report_rate == 0:
+            model.eval()
             with torch.no_grad():
 
                 # dividing by length of train_set making it comparable
@@ -110,22 +111,6 @@ def train(
                 else:
                     dev_acc = 0.0
 
-                # create message object
-                msg = (
-                    "@{k}: \t loss(train)={tl:f} \t acc(train)={ta} \t"
-                    "acc(dev)={da} \t time(epoch)={ti}"
-                )
-
-                def format(x):
-                    return round(x, round_decimals)
-
-                # print and format
                 print(
-                    msg.format(
-                        k=t + 1,
-                        tl=format(train_loss),
-                        ta=format(train_acc),
-                        da=format(dev_acc),
-                        ti=datetime.now() - time_begin,
-                    )
+                    f"@{(t + 1):02}: \t loss(train)={train_loss:2.4f}  \t acc(train)={train_acc:2.4f}  \t acc(dev)={dev_acc:2.4f}  \t time(epoch)={datetime.now() - time_begin}"
                 )
