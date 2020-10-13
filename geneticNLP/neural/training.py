@@ -23,7 +23,6 @@ def train(
     epoch_num: int = 60,
     batch_size: int = 64,
     report_rate: int = 10,
-    shuffle: bool = True,
 ):
     """Train the model on the given dataset w.r.t. the batch_loss function.
     The model parameters are updated in-place.
@@ -56,10 +55,8 @@ def train(
 
     # create batched loader
     batches = batch_loader(
-        # Use no shuffling, it doesn't work with iterable datasets
         train_set,
         batch_size=batch_size,
-        shuffle=shuffle,
         num_workers=4,
     )
 
