@@ -1,5 +1,5 @@
 import random
-
+import copy
 
 #
 #
@@ -15,9 +15,15 @@ def mutate(
     def _mutate(param):
         return param + (mutation_rate * random.randint(-1, 1))
 
-    child_network = parent_network.copy()
+    child_network = copy.deepcopy(parent_network)
 
     for layer in child_network.parameters():
+
+        if len(layer.shape) == 4:
+            print("shape not mutated")
+
+        if len(layer.shape) == 3:
+            print("shape not mutated")
 
         # mutate matrices : [1 x n]
         if len(layer.shape) == 2:
