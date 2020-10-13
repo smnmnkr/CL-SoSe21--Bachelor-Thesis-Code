@@ -20,7 +20,7 @@ model = POSTagger(
         },
         "score": {
             "hidden_size": 50,
-            "dropout": 0.2,
+            "dropout": 0.5,
         },
     },
     Encoding({tok.pos for sent in data_train for tok in sent}),
@@ -34,5 +34,5 @@ train(
     data_dev,
     batch_loss,
     accuracy,
-    report_rate=1,
+    report_rate=10,
 )
