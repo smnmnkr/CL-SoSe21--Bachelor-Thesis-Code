@@ -1,3 +1,7 @@
+
+demo:
+	@python3 -m geneticNLP
+
 test:
 	@python3 -m pytest -s -v
 
