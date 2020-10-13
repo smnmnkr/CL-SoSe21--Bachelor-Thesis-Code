@@ -1,4 +1,4 @@
-from geneticNLP.data import Loader
+from geneticNLP.data import CONLLU
 
 # NOTE: user dependent file
 conllu_file: str = "./data/universal-dependencies--en-dev.conllu"
@@ -9,6 +9,6 @@ data_quantity: int = 2002
 def test_loader():
 
     # create embedding object
-    loader = Loader(conllu_file)
+    data = CONLLU(conllu_file)
 
-    assert loader.data_quantity() == data_quantity
+    assert len(data) == data_quantity

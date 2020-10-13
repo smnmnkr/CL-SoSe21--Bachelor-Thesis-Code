@@ -1,2 +1,2 @@
 # __init__.py
-from .loader import Loader
+from .conllu import CONLLU
