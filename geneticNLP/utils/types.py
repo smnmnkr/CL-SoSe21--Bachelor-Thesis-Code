@@ -1,4 +1,4 @@
-import torch.nn.utils.rnn as rnn
+from typing import NamedTuple
 
 import torch
 
@@ -6,3 +6,11 @@ import torch
 #  -------- Tensor type -----------
 #
 TT = torch.TensorType
+
+
+#  -------- Token -----------
+#
+class Token(NamedTuple):
+    word: str
+    pos: str
+    head: int
