@@ -1,10 +1,6 @@
-from typing import Iterator
-from fasttext.FastText import load_model
-
 import torch
 import torch.nn as nn
 
-from geneticNLP.embeddings import Interface
 from geneticNLP.utils.types import TT
 
 
