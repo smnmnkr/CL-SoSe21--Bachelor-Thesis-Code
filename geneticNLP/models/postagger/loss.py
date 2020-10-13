@@ -23,7 +23,7 @@ def batch_loss(model, data):
         inputs.append(list(words))
 
     # Calculate the POS tagging-related loss
-    return nn.CrossEntropyLoss(reduction="sum")(
+    return nn.CrossEntropyLoss()(
         torch.cat(model.forward(inputs)),
         torch.LongTensor(target_pos_ixs).to(device),
     )
