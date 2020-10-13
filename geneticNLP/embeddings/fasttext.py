@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 
 from geneticNLP.embeddings import Interface
+
+from geneticNLP.utils import get_device
 from geneticNLP.utils.types import TT
 
 
@@ -30,29 +32,28 @@ class FastText(Interface):
     #
     #  -------- forward -----------
     #
-    def forward(self, word: str) -> TT:
-
-        emb = torch.tensor(self.model[word], dtype=torch.float)
-        return self.dropout(emb)
+    def forward_tok(self, tok: str) -> TT:
+        return self.dropout(torch.tensor(self.model[tok]).to(get_device()))
 
     #
     #
-    #  -------- forwards -----------
+    #  -------- forward_sent -----------
     #
-    def forwards(self, words: list) -> TT:
+    def forward_sent(self, sent: list) -> TT:
+        return torch.stack([self.forward_tok(tok) for tok in sent])
 
-        emb: list = []
-
-        for w in words:
-            emb.append(self.forward(w))
-
-        return torch.stack(emb)
+    #
+    #
+    #  -------- forward_batch -----------
+    #
+    def forward_batch(self, batch: list) -> list:
+        return [self.forward_sent(sent) for sent in batch]
 
     #
     #
     #  -------- load_model -----------
     #
-    def load_model(self, file_path):
+    def load_model(self, file_path) -> fasttext.FastText:
         return fasttext.load_model(file_path)
 
     #  -------- dimension -----------

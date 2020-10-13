@@ -34,12 +34,12 @@ class Untrained(nn.Module):
 
     #
     #
-    #  -------- forward -----------
+    #  -------- forward_tok -----------
     #
-    def forward(self, word: str) -> TT:
+    def forward_tok(self, tok: str) -> TT:
 
         try:
-            idx = self.lookup[word]
+            idx = self.lookup[tok]
 
         except KeyError:
             idx = self.padding_idx
@@ -49,16 +49,17 @@ class Untrained(nn.Module):
 
     #
     #
-    #  -------- forwards -----------
+    #  -------- forward_sent -----------
     #
-    def forwards(self, words: list) -> TT:
+    def forward_sent(self, sent: list) -> TT:
+        return torch.stack([self.forward_tok(tok) for tok in sent])
 
-        emb: list = []
-
-        for w in words:
-            emb.append(self.forward(w))
-
-        return torch.stack(emb)
+    #
+    #
+    #  -------- forward_batch -----------
+    #
+    def forward_batch(self, batch: list) -> list:
+        return [self.forward_sent(sent) for sent in batch]
 
     #
     #
