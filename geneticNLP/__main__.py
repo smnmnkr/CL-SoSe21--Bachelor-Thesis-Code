@@ -15,7 +15,7 @@ emb = FastText("./data/fasttext--cc.en.300.bin")
 # emb = Untrained({tok.word for sent in data_train for tok in sent}, 16),
 
 data_train_processed = PreProcessed(
-    "./data/universal-dependencies--en-dev.conllu", emb, enc
+    "./data/universal-dependencies--en-dev_reduced.conllu", emb, enc
 )
 
 data_dev_processed = PreProcessed(
