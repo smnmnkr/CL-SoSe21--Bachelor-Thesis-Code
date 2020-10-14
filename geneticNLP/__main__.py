@@ -1,5 +1,5 @@
-from geneticNLP.data import CONLLU
-from geneticNLP.embeddings import FastText, Untrained
+from geneticNLP.data import CONLLU, PreProcessed
+from geneticNLP.embeddings import FastText
 from geneticNLP.models import POSTagger
 
 from geneticNLP.neural import train, evolve
@@ -14,38 +14,42 @@ enc = Encoding({tok.pos for sent in data_train for tok in sent})
 emb = FastText("./data/fasttext--cc.en.300.bin")
 # emb = Untrained({tok.word for sent in data_train for tok in sent}, 16),
 
+data_train_processed = PreProcessed(
+    "./data/universal-dependencies--en-dev.conllu", emb, enc
+)
 
-model = POSTagger(
-    {
-        "lstm": {
-            "input_size": emb.dimension,
-            "hidden_size": 16,
-            "depth": 1,
-            "dropout": 0.0,
-        },
-        "score": {
-            "hidden_size": 8,
-            "output_size": len(enc),
-            "dropout": 0.5,
-        },
+data_dev_processed = PreProcessed(
+    "./data/universal-dependencies--en-test.conllu", emb, enc
+)
+
+
+config: dict = {
+    "lstm": {
+        "input_size": emb.dimension,
+        "hidden_size": 16,
+        "depth": 1,
+        "dropout": 0.0,
     },
-)
+    "score": {
+        "hidden_size": 16,
+        "output_size": len(enc),
+        "dropout": 0.0,
+    },
+}
 
 
-# evolve(
-#     model,
-#     data_train,
-#     data_dev,
-#     accuracy,
-#     epoch_num=6,
-#     report_rate=2,
-# )
+mode = 0
 
-train(
-    model,
-    enc,
-    emb,
-    data_train,
-    data_dev,
-    report_rate=10,
-)
+if mode == 0:
+    evolve(
+        POSTagger,
+        config,
+        data_train_processed,
+        data_dev_processed,
+    )
+elif mode == 1:
+    train(
+        POSTagger(config),
+        data_train_processed,
+        data_dev_processed,
+    )
