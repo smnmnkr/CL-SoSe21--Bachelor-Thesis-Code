@@ -9,4 +9,4 @@ def elitism(generation: dict, n: int):
         for k, v in sorted(generation.items(), key=lambda item: item[1])
     }
 
-    return dict(itertools.islice(ranking.items(), n))
+    return dict(itertools.islice(ranking.items(), len(ranking) - n, None))
