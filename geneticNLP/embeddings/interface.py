@@ -29,17 +29,24 @@ class Interface(ABC):
     #  -------- forward -----------
     #
     @abstractmethod
-    def forward(self, word: str) -> TT:
+    def forward_tok(self, tok: str) -> TT:
         """Embed single given word."""
         raise NotImplementedError
 
     #
     #
-    #  -------- forwards -----------
+    #  -------- forward_sent -----------
     #
     @abstractmethod
-    def forwards(self, words: list) -> TT:
-        """Embed multiply given words."""
+    def forward_sent(self, sent: list) -> TT:
+        """Embed multiply given sent."""
+        raise NotImplementedError
+
+    #  -------- forward_batch -----------
+    #
+    @abstractmethod
+    def forward_batch(self, batch: list) -> list:
+        """Embed multiply given batch of sents."""
         raise NotImplementedError
 
     #

@@ -1,9 +1,12 @@
+import itertools
+
 #  -------- elitism -----------
 #
-def elitism(network_generation: list, n: int):
+def elitism(generation: dict, n: int):
 
-    ranking: list = sorted(
-        network_generation, key=lambda network: network.getScore()
-    )
+    ranking: dict = {
+        k: v
+        for k, v in sorted(generation.items(), key=lambda item: item[1])
+    }
 
-    return ranking[len(ranking) - n :]
+    return dict(itertools.islice(ranking.items(), len(ranking) - n, None))
