@@ -1,4 +1,4 @@
-from geneticNLP.data import CONLLU, PreProcessed
+from geneticNLP.data import PreProcessed
 from geneticNLP.embeddings import FastText
 from geneticNLP.models import POSTagger
 
@@ -7,12 +7,32 @@ from geneticNLP.neural import train, evolve
 from geneticNLP.utils import Encoding
 
 
-data_train = CONLLU("./data/universal-dependencies--en-dev.conllu")
-data_dev = CONLLU("./data/universal-dependencies--en-test.conllu")
+# 0 = evolve, 1 = train
+mode: int = 0
 
-enc = Encoding({tok.pos for sent in data_train for tok in sent})
+ud_tags: set = {
+    "ADV",
+    "SCONJ",
+    "ADP",
+    "PRON",
+    "PUNCT",
+    "AUX",
+    "NOUN",
+    "PROPN",
+    "INTJ",
+    "CCONJ",
+    "PART",
+    "X",
+    "NUM",
+    "ADJ",
+    "SYM",
+    "DET",
+    "VERB",
+}
+
+
+enc = Encoding(ud_tags)
 emb = FastText("./data/fasttext--cc.en.300.bin")
-# emb = Untrained({tok.word for sent in data_train for tok in sent}, 16),
 
 data_train_processed = PreProcessed(
     "./data/universal-dependencies--en-dev_reduced.conllu", emb, enc
@@ -38,18 +58,19 @@ config: dict = {
 }
 
 
-mode = 0
+if __name__ == "__main__":
 
-if mode == 0:
-    evolve(
-        POSTagger,
-        config,
-        data_train_processed,
-        data_dev_processed,
-    )
-elif mode == 1:
-    train(
-        POSTagger(config),
-        data_train_processed,
-        data_dev_processed,
-    )
+    if mode == 0:
+        evolve(
+            POSTagger,
+            config,
+            data_train_processed,
+            data_dev_processed,
+        )
+
+    elif mode == 1:
+        train(
+            POSTagger(config),
+            data_train_processed,
+            data_dev_processed,
+        )
