@@ -15,12 +15,10 @@ from geneticNLP.utils import get_device
 def evolve(
     Model_cls: object,
     config: dict,
-    encoding: object,
-    embedding: object,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     mutation_rate: float = 0.2,
-    population_size: int = 50,
+    population_size: int = 40,
     survivor_rate: float = 4,
     epoch_num: int = 60,
     report_rate: int = 10,

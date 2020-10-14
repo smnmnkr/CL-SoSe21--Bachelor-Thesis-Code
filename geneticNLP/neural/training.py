@@ -11,8 +11,6 @@ from geneticNLP.data import batch_loader
 
 def train(
     model: nn.Module,
-    encoding,
-    embedding,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     learning_rate: float = 1e-2,
