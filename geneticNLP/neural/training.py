@@ -56,7 +56,7 @@ def train(
             optimizer.zero_grad()
 
             # compute loss, backward
-            loss = model.loss(batch, encoding, embedding)
+            loss = model.loss(batch)
             loss.backward()
 
             # scaling the gradients down, places a limit on the size of the parameter updates
@@ -73,27 +73,14 @@ def train(
             # https://discuss.pytorch.org/t/calling-loss-backward-reduce-memory-usage/2735
             del loss
 
-        # --- (in epoch): if is reporting epoch
+        # --- if is reporting epoch
         if (t + 1) % report_rate == 0:
             print(
                 "@{:02}: \t loss(train)={:2.4f} \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
                     (t + 1),
                     train_loss / len(train_set),
-                    evaluate(train_loader, model, encoding, embedding),
-                    evaluate(dev_loader, model, encoding, embedding),
+                    model.evaluate(train_loader),
+                    model.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
             )
-
-
-def evaluate(data_loader, model, encoding, embedding) -> float:
-
-    model.eval()
-    with torch.no_grad():
-
-        accuracy_per_batch: list = [
-            model.accuracy(batch, encoding, embedding)
-            for batch in data_loader
-        ]
-
-    return sum(accuracy_per_batch) / len(accuracy_per_batch)

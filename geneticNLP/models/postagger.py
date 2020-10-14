@@ -58,45 +58,29 @@ class POSTagger(nn.Module):
     def predict(
         self,
         batch: list,
-        encoding,
-        embedding,
     ) -> tuple:
 
-        to_predict: list = []
-        target_ids: list = []
+        embeds: list = []
+        encods: list = []
 
         for sent in batch:
-            words = map(lambda tok: tok.word, sent)
-            gold_tags = map(lambda tok: tok.pos, sent)
+            embeds.append(sent[0])
+            encods.append(sent[1])
 
-            target_ids_sent: list = []
+        predictions: list = self.forward(embeds)
 
-            for tag in gold_tags:
-                target_ids_sent.append(encoding.encode(tag))
-
-            target_ids.append(target_ids_sent)
-            to_predict.append(list(words))
-
-        embeddings: list = embedding.forward_batch(to_predict)
-        predictions: list = self.forward(embeddings)
-
-        return predictions, target_ids
+        return predictions, encods
 
     #
     #
     #  -------- accuracy -----------
     #
-    def accuracy(
-        self,
-        batch: list,
-        encoding,
-        embedding,
-    ) -> float:
+    def accuracy(self, batch: list) -> float:
 
         k: float = 0.0
         n: float = 0.0
 
-        predictions, target_ids = self.predict(batch, encoding, embedding)
+        predictions, target_ids = self.predict(batch)
 
         # Process the predictions and compare with the gold labels
         for pred, gold in zip(predictions, target_ids):
@@ -115,13 +99,25 @@ class POSTagger(nn.Module):
     def loss(
         self,
         batch: list,
-        encoding,
-        embedding,
     ) -> nn.CrossEntropyLoss:
 
-        predictions, target_ids = self.predict(batch, encoding, embedding)
+        predictions, target_ids = self.predict(batch)
 
         return nn.CrossEntropyLoss()(
             torch.cat(predictions),
             torch.LongTensor(flatten(target_ids)).to(get_device()),
         )
+
+    #
+    #
+    #  -------- evalutate -----------
+    #
+    @torch.no_grad()
+    def evaluate(self, data_loader) -> float:
+        self.eval()
+
+        accuracy_per_batch: list = [
+            self.accuracy(batch) for batch in data_loader
+        ]
+
+        return sum(accuracy_per_batch) / len(accuracy_per_batch)
