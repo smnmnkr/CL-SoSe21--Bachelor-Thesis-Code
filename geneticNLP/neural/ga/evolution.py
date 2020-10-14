@@ -1,77 +1,89 @@
-import itertools
-import copy
-import random
+import random, operator
 
 from datetime import datetime
-
-import torch
-import torch.nn as nn
 
 from torch.utils.data import IterableDataset
 
 from geneticNLP.neural.ga.mutation import mutate
 from geneticNLP.neural.ga.selection import elitism
 
+from geneticNLP.data import batch_loader
+
+from geneticNLP.utils import get_device
+
 
 def evolve(
-    start_model: nn.Module,
+    Model_cls: object,
+    config: dict,
+    encoding: object,
+    embedding: object,
     train_set: IterableDataset,
     dev_set: IterableDataset,
-    accuracy: callable,
-    mutation_rate: float = 1e-2,
-    survivor_rate: float = 1e-6,
-    population_size: int = 5,
+    mutation_rate: float = 0.2,
+    population_size: int = 50,
+    survivor_rate: float = 4,
     epoch_num: int = 60,
     report_rate: int = 10,
+    batch_size: int = 16,
 ):
 
-    # activate gpu usage for the model if possible, else nothing will change
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    start_model = start_model.to(device)
+    # create batched loader
+    train_loader = batch_loader(
+        train_set,
+        batch_size=batch_size,
+        num_workers=0,
+    )
+    dev_loader = batch_loader(
+        dev_set,
+        batch_size=batch_size,
+        num_workers=0,
+    )
 
     # generate base population
-    population = dict.fromkeys(
-        list(itertools.repeat(copy.deepcopy(start_model), population_size)),
-        0.0,
-    )
+    population: dict = {
+        Model_cls(config).to(get_device()): 0.0
+        for _ in range(population_size)
+    }
 
     # --
     for t in range(epoch_num):
         time_begin = datetime.now()
 
-        # -- eval
-        for modul, score in population.items():
-            modul.eval()
-            with torch.no_grad():
-                population[modul] = accuracy(modul, train_set)
+        # -- evaluate score on dev set
+        for modul, _ in population.items():
 
-        selection: dict = elitism(population, 5)
+            population[modul] = modul.evaluate(train_loader)
+
+        # --- report
+        if (t + 1) % report_rate == 0:
+            best, score = max(
+                population.items(), key=operator.itemgetter(1)
+            )
+
+            print(
+                "@{:02}: \t {} \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
+                    (t + 1),
+                    id(best),
+                    score,
+                    best.evaluate(dev_loader),
+                    datetime.now() - time_begin,
+                )
+            )
+
+        # --- selection
+        selection: dict = elitism(population, survivor_rate)
         next_generation: list = []
 
-        # generate new players
+        # --- mutation
         for _ in range(population_size):
 
             # select random player from selection
-            randomSelected, _ = random.choice(list(selection.items()))
+            random_selected, _ = random.choice(list(selection.items()))
+
+            # mutate random selected
+            random_mutated = mutate(random_selected, mutation_rate)
 
             # mutate and append it
-            next_generation.append(mutate(randomSelected, mutation_rate))
+            next_generation.append(random_mutated)
 
         population = dict.fromkeys(next_generation, 0.0)
-
-        # reporting (every `report_rate` epochs)
-        if (t + 1) % report_rate == 0:
-
-            best, _ = next(iter(population.items()))
-
-            train_acc = accuracy(best, train_set)
-
-            # get dev accurracy if given
-            if dev_set:
-                dev_acc = accuracy(best, dev_set)
-            else:
-                dev_acc = 0.0
-
-            print(
-                f"@{(t + 1):02}: \t acc(train)={train_acc:2.4f}  \t acc(dev)={dev_acc:2.4f}  \t time(epoch)={datetime.now() - time_begin}"
-            )

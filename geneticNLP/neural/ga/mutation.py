@@ -1,12 +1,11 @@
-import random
 import copy
-
 import torch
 
 #
 #
 #  -------- mutate -----------
 #
+@torch.no_grad()
 def mutate(
     parent_network,
     mutation_rate: float = 0.02,
@@ -14,7 +13,7 @@ def mutate(
 
     child_network = copy.deepcopy(parent_network)
 
-    for layer in child_network.parameters():
-        layer = layer + torch.rand(tuple(layer.shape))  # * mutation_rate
+    for param in child_network.parameters():
+        param.data += mutation_rate * torch.randn_like(param)
 
     return child_network
