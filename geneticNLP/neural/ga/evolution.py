@@ -47,40 +47,42 @@ def evolve(
     for t in range(epoch_num):
         time_begin = datetime.now()
 
-        # -- evaluate score on dev set
-        for modul, _ in population.items():
+        for batch in train_loader:
 
-            population[modul] = modul.evaluate(train_loader)
+            # -- evaluate score on dev set
+            for modul, _ in population.items():
+
+                population[modul] = modul.accuracy(batch)
+
+            # --- selection
+            selection: dict = elitism(population, survivor_rate)
+            next_generation: dict = {}
+
+            # --- mutation
+            for _ in range(population_size):
+
+                # select random player from selection
+                random_selected, score = random.choice(
+                    list(selection.items())
+                )
+
+                # mutate random selected
+                random_mutated = mutate(random_selected, mutation_rate)
+
+                # mutate and append it
+                next_generation[random_mutated] = score
+
+            population = next_generation
 
         # --- report
         if (t + 1) % report_rate == 0:
-            best, score = max(
-                population.items(), key=operator.itemgetter(1)
-            )
+            best, _ = max(population.items(), key=operator.itemgetter(1))
 
             print(
                 "@{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
                     (t + 1),
-                    score,
+                    best.evaluate(train_loader),
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
             )
-
-        # --- selection
-        selection: dict = elitism(population, survivor_rate)
-        next_generation: list = []
-
-        # --- mutation
-        for _ in range(population_size):
-
-            # select random player from selection
-            random_selected, _ = random.choice(list(selection.items()))
-
-            # mutate random selected
-            random_mutated = mutate(random_selected, mutation_rate)
-
-            # mutate and append it
-            next_generation.append(random_mutated)
-
-        population = dict.fromkeys(next_generation, 0.0)
