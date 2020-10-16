@@ -54,6 +54,11 @@ class FastText(Interface):
     #  -------- load_model -----------
     #
     def load_model(self, file_path) -> fasttext.FastText:
+
+        # remove useless load_model warning
+        # src: https://github.com/facebookresearch/fastText/issues/1067
+        fasttext.FastText.eprint = lambda x: None
+
         return fasttext.load_model(file_path)
 
     #  -------- dimension -----------
