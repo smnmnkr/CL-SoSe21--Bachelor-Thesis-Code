@@ -26,7 +26,11 @@ def time_track(func):
 
         duration = t_end - t_start
 
-        return result, duration
+        print(
+            f"[--- TIMETRACK || method: {func.__name__} -- time: {duration:2.4f} sec. ---]"
+        )
+
+        return result
 
     return wrap
 
