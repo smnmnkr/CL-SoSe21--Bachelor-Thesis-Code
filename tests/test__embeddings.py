@@ -41,7 +41,7 @@ def test_FastText_init(fs_fixture):
 
 def test_FastText_forward_word(fs_fixture):
     # test: forward single word
-    forward_word = fs_fixture.forward(word)
+    forward_word = fs_fixture.forward_tok(word)
 
     assert isinstance(forward_word, torch.FloatTensor)
     assert forward_word.size()[0] == dimension
@@ -49,7 +49,7 @@ def test_FastText_forward_word(fs_fixture):
 
 def test_FastText_fordward_sentence(fs_fixture):
     # test: forward multiply words/sentence
-    forward_sent = fs_fixture.forwards(sent)
+    forward_sent = fs_fixture.forward_sent(sent)
 
     assert isinstance(forward_sent, torch.FloatTensor)
     assert forward_sent.size()[0] == len(sent)
@@ -63,7 +63,7 @@ def test_Untrained_init(ut_fixture):
 
 def test_Untrained_forward_word(ut_fixture):
     # test: forward single word
-    forward_word = ut_fixture.forward(word)
+    forward_word = ut_fixture.forward_tok(word)
 
     assert isinstance(forward_word, torch.FloatTensor)
     assert forward_word.size()[0] == dimension
@@ -71,7 +71,7 @@ def test_Untrained_forward_word(ut_fixture):
 
 def test_Untrained_fordward_sentence(ut_fixture):
     # test: forward multiply words/sentence
-    forward_sent = ut_fixture.forwards(sent)
+    forward_sent = ut_fixture.forward_sent(sent)
 
     assert isinstance(forward_sent, torch.FloatTensor)
     assert forward_sent.size()[0] == len(sent)
