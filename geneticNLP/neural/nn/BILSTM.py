@@ -27,7 +27,7 @@ class BILSTM(nn.Module):
             hidden_size=out_size,
             bidirectional=True,
             num_layers=depth,
-            dropout=dropout,
+            dropout=0.0 if (depth == 1) else dropout,
         )
 
     #
