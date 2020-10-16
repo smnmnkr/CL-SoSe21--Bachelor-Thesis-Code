@@ -59,7 +59,7 @@ def evolve(
             )
 
             print(
-                "@{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
+                "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (t + 1),
                     score,
                     best.evaluate(dev_loader),

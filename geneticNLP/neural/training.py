@@ -74,7 +74,7 @@ def train(
         # --- if is reporting epoch
         if (t + 1) % report_rate == 0:
             print(
-                "@{:02}: \t loss(train)={:2.4f} \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
+                "[--- @{:02}: \t loss(train)={:2.4f} \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (t + 1),
                     train_loss / len(train_set),
                     model.evaluate(train_loader),
