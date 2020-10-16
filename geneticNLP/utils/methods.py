@@ -1,5 +1,6 @@
 from typing import List
 
+import json
 import operator
 import functools
 from functools import wraps
@@ -68,3 +69,13 @@ def unpad(padded: TT, length: TT) -> List[TT]:
 #
 def flatten(l: list):
     return functools.reduce(operator.iconcat, l, [])
+
+
+#
+#
+#  -------- load_json -----------
+#
+def load_json(path: str) -> dict:
+    """Load JSON configuration file."""
+    with open(path) as data:
+        return json.load(data)
