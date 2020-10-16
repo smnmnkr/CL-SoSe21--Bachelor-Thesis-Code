@@ -1,10 +1,9 @@
-from geneticNLP.data import PreProcessed
-from geneticNLP.embeddings import FastText
 from geneticNLP.models import POSTagger
 
 from geneticNLP.neural import train
 
-from geneticNLP.utils import Encoding, load_json
+from geneticNLP.utils import load_json
+from geneticNLP.tasks.utils import load_resources
 
 
 #
@@ -13,37 +12,25 @@ from geneticNLP.utils import Encoding, load_json
 #
 def do_train(args: dict) -> None:
 
-    # ---
+    # --- load config json files
     model_config: dict = load_json(args.model_config)
     training_config: dict = load_json(args.training_config)
     data_config: dict = load_json(args.data_config)
 
-    try:
-        # ---
-        embedding = FastText(data_config.get("embedding"))
-        encoding = Encoding(data_config.get("encoding"))
+    # --- load external data sources
+    embedding, encoding, data = load_resources(data_config)
 
-        # ---
-        data_train = PreProcessed(
-            data_config.get("train"), embedding, encoding
-        )
-        data_dev = PreProcessed(data_config.get("dev"), embedding, encoding)
-
-    # ---
-    except:
-        raise NotImplementedError
-
-    # ---
+    # --- add data dependent model config
     model_config["lstm"]["input_size"] = embedding.dimension
     model_config["score"]["output_size"] = len(encoding)
 
-    # ---
+    # --- create model
     model = POSTagger(model_config)
 
-    # ---
+    # --- start training
     train(
         model,
-        data_train,
-        data_dev,
+        data.get("train"),
+        data.get("dev"),
         **training_config,
     )
