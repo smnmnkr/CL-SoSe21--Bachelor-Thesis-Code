@@ -82,11 +82,11 @@ make clean
 - 0.0.1 POS-Tagger preliminary beta
 - 0.0.2 Optimized POS-Tagger
 - 0.0.3 Optimized Gradient Descent Training
-- 0.1.0 Include Genetic Algorithm Training
-- 1.0.0 Create stable Experimenting Environment
+- 0.1.0 Included Genetic Algorithm Training
+- 1.0.0 Created stable Experimenting Environment
+- 1.0.1 Updated Unittests
 
 ## Roadmap
 
-- Fix: Update Unittests
 - Major: Include Dependency Parser
 - Major: Include hybrid training approach
