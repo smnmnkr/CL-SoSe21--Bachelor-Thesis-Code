@@ -15,7 +15,7 @@ def train(
     dev_set: IterableDataset,
     learning_rate: float = 1e-2,
     weight_decay: float = 1e-6,
-    clip: float = 60.0,
+    gradient_clip: float = 60.0,
     epoch_num: int = 60,
     batch_size: int = 16,
     report_rate: int = 10,
@@ -59,7 +59,7 @@ def train(
 
             # scaling the gradients down, places a limit on the size of the parameter updates
             # https://pytorch.org/docs/stable/nn.html#clip-grad-norm
-            nn.utils.clip_grad_norm_(model.parameters(), clip)
+            nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
 
             # optimize
             optimizer.step()
