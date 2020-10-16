@@ -20,8 +20,8 @@ def evolve(
     mutation_rate: float = 0.2,
     population_size: int = 120,
     survivor_rate: float = 10,
-    epoch_num: int = 800,
-    report_rate: int = 10,
+    epoch_num: int = 2000,
+    report_rate: int = 50,
     batch_size: int = 32,
 ):
 
