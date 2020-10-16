@@ -2,7 +2,7 @@ from geneticNLP.models import POSTagger
 
 from geneticNLP.neural import train
 
-from geneticNLP.utils import load_json
+from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import load_resources
 
 
@@ -10,6 +10,7 @@ from geneticNLP.tasks.utils import load_resources
 #
 #  -------- do_train -----------
 #
+@time_track
 def do_train(args: dict) -> None:
 
     # --- load config json files

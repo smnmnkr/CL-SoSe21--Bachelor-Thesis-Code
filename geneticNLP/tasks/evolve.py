@@ -2,13 +2,14 @@ from geneticNLP.models import POSTagger
 
 from geneticNLP.neural import evolve
 
-from geneticNLP.utils import load_json
+from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import load_resources
 
 #
 #
 #  -------- do_evolve -----------
 #
+@time_track
 def do_evolve(args: dict) -> None:
 
     # --- load config json files
