@@ -3,48 +3,64 @@
 ## Usage [tbc]
 
 ```bash
-# run demo
-make demo
+# run demo evolution
+make evolve
+
+# run demo training
+make train
 ```
 
 ## Configuration [tbc]
 
-### POS-Tagger
+### Model (POS-Tagger)
 
 ```json
 {
-  "embedding": {
-    "type": "fasttext/untrained",
-    "data": "/path/to/data",
-    "dimension": 300
-  },
   "lstm": {
-    "hidden_size": 50,
-    "depth": 2,
+    "hidden_size": 16,
+    "depth": 1,
     "dropout": 0.5
   },
   "score": {
-    "hidden_size": 50,
-    "dropout": 0.2
+    "hidden_size": 16,
+    "dropout": 0.5
   }
 }
 ```
 
-### Training
+### Evolution // Training
 
 ```json
 {
-  "learning_rate": 2e-3,
-  "weight_decay": 0.01,
-  "clip": 5.0,
+  "mutation_rate": 0.2,
+  "population_size": 40,
+  "survivor_rate": 4,
   "epoch_num": 60,
-  "batch_size": 16,
-  "report_rate": 10,
-  "data": {
-    "train": "/path/to/train",
-    "dev": "/path/to/dev",
-    "test": "/path/to/test"
-  }
+  "report_rate": 5,
+  "batch_size": 32
+}
+```
+
+```json
+{
+  "learning_rate": 1e-2,
+  "weight_decay": 1e-6,
+  "gradient_clip": 60.0,
+  "epoch_num": 60,
+  "report_rate": 5,
+  "batch_size": 32
+}
+```
+
+### Data
+
+```json
+{
+  "embedding": "path/to/fasttext-data.bin",
+  "encoding": ["LIST", "OF", "POS", "TAGS"],
+  "train": "path/to/train.conllu",
+  "dev": "path/to/dev.conllu",
+  "test": "path/to/test.conllu"
 }
 ```
 
@@ -63,13 +79,14 @@ make clean
 
 ## History
 
-- 0.0.1 Release: POS-Tagger preliminary beta
+- 0.0.1 POS-Tagger preliminary beta
+- 0.0.2 Optimized POS-Tagger
+- 0.0.3 Optimized Gradient Descent Training
+- 0.1.0 Include Genetic Algorithm Training
+- 1.0.0 Create stable Experimenting Environment
 
 ## Roadmap
 
-- Fix: Refractor and Optimize POS-Tagger
-- Fix: Refractor and Optimize Gradient Descent Training
-- Minor: Create stable experimenting automation
-- Minor: Include genetic algorithm training
+- Fix: Update Unittests
 - Major: Include Dependency Parser
 - Major: Include hybrid training approach
