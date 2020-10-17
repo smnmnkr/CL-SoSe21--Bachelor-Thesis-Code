@@ -16,8 +16,8 @@ def load_tagger(
 ) -> POSTagger:
 
     # --- add data dependent model config
-    model_config["lstm"]["input_size"] = embedding.dimension
-    model_config["score"]["output_size"] = len(encoding)
+    model_config["lstm"]["in_size"] = embedding.dimension
+    model_config["score"]["hid_size"] = len(encoding)
 
     # --- return model and updated config
     return (POSTagger(model_config), model_config)
