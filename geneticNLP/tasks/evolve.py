@@ -24,10 +24,12 @@ def do_evolve(args: dict) -> None:
     model_config["lstm"]["input_size"] = embedding.dimension
     model_config["score"]["output_size"] = len(encoding)
 
+    # --- create model
+    model = POSTagger(model_config)
+
     # --- start evolution
     evolve(
-        POSTagger,
-        model_config,
+        model,
         data.get("train"),
         data.get("dev"),
         **evolution_config,

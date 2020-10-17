@@ -2,6 +2,7 @@ import random, operator
 
 from datetime import datetime
 
+import torch.nn as nn
 from torch.utils.data import IterableDataset
 
 from geneticNLP.neural.ga.mutation import mutate
@@ -13,8 +14,7 @@ from geneticNLP.utils import get_device
 
 
 def evolve(
-    Model_cls: object,
-    config: dict,
+    model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     mutation_rate: float = 0.2,
@@ -38,19 +38,16 @@ def evolve(
     )
 
     # generate base population
-    population: dict = {
-        Model_cls(config).to(get_device()): 0.0
-        for _ in range(population_size)
-    }
+    population: dict = {model.to(get_device()): 0.0}
 
     # --
     for t in range(epoch_num):
         time_begin = datetime.now()
 
         # -- evaluate score on dev set
-        for modul, _ in population.items():
+        for item, _ in population.items():
 
-            population[modul] = modul.evaluate(train_loader)
+            population[item] = item.evaluate(train_loader)
 
         # --- report
         if (t + 1) % report_rate == 0:
@@ -67,8 +64,10 @@ def evolve(
                 )
             )
 
-        # --- selection
-        selection: dict = elitism(population, survivor_rate)
+        # --- select by elite if is not first epoch else use only input model
+        selection: dict = (
+            elitism(population, survivor_rate) if (t > 0) else population
+        )
         next_generation: list = []
 
         # --- mutation
