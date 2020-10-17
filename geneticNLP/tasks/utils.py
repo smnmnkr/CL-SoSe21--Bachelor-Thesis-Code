@@ -1,7 +1,8 @@
 from geneticNLP.models import POSTagger
-from geneticNLP.data import PreProcessed
 from geneticNLP.embeddings import FastText
-from geneticNLP.utils import Encoding, time_track
+
+from geneticNLP.data import PreProcessed
+from geneticNLP.utils import Encoding, time_track, get_device
 
 
 #
@@ -19,8 +20,10 @@ def load_tagger(
     model_config["lstm"]["in_size"] = embedding.dimension
     model_config["score"]["hid_size"] = len(encoding)
 
+    model = POSTagger(model_config).to(get_device())
+
     # --- return model and updated config
-    return (POSTagger(model_config), model_config)
+    return (model, model_config)
 
 
 #

@@ -5,12 +5,9 @@ from datetime import datetime
 import torch.nn as nn
 from torch.utils.data import IterableDataset
 
-from geneticNLP.neural.ga.mutation import mutate
-from geneticNLP.neural.ga.selection import elitism
+from geneticNLP.neural.ga import mutate, elitism
 
 from geneticNLP.data import batch_loader
-
-from geneticNLP.utils import get_device
 
 
 def evolve(
@@ -38,7 +35,7 @@ def evolve(
     )
 
     # generate base population
-    population: dict = {model.to(get_device()): 0.0}
+    population: dict = {model: 0.0}
 
     # --
     for t in range(epoch_num):
