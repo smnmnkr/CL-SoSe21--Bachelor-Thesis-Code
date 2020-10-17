@@ -9,9 +9,10 @@ class Interface(ABC):
 
     Methods
     ----------
-    - forward(self, word: str) -> TT
-    - forwards(self, words: list) -> TT
-    - load_model(self, *data_path: str) -> Model
+    - forward_tok(self, tok: str) -> TT
+    - forward_sent(self, sent: list) -> TT
+    - forward_batch(self, batch: list) -> list[TT]
+    - load_model(self, data_path: str) -> Model
     - dimension(self)@property -> int
     - __len__(self) -> int
     """
