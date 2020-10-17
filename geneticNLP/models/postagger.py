@@ -38,17 +38,12 @@ class POSTagger(nn.Module):
     def forward(self, embed_batch: list) -> list:
 
         # Contextualize embeddings with BiLSTM
-        sents_vec_context_pack = self.context(embed_batch)
-
-        # Convert packed representation to a padded representation
-        padded, length = rnn.pad_packed_sequence(
-            sents_vec_context_pack, batch_first=True
-        )
+        pad_context, mask = self.context(embed_batch)
 
         # Calculate the POS-Tag scores
-        result = self.score(padded)
+        pad_scores = self.score(pad_context)
 
-        return unpad(result, length)
+        return unpad(pad_scores, mask)
 
     #
     #
