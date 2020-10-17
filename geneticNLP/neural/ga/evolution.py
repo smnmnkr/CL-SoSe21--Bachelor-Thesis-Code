@@ -2,26 +2,26 @@ import random, operator
 
 from datetime import datetime
 
+import torch.nn as nn
 from torch.utils.data import IterableDataset
 
-from geneticNLP.neural.ga.mutation import mutate
-from geneticNLP.neural.ga.selection import elitism
+from geneticNLP.neural.ga import mutate, elitism
 
 from geneticNLP.data import batch_loader
 
-from geneticNLP.utils import get_device
-
-
+#
+#
+#  -------- evolve -----------
+#
 def evolve(
-    Model_cls: object,
-    config: dict,
+    model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     mutation_rate: float = 0.2,
     population_size: int = 120,
     survivor_rate: float = 10,
-    epoch_num: int = 800,
-    report_rate: int = 10,
+    epoch_num: int = 2000,
+    report_rate: int = 50,
     batch_size: int = 32,
 ):
 
@@ -38,19 +38,16 @@ def evolve(
     )
 
     # generate base population
-    population: dict = {
-        Model_cls(config).to(get_device()): 0.0
-        for _ in range(population_size)
-    }
+    population: dict = {model: 0.0}
 
     # --
     for t in range(epoch_num):
         time_begin = datetime.now()
 
         # -- evaluate score on dev set
-        for modul, _ in population.items():
+        for item, _ in population.items():
 
-            population[modul] = modul.evaluate(train_loader)
+            population[item] = item.evaluate(train_loader)
 
         # --- report
         if (t + 1) % report_rate == 0:
@@ -59,7 +56,7 @@ def evolve(
             )
 
             print(
-                "@{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={}".format(
+                "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (t + 1),
                     score,
                     best.evaluate(dev_loader),
@@ -67,8 +64,10 @@ def evolve(
                 )
             )
 
-        # --- selection
-        selection: dict = elitism(population, survivor_rate)
+        # --- select by elite if is not first epoch else use only input model
+        selection: dict = (
+            elitism(population, survivor_rate) if (t > 0) else population
+        )
         next_generation: list = []
 
         # --- mutation

@@ -1,10 +1,11 @@
 from typing import List
 
+import json
 import operator
 import functools
 from functools import wraps
 
-from time import time
+from datetime import datetime
 
 import torch
 import torch.nn.utils.rnn as rnn
@@ -19,13 +20,15 @@ def time_track(func):
     @wraps(func)
     def wrap(*args, **kw):
 
-        t_start = time()
+        t_begin = datetime.now()
         result = func(*args, **kw)
-        t_end = time()
+        t_end = datetime.now()
 
-        duration = t_end - t_start
+        print(
+            f"[--- TIMETRACK || method: {func.__name__} -- time: {t_end-t_begin} ---]"
+        )
 
-        return result, duration
+        return result
 
     return wrap
 
@@ -68,3 +71,13 @@ def unpad(padded: TT, length: TT) -> List[TT]:
 #
 def flatten(l: list):
     return functools.reduce(operator.iconcat, l, [])
+
+
+#
+#
+#  -------- load_json -----------
+#
+def load_json(path: str) -> dict:
+    """Load JSON configuration file."""
+    with open(path) as data:
+        return json.load(data)

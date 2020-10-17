@@ -1,55 +1,138 @@
-from geneticNLP.data import CONLLU, PreProcessed
-from geneticNLP.embeddings import FastText
-from geneticNLP.models import POSTagger
+import argparse
 
-from geneticNLP.neural import train, evolve
+from geneticNLP.tasks import do_evolve, do_train, do_hybrid
 
-from geneticNLP.utils import Encoding
-
-
-data_train = CONLLU("./data/universal-dependencies--en-dev.conllu")
-data_dev = CONLLU("./data/universal-dependencies--en-test.conllu")
-
-enc = Encoding({tok.pos for sent in data_train for tok in sent})
-emb = FastText("./data/fasttext--cc.en.300.bin")
-# emb = Untrained({tok.word for sent in data_train for tok in sent}, 16),
-
-data_train_processed = PreProcessed(
-    "./data/universal-dependencies--en-dev_reduced.conllu", emb, enc
+#
+#
+#  -------- ARGPARSER: -----------
+#
+parser = argparse.ArgumentParser(description="geneticNLP")
+subparsers = parser.add_subparsers(
+    dest="command", help="available commands"
 )
 
-data_dev_processed = PreProcessed(
-    "./data/universal-dependencies--en-test.conllu", emb, enc
+#
+#
+#  -------- EVOLUTION: -----------
+#
+parser_evolve = subparsers.add_parser(
+    "evolve",
+    help="use neural evolution",
 )
 
+parser_evolve.add_argument(
+    "-M",
+    dest="model_config",
+    required=True,
+    help="model config.json file",
+    metavar="FILE",
+)
 
-config: dict = {
-    "lstm": {
-        "input_size": emb.dimension,
-        "hidden_size": 16,
-        "depth": 1,
-        "dropout": 0.0,
-    },
-    "score": {
-        "hidden_size": 16,
-        "output_size": len(enc),
-        "dropout": 0.0,
-    },
-}
+parser_evolve.add_argument(
+    "-E",
+    dest="evolution_config",
+    required=True,
+    help="evolution config.json file",
+    metavar="FILE",
+)
 
+parser_evolve.add_argument(
+    "-D",
+    dest="data_config",
+    required=True,
+    help="data config.json file",
+    metavar="FILE",
+)
 
-mode = 0
+#
+#
+#  -------- TRAINING: -----------
+#
+parser_train = subparsers.add_parser(
+    "train",
+    help="use gradient based training",
+)
 
-if mode == 0:
-    evolve(
-        POSTagger,
-        config,
-        data_train_processed,
-        data_dev_processed,
-    )
-elif mode == 1:
-    train(
-        POSTagger(config),
-        data_train_processed,
-        data_dev_processed,
-    )
+parser_train.add_argument(
+    "-M",
+    dest="model_config",
+    required=True,
+    help="model config.json file",
+    metavar="FILE",
+)
+
+parser_train.add_argument(
+    "-T",
+    dest="training_config",
+    required=True,
+    help="training config.json file",
+    metavar="FILE",
+)
+
+parser_train.add_argument(
+    "-D",
+    dest="data_config",
+    required=True,
+    help="data config.json file",
+    metavar="FILE",
+)
+
+#
+#
+#  -------- HYBRID: -----------
+#
+parser_hybrid = subparsers.add_parser(
+    "hybrid",
+    help="use gradient based training",
+)
+
+parser_hybrid.add_argument(
+    "-M",
+    dest="model_config",
+    required=True,
+    help="model config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-T",
+    dest="training_config",
+    required=True,
+    help="training config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-E",
+    dest="evolution_config",
+    required=True,
+    help="evolution config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-D",
+    dest="data_config",
+    required=True,
+    help="data config.json file",
+    metavar="FILE",
+)
+
+#
+#
+#  -------- MAIN: -----------
+#
+if __name__ == "__main__":
+
+    # get console arguments
+    args = parser.parse_args()
+
+    # choose task
+    if args.command == "evolve":
+        do_evolve(args)
+
+    if args.command == "train":
+        do_train(args)
+
+    if args.command == "hybrid":
+        do_hybrid(args)

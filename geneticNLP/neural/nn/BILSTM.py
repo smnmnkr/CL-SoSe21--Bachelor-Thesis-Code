@@ -15,7 +15,7 @@ class BILSTM(nn.Module):
     def __init__(
         self,
         in_size: int,
-        out_size: int,
+        hid_size: int,
         depth: int,
         dropout: float,
     ):
@@ -24,10 +24,10 @@ class BILSTM(nn.Module):
         # We keep the size of the hidden layer equal to the embedding size
         self.net = nn.LSTM(
             input_size=in_size,
-            hidden_size=out_size,
+            hidden_size=hid_size,
             bidirectional=True,
             num_layers=depth,
-            dropout=dropout,
+            dropout=0.0 if (depth == 1) else dropout,
         )
 
     #

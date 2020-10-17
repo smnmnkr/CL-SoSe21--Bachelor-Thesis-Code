@@ -18,17 +18,16 @@ class POSTagger(nn.Module):
 
         # BILSTM to calculate contextualized word embeddings
         self.context = BILSTM(
-            in_size=config["lstm"]["input_size"],
-            out_size=config["lstm"]["hidden_size"],
+            in_size=config["lstm"]["in_size"],
+            hid_size=config["lstm"]["hid_size"],
             depth=config["lstm"]["depth"],
             dropout=config["lstm"]["dropout"],
         )
 
         # MLP to calculate the POS tags
         self.score = MLP(
-            in_size=config["lstm"]["hidden_size"] * 2,
-            hid_size=config["score"]["hidden_size"],
-            out_size=config["score"]["output_size"],
+            in_size=config["lstm"]["hid_size"] * 2,
+            hid_size=config["score"]["hid_size"],
             dropout=config["score"]["dropout"],
         )
 
@@ -75,6 +74,7 @@ class POSTagger(nn.Module):
     #
     #  -------- accuracy -----------
     #
+    @torch.no_grad()
     def accuracy(self, batch: list) -> float:
 
         k: float = 0.0

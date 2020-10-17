@@ -8,17 +8,15 @@ class MLP(nn.Module):
         self,
         in_size: int,
         hid_size: int,
-        out_size: int,
         dropout: float,
     ):
         super().__init__()
 
-        # [Linear -> Activation -> Linear -> Dropout]
+        # [Linear -> Dropout -> Activation]
         self.net = nn.Sequential(
             nn.Linear(in_size, hid_size),
-            nn.LeakyReLU(inplace=True),
-            nn.Linear(hid_size, out_size),
             nn.Dropout(p=dropout, inplace=True),
+            nn.LeakyReLU(inplace=True),
         )
 
     #

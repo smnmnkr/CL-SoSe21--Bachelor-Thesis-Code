@@ -1,0 +1,25 @@
+{
+  "embedding": "./data/fasttext--cc.en.300.bin",
+  "encoding": [
+    "ADV",
+    "SCONJ",
+    "ADP",
+    "PRON",
+    "PUNCT",
+    "AUX",
+    "NOUN",
+    "PROPN",
+    "INTJ",
+    "CCONJ",
+    "PART",
+    "X",
+    "NUM",
+    "ADJ",
+    "SYM",
+    "DET",
+    "VERB"
+  ],
+  "train": "./data/universal-dependencies--en-dev.conllu",
+  "dev": "./data/universal-dependencies--en-test.conllu",
+  "test": null
+}
