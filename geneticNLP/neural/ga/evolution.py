@@ -9,7 +9,10 @@ from geneticNLP.neural.ga import mutate, elitism
 
 from geneticNLP.data import batch_loader
 
-
+#
+#
+#  -------- evolve -----------
+#
 def evolve(
     model: nn.Module,
     train_set: IterableDataset,

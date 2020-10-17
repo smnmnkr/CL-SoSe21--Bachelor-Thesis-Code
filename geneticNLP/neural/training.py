@@ -7,7 +7,10 @@ from torch.utils.data import IterableDataset
 
 from geneticNLP.data import batch_loader
 
-
+#
+#
+#  -------- train -----------
+#
 def train(
     model: nn.Module,
     train_set: IterableDataset,
