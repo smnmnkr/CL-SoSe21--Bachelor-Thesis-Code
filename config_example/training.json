@@ -4,5 +4,5 @@
   "gradient_clip": 60.0,
   "epoch_num": 60,
   "report_rate": 5,
-  "batch_size": 32
+  "batch_size": 16
 }
