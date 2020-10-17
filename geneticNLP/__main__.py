@@ -1,6 +1,6 @@
 import argparse
 
-from geneticNLP.tasks import do_evolve, do_train
+from geneticNLP.tasks import do_evolve, do_train, do_hybrid
 
 #
 #
@@ -79,6 +79,47 @@ parser_train.add_argument(
 
 #
 #
+#  -------- HYBRID: -----------
+#
+parser_hybrid = subparsers.add_parser(
+    "hybrid",
+    help="use gradient based training",
+)
+
+parser_hybrid.add_argument(
+    "-M",
+    dest="model_config",
+    required=True,
+    help="model config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-T",
+    dest="training_config",
+    required=True,
+    help="training config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-E",
+    dest="evolution_config",
+    required=True,
+    help="evolution config.json file",
+    metavar="FILE",
+)
+
+parser_hybrid.add_argument(
+    "-D",
+    dest="data_config",
+    required=True,
+    help="data config.json file",
+    metavar="FILE",
+)
+
+#
+#
 #  -------- MAIN: -----------
 #
 if __name__ == "__main__":
@@ -92,3 +133,6 @@ if __name__ == "__main__":
 
     if args.command == "train":
         do_train(args)
+
+    if args.command == "hybrid":
+        do_hybrid(args)
