@@ -5,7 +5,7 @@ import operator
 import functools
 from functools import wraps
 
-from time import time
+from datetime import datetime
 
 import torch
 import torch.nn.utils.rnn as rnn
@@ -20,14 +20,12 @@ def time_track(func):
     @wraps(func)
     def wrap(*args, **kw):
 
-        t_start = time()
+        t_begin = datetime.now()
         result = func(*args, **kw)
-        t_end = time()
-
-        duration = t_end - t_start
+        t_end = datetime.now()
 
         print(
-            f"[--- TIMETRACK || method: {func.__name__} -- time: {duration:2.4f} sec. ---]"
+            f"[--- TIMETRACK || method: {func.__name__} -- time: {t_end-t_begin} ---]"
         )
 
         return result
