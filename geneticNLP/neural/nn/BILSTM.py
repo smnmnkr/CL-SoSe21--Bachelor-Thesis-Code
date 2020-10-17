@@ -21,7 +21,7 @@ class BILSTM(nn.Module):
     ):
         super().__init__()
 
-        # We keep the size of the hidden layer equal to the embedding size
+        # [LSTM : (Layers -> Dropout)^depth -> Activation]
         self.net = nn.LSTM(
             input_size=in_size,
             hidden_size=hid_size,
@@ -29,6 +29,7 @@ class BILSTM(nn.Module):
             num_layers=depth,
             dropout=0.0 if (depth == 1) else dropout,
         )
+        self.acf = nn.LeakyReLU()
 
     #
     #
@@ -44,6 +45,7 @@ class BILSTM(nn.Module):
 
         Returns a packed sequence.
         """
+        self.net.flatten_parameters()
 
         # Pack sentence vectors as a packed sequence
         packed_batch = rnn.pack_sequence(batch, enforce_sorted=False)
@@ -51,5 +53,10 @@ class BILSTM(nn.Module):
         # Apply LSTM to the packed sequence of word embeddings
         packed_hidden, _ = self.net(packed_batch)
 
+        # Convert packed representation to a padded representation
+        padded_hidden, mask = rnn.pad_packed_sequence(
+            packed_hidden, batch_first=True
+        )
+
         # Return the scores
-        return packed_hidden
+        return (self.acf(padded_hidden), mask)
