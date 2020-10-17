@@ -74,6 +74,7 @@ class POSTagger(nn.Module):
     #
     #  -------- accuracy -----------
     #
+    @torch.no_grad()
     def accuracy(self, batch: list) -> float:
 
         k: float = 0.0
