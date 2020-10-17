@@ -1,9 +1,7 @@
-from geneticNLP.models import POSTagger
-
 from geneticNLP.neural import train
 
 from geneticNLP.utils import load_json, time_track
-from geneticNLP.tasks.utils import load_resources
+from geneticNLP.tasks.utils import load_resources, load_tagger
 
 
 #
@@ -21,12 +19,8 @@ def do_train(args: dict) -> None:
     # --- load external data sources
     embedding, encoding, data = load_resources(data_config)
 
-    # --- add data dependent model config
-    model_config["lstm"]["input_size"] = embedding.dimension
-    model_config["score"]["output_size"] = len(encoding)
-
-    # --- create model
-    model = POSTagger(model_config)
+    # --- load model
+    model, model_config = load_tagger(model_config, embedding, encoding)
 
     # --- start training
     train(
