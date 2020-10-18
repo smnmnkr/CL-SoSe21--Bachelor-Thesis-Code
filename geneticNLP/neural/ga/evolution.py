@@ -74,10 +74,10 @@ def evolve(
         for _ in range(population_size):
 
             # select random player from selection
-            random_selected, _ = random.choice(list(selection.items()))
+            random_selected, score = random.choice(list(selection.items()))
 
             # mutate random selected
-            random_mutated = mutate(random_selected, mutation_rate)
+            random_mutated = mutate(random_selected, score, mutation_rate)
 
             # mutate and append it
             next_generation.append(random_mutated)
