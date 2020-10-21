@@ -19,7 +19,7 @@
     "DET",
     "VERB"
   ],
-  "train": "./data/universal-dependencies--en-dev.conllu",
-  "dev": "./data/universal-dependencies--en-test.conllu",
+  "train": "./data/universal-dependencies--en-dev_reduced.conllu",
+  "dev": "./data/universal-dependencies--en-dev.conllu",
   "test": null
 }
