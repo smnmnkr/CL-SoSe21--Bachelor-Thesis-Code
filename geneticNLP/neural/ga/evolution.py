@@ -1,4 +1,4 @@
-import random, operator
+import random, operator, multiprocessing
 
 from datetime import datetime
 
@@ -9,6 +9,10 @@ from torch.utils.data import IterableDataset
 from geneticNLP.neural.ga import mutate, elitism
 
 from geneticNLP.data import batch_loader
+
+# prevent MAC OSX multiprocessing bug
+# src: https://github.com/pytest-dev/pytest-flask/issues/104
+multiprocessing.set_start_method("fork")
 
 #
 #
@@ -94,7 +98,15 @@ def evolve(
 
             # --- evaluate all models on train set
             for item, _ in population.items():
-                population[item] = item.evaluate(train_loader)
+
+                def worker_eval(model):
+                    population[model] = model.evaluate(train_loader)
+
+                processes = multiprocessing.Process(
+                    target=worker_eval, args=(item,)
+                )
+
+                processes.start()
 
             # --- find best model and corresponding score
             best, score = max(
