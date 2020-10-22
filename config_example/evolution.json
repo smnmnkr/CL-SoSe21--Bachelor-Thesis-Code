@@ -4,5 +4,5 @@
   "population_size": 400,
   "survivor_rate": 40,
   "report_rate": 10,
-  "batch_size": 64
+  "batch_size": 96
 }
