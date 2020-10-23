@@ -1,2 +1,2 @@
 # __init__.py
-from .interface import Model
+from ._interface import Model
