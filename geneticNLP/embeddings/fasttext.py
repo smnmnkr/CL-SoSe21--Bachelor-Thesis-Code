@@ -4,13 +4,13 @@ import fasttext.util
 import torch
 import torch.nn as nn
 
-from geneticNLP.embeddings import Interface
+from geneticNLP.embeddings import Embedding
 
 from geneticNLP.utils import get_device
 from geneticNLP.utils.types import TT
 
 
-class FastText(Interface):
+class FastText(Embedding):
     """Module for FastText (binary) word embedding."""
 
     #
