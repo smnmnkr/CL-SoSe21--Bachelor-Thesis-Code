@@ -1,8 +1,7 @@
-import torch
-import torch.nn as nn
+from .stripped import POSstripped
 
 
-class POSfull(nn.Module):
+class POSfull(POSstripped):
 
     #
     #
@@ -33,15 +32,17 @@ class POSfull(nn.Module):
         batch: list,
     ) -> tuple:
 
-        words, poss = list()
+        word_batch: list = []
+        label_batch: list = []
 
         for sent in batch:
-            words = map(lambda tok: tok.word, sent)
-            poss = map(lambda tok: tok.pos, sent)
+            word_batch.append(map(lambda tok: tok.word, sent))
 
-        embeds: list = self.embeddings.forward_sent(words)
-        encods: list = [self.encoding.encode(tag) for tag in poss]
+            label_batch.append(
+                [
+                    self.encoding.encode(tag)
+                    for tag in map(lambda tok: tok.pos, sent)
+                ]
+            )
 
-        predictions: list = self.forward(embeds)
-
-        return predictions, encods
+        return self.forward(word_batch), label_batch
