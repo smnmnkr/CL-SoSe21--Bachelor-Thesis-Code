@@ -53,16 +53,9 @@ class POSstripped(nn.Module):
         batch: list,
     ) -> tuple:
 
-        embeds: list = []
-        encods: list = []
+        embeds, encods = zip(*batch)
 
-        for sent in batch:
-            embeds.append(sent[0])
-            encods.append(sent[1])
-
-        predictions: list = self.forward(embeds)
-
-        return predictions, encods
+        return self.forward(embeds), encods
 
     #
     #
