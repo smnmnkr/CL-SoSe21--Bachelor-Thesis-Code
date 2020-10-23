@@ -27,9 +27,10 @@ class FastText(Embedding):
         # load model optionally reduce dimension
         self.model = self.load_model(data_path)
 
-        # optionally reduce dimension
-        if dimension < 300:
+        # optionally reduce dimension, and save new file
+        if dimension != self.dimension:
             fasttext.util.reduce_model(self.model, dimension)
+            self.model.save_model(f"{data_path}_{dimension}.bin")
 
         # save dropout
         self.dropout = nn.Dropout(p=dropout, inplace=False)
