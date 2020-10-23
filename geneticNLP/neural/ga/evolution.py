@@ -124,6 +124,7 @@ def evolve(
             best, score = max(
                 population.items(), key=operator.itemgetter(1)
             )
+            convergence = score
 
             print(
                 "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
