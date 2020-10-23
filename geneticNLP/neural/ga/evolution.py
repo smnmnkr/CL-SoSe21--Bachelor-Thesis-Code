@@ -127,8 +127,9 @@ def evolve(
             convergence = score
 
             print(
-                "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
+                "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (epoch + 1),
+                    sum(population.values()) / len(population),
                     score,
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
