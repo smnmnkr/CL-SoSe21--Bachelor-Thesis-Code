@@ -1,8 +1,9 @@
 {
-  "mutation_rate": 0.2,
+  "mutation_rate": 20,
   "convergence_min": 0.95,
-  "population_size": 200,
-  "survivor_rate": 20,
+  "population_size": 400,
+  "survivor_rate": 40,
+  "crossover_rate": 0.5,
   "report_rate": 5,
   "batch_size": 96
 }

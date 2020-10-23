@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import IterableDataset
 
-from geneticNLP.neural.ga import mutate, elitism
+from geneticNLP.neural.ga import mutate, elitism, cross
 
 from geneticNLP.data import batch_loader
 
@@ -26,6 +26,7 @@ def evolve(
     convergence_min: int = 0.95,
     population_size: int = 80,
     survivor_rate: float = 10,
+    crossover_rate: float = 0.5,
     report_rate: int = 50,
     batch_size: int = 32,
 ):
@@ -75,11 +76,22 @@ def evolve(
             # --- mutation
             for _ in range(population_size - survivor_rate):
 
-                # select random player from selection
-                random_selected, _ = random.choice(list(selection.items()))
+                # get random players from selection
+                random_selected_1, _ = random.choice(
+                    list(selection.items())
+                )
+                random_selected_2, _ = random.choice(
+                    list(selection.items())
+                )
+
+                # (optionally) cross random players
+                if random.uniform(0, 1) > crossover_rate:
+                    random_selected_1 = cross(
+                        random_selected_1, random_selected_2
+                    )
 
                 # mutate random selected
-                random_mutated = mutate(random_selected, mutation_rate)
+                random_mutated = mutate(random_selected_1, mutation_rate)
 
                 # mutate and append it
                 next_generation.append(random_mutated)
