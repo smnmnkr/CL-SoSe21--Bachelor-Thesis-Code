@@ -6,13 +6,25 @@ from abc import ABC, abstractmethod
 
 
 class Model(ABC):
+    """
+    Abstract model interface for neural networks.
+
+    Methods
+    ----------
+    - __init__(config: dict) -> None
+    - forward(self, batch: list) -> list[TT]
+    - predict(self, batch: list) -> typle[list[TT],list[int]]
+    - loss(self, batch: list) -> nn.CrossEntropyLoss
+    - accuracy(self, batch: list)@torch.no_grad() -> float
+    - evaluate(self, data_loader: data.DataLoader)@torch.no_grad() -> float
+    """
 
     #
     #
     #  -------- __init__ -----------
     #
     @abstractmethod
-    def __init__():
+    def __init__(config: dict) -> None:
         raise NotImplementedError
 
     #
@@ -20,7 +32,10 @@ class Model(ABC):
     #  -------- forward -----------
     #
     @abstractmethod
-    def forward(self, batch: list) -> list:
+    def forward(
+        self,
+        batch: list,
+    ) -> list:
         raise NotImplementedError
 
     #
@@ -36,15 +51,6 @@ class Model(ABC):
 
     #
     #
-    #  -------- accuracy -----------
-    #
-    @abstractmethod
-    @torch.no_grad()
-    def accuracy(self, batch: list) -> float:
-        raise NotImplementedError
-
-    #
-    #
     #  -------- loss -----------
     #
     @abstractmethod
@@ -52,6 +58,18 @@ class Model(ABC):
         self,
         batch: list,
     ) -> nn.CrossEntropyLoss:
+        raise NotImplementedError
+
+    #
+    #
+    #  -------- accuracy -----------
+    #
+    @abstractmethod
+    @torch.no_grad()
+    def accuracy(
+        self,
+        batch: list,
+    ) -> float:
         raise NotImplementedError
 
     #
