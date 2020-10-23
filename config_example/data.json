@@ -19,6 +19,7 @@
     "DET",
     "VERB"
   ],
+  "preprocess": true,
   "train": "./data/universal-dependencies--en-dev_reduced.conllu",
   "dev": "./data/universal-dependencies--en-dev.conllu",
   "test": null

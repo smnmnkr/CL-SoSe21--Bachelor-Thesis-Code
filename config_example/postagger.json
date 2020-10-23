@@ -1,4 +1,8 @@
 {
+  "embedding": {
+    "size": 32,
+    "dropout": 0.0
+  },
   "lstm": {
     "hid_size": 16,
     "depth": 1,

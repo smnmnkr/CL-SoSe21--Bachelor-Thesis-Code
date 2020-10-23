@@ -18,7 +18,7 @@ def do_hybrid(args: dict) -> None:
     data_config: dict = load_json(args.data_config)
 
     # --- load external data sources
-    embedding, encoding, data = load_resources(data_config)
+    embedding, encoding, data = load_resources(data_config, model_config)
 
     # --- load model
     model, model_config = load_tagger(model_config, embedding, encoding)
