@@ -1,4 +1,5 @@
 import fasttext
+import fasttext.util
 
 import torch
 import torch.nn as nn
@@ -19,11 +20,16 @@ class FastText(Interface):
     def __init__(
         self,
         data_path,
+        dimension: int = 300,
         dropout: float = 0.0,
     ):
 
-        # save model
+        # load model optionally reduce dimension
         self.model = self.load_model(data_path)
+
+        # optionally reduce dimension
+        if dimension < 300:
+            fasttext.util.reduce_model(self.model, dimension)
 
         # save dropout
         self.dropout = nn.Dropout(p=dropout, inplace=False)
