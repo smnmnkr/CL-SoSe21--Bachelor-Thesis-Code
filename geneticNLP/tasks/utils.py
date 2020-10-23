@@ -1,4 +1,5 @@
-from geneticNLP.models import POSTagger
+from geneticNLP.models import Model
+from geneticNLP.models.postagger import POSstripped, POSfull
 from geneticNLP.embeddings import FastText
 
 from geneticNLP.data import PreProcessed, CONLLU
@@ -7,20 +8,47 @@ from geneticNLP.utils import Encoding, time_track, get_device
 
 #
 #
-#  -------- load_tagger -----------
+#  -------- setup -----------
 #
 @time_track
+def setup(
+    model_config: dict,
+    data_config: dict,
+):
+
+    # --- load external data sources
+    embedding, encoding, data = load_resources(data_config, model_config)
+
+    # --- load model
+    model, model_config = load_tagger(
+        model_config, data_config, embedding, encoding
+    )
+
+    return (model, data)
+
+
+#
+#
+#  -------- load_tagger -----------
+#
 def load_tagger(
     model_config: dict,
+    data_config: dict,
     embedding: FastText,
     encoding: Encoding,
-) -> POSTagger:
+) -> Model:
 
     # --- add data dependent model config
     model_config["lstm"]["in_size"] = embedding.dimension
     model_config["score"]["hid_size"] = len(encoding)
 
-    model = POSTagger(model_config).to(get_device())
+    # --- load stripped model
+    if data_config.get("preprocess"):
+        model = POSstripped(model_config).to(get_device())
+
+    # --- load full model
+    else:
+        model = POSfull(model_config, embedding, encoding).to(get_device())
 
     # --- return model and updated config
     return (model, model_config)
@@ -30,7 +58,6 @@ def load_tagger(
 #
 #  -------- load_resources -----------
 #
-@time_track
 def load_resources(
     data_config: dict,
     model_config: dict,

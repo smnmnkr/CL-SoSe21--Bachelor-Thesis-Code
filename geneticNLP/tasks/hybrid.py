@@ -1,7 +1,7 @@
 from geneticNLP.neural import train, evolve
 
 from geneticNLP.utils import load_json, time_track
-from geneticNLP.tasks.utils import load_resources, load_tagger
+from geneticNLP.tasks.utils import setup
 
 
 #
@@ -17,11 +17,8 @@ def do_hybrid(args: dict) -> None:
     evolution_config: dict = load_json(args.evolution_config)
     data_config: dict = load_json(args.data_config)
 
-    # --- load external data sources
-    embedding, encoding, data = load_resources(data_config, model_config)
-
-    # --- load model
-    model, model_config = load_tagger(model_config, embedding, encoding)
+    # --- setup experiment
+    model, data = setup(model_config, data_config)
 
     # --- start training
     train(
