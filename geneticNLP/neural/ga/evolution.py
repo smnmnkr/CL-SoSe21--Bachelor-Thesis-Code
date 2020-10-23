@@ -84,8 +84,10 @@ def evolve(
                     list(selection.items())
                 )
 
+                print(random_selected_1 == random_selected_2)
+
                 # (optionally) cross random players
-                if random.uniform(0, 1) > crossover_rate:
+                if crossover_rate > random.uniform(0, 1) and epoch > 0:
                     random_selected_1 = cross(
                         random_selected_1, random_selected_2
                     )
