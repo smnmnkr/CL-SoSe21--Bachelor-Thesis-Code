@@ -19,12 +19,15 @@ def cross(
         rec_network.parameters(),
     ):
 
+        # create mask, which determines the retained weights
         mask_positive = (
             torch.FloatTensor(c_layer.shape).uniform_() > dominance
         ).int()
 
+        # create inverted mask
         mask_negativ = torch.abs(mask_positive - 1)
 
+        # combine the two layers
         c_layer.data = c_layer * mask_positive + r_layer * mask_negativ
 
     return child_network
