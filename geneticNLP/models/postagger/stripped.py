@@ -6,7 +6,7 @@ from geneticNLP.neural.nn import MLP, BILSTM
 from geneticNLP.utils import unpad, flatten, get_device
 
 
-class POSTagger(nn.Module):
+class POSstripped(nn.Module):
 
     #
     #
