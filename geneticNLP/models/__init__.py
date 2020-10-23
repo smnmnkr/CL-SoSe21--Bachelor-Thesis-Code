@@ -1,3 +1,2 @@
 # __init__.py
-
-from .postagger import POSTagger
+from .interface import Model
