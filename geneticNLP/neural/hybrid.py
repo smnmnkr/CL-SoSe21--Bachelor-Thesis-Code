@@ -7,6 +7,7 @@ import torch.nn as nn
 from torch.utils.data import IterableDataset
 
 from geneticNLP.neural.ga import mutate, elitism
+from geneticNLP.neural.ga.swarm import optimize
 
 from geneticNLP.data import batch_loader
 from geneticNLP.utils.methods import get_device
@@ -59,13 +60,22 @@ def hybrid(
 
         for batch in train_loader:
 
-            # --- select by elite if is not first epoch else use queen
+            # --- selection if is not first epoch else use queen
             selection: dict = (
                 elitism(swarm, selection_rate)
                 if (epoch > 0)
                 else {queen: 0.0}
             )
             swarm.clear()
+
+            # --- update queen model
+            if epoch > 0:
+                optimize(
+                    queen,
+                    selection,
+                    noise_std,
+                    learning_rate,
+                )
 
             # --- mutation
             for _ in range(population_size):
@@ -77,39 +87,18 @@ def hybrid(
 
                 swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
 
-            # --- update queen model
-
-            #
-            scores = torch.tensor(list(swarm.values())).to(get_device())
-            scores_std = (scores - torch.mean(scores)) / torch.std(scores)
-
-            #
-            swarm_params: list = [
-                [param for param in worker.parameters()] for worker in swarm
-            ]
-
-            #
-            for id_p, q_param in enumerate(queen.parameters()):
-
-                for id_s, s_param in enumerate(
-                    [worker[id_p] for worker in swarm_params]
-                ):
-                    q_param.data += (
-                        learning_rate
-                        / (population_size * noise_std)
-                        * (s_param * scores[id_s])
-                    )
-
         # --- increase epoch
         epoch += 1
 
         # --- report
         if (epoch + 1) % report_rate == 0:
+            convergence = queen.evaluate(train_loader)
+
             print(
                 "[--- @{:02}: \t swarm(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (epoch + 1),
                     sum(swarm.values()) / len(swarm),
-                    queen.evaluate(train_loader),
+                    convergence,
                     queen.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
