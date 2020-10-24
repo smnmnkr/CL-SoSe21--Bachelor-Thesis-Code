@@ -6,6 +6,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import IterableDataset
 
+from geneticNLP.neural.ga import mutate, elitism
+
 from geneticNLP.data import batch_loader
 from geneticNLP.utils.methods import get_device
 
@@ -22,8 +24,8 @@ def hybrid(
     learning_rate: float = 0.001,
     convergence_min: int = 0.95,
     population_size: int = 200,
-    report_rate: int = 2,
-    batch_size: int = 32,
+    report_rate: int = 10,
+    batch_size: int = 96,
 ):
     # disable gradients
     torch.set_grad_enabled(False)
@@ -41,7 +43,7 @@ def hybrid(
 
     # generate queen, swarm
     queen: nn.Module = model
-    swarm: dict = {model: 0.0 for _ in range(population_size)}
+    swarm: dict = {}
 
     # --
     while convergence < convergence_min:
@@ -57,19 +59,39 @@ def hybrid(
 
         for batch in train_loader:
 
-            # --- init entitiy randomly and calculate batch score
-            for entitiy, _ in swarm.items():
-                swarm[entitiy] = entitiy.accuracy(batch)
+            # --- select by elite if is not first epoch else use queen
+            selection: dict = (
+                elitism(swarm, 20) if (epoch > 0) else {queen: 0.0}
+            )
+
+            # --- add selection to next generation
+            next_generation: list = [
+                selected for selected, _ in selection.items()
+            ]
+            swarm.clear()
+
+            # --- mutation
+            for _ in range(population_size):
+
+                # get random entitiy from selection
+                rnd_entitiy, _ = random.choice(list(selection.items()))
+
+                mut_entitiy = mutate(rnd_entitiy, 20)
+
+                swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
 
             # --- update queen model
-            scores = torch.tensor(list(swarm.values())).to(get_device())
 
+            #
+            scores = torch.tensor(list(swarm.values())).to(get_device())
             scores_std = (scores - torch.mean(scores)) / torch.std(scores)
 
+            #
             swarm_params: list = [
                 [param for param in worker.parameters()] for worker in swarm
             ]
 
+            #
             for id_p, q_param in enumerate(queen.parameters()):
 
                 for id_s, s_param in enumerate(
@@ -78,7 +100,7 @@ def hybrid(
                     q_param.data += (
                         learning_rate
                         / (population_size * noise_std)
-                        * (s_param * scores_std[id_s])
+                        * (s_param * scores[id_s])
                     )
 
         # --- increase epoch

@@ -25,7 +25,7 @@ def evolve(
     mutation_rate: float = 0.02,
     convergence_min: int = 0.95,
     population_size: int = 80,
-    survivor_rate: float = 10,
+    selection_rate: float = 10,
     crossover_rate: float = 0.5,
     report_rate: int = 50,
     batch_size: int = 32,
@@ -63,7 +63,7 @@ def evolve(
 
             # --- select by elite if is not first epoch else use only input model
             selection: dict = (
-                elitism(population, survivor_rate)
+                elitism(population, selection_rate)
                 if (epoch > 0)
                 else population
             )
@@ -74,7 +74,7 @@ def evolve(
             ]
 
             # --- mutation
-            for _ in range(population_size - survivor_rate):
+            for _ in range(population_size - selection_rate):
 
                 # get random players from selection
                 random_selected_1, _ = random.choice(

@@ -34,7 +34,7 @@ make train
 {
   "mutation_rate": 0.2,
   "population_size": 40,
-  "survivor_rate": 4,
+  "selection_rate": 4,
   "epoch_num": 60,
   "report_rate": 5,
   "batch_size": 32

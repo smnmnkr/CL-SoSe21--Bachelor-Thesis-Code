@@ -8,7 +8,7 @@
 {
   "mutation_rate": 0.2,
   "population_size": 120,
-  "survivor_rate": 10,
+  "selection_rate": 10,
   "epoch_num": 800,
   "batch_size": 32,
   "report_rate": 50,
