@@ -35,14 +35,6 @@ class POSstripped(nn.Module):
 
     #
     #
-    #  -------- init_weights -----------
-    #
-    def init_weights(self):
-        self.context.init_weights()
-        self.score.init_weights()
-
-    #
-    #
     #  -------- forward -----------
     #
     def forward(self, embed_batch: list) -> list:
