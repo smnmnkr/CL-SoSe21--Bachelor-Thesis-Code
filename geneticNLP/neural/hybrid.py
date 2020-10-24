@@ -68,15 +68,6 @@ def hybrid(
             )
             swarm.clear()
 
-            # --- update queen model
-            if epoch > 0:
-                optimize(
-                    queen,
-                    selection,
-                    noise_std,
-                    learning_rate,
-                )
-
             # --- mutation
             for _ in range(population_size):
 
@@ -86,6 +77,14 @@ def hybrid(
                 mut_entitiy = mutate(rnd_entitiy, 20)
 
                 swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
+
+        # --- update queen model
+        optimize(
+            queen,
+            swarm,
+            noise_std,
+            learning_rate,
+        )
 
         # --- increase epoch
         epoch += 1
