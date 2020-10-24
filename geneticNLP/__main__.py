@@ -105,18 +105,10 @@ parser_hybrid.add_argument(
 )
 
 parser_hybrid.add_argument(
-    "-T",
-    dest="training_config",
+    "-H",
+    dest="hybrid_config",
     required=True,
-    help="training config.json file",
-    metavar="FILE",
-)
-
-parser_hybrid.add_argument(
-    "-E",
-    dest="evolution_config",
-    required=True,
-    help="evolution config.json file",
+    help="hybrid config.json file",
     metavar="FILE",
 )
 
