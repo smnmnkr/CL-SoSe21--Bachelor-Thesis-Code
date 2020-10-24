@@ -15,6 +15,7 @@ def do_hybrid(args: dict) -> None:
     # --- load config json files
     model_config: dict = load_json(args.model_config)
     data_config: dict = load_json(args.data_config)
+    hybrid_config: dict = load_json(args.hybrid_config)
 
     # --- setup experiment
     model, data = setup(model_config, data_config)
@@ -24,4 +25,5 @@ def do_hybrid(args: dict) -> None:
         model,
         data.get("train"),
         data.get("dev"),
+        **hybrid_config,
     )
