@@ -1,9 +1,9 @@
 {
-  "mutation_rate": 0.02,
-  "convergence_min": 0.3,
+  "noise_std": 0.2,
+  "learning_rate": 0.1,
+  "convergence_min": 0.8,
   "population_size": 400,
   "selection_rate": 40,
-  "crossover_rate": 0.5,
   "report_rate": 10,
   "batch_size": 96
 }

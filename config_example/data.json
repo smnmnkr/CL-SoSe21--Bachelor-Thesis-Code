@@ -1,5 +1,5 @@
 {
-  "embedding": "./data/fasttext--cc.en.300.bin",
+  "embedding": "./data/fasttext--cc.en.32.bin",
   "encoding": [
     "ADV",
     "SCONJ",
