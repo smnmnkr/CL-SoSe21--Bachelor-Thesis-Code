@@ -15,6 +15,9 @@ class POSstripped(nn.Module):
     def __init__(self, config: dict):
         super().__init__()
 
+        # save config
+        self.config = config
+
         # BILSTM to calculate contextualized word embeddings
         self.context = BILSTM(
             in_size=config["lstm"]["in_size"],
@@ -29,6 +32,14 @@ class POSstripped(nn.Module):
             hid_size=config["score"]["hid_size"],
             dropout=config["score"]["dropout"],
         )
+
+    #
+    #
+    #  -------- init_weights -----------
+    #
+    def init_weights(self):
+        self.context.init_weights()
+        self.score.init_weights()
 
     #
     #
