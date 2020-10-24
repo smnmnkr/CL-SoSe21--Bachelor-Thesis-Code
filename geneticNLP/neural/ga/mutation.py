@@ -1,6 +1,8 @@
 import copy
 import torch
 
+from geneticNLP.utils import get_device
+
 #
 #
 #  -------- mutate -----------
@@ -15,10 +17,13 @@ def mutate(
 
     for param in child_network.parameters():
 
-        # mut_tensor = torch.randn_like(param)
-        mut_tensor = torch.empty(param.shape).normal_(
-            mean=0,
-            std=mutation_rate,
+        mut_tensor = (
+            torch.empty(param.shape)
+            .normal_(
+                mean=0,
+                std=mutation_rate,
+            )
+            .to(get_device())
         )
 
         param.data += mut_tensor
