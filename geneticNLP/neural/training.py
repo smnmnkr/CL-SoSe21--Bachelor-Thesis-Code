@@ -18,10 +18,10 @@ def train(
     learning_rate: float = 1e-2,
     weight_decay: float = 1e-6,
     gradient_clip: float = 60.0,
-    epoch_num: int = 60,
+    epoch_num: int = 200,
     report_rate: int = 10,
-    batch_size: int = 16,
-    batch_double: float = 20,
+    batch_size: int = 32,
+    batch_double: float = 40,
 ):
 
     # choose Adam for optimization

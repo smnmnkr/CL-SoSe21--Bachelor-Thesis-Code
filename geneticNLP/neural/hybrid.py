@@ -22,10 +22,11 @@ def hybrid(
     dev_set: IterableDataset,
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
-    convergence_min: int = 0.95,
-    population_size: int = 200,
+    convergence_min: int = 0.8,
+    population_size: int = 80,
+    selection_rate: float = 10,
     report_rate: int = 10,
-    batch_size: int = 96,
+    batch_size: int = 32,
 ):
     # disable gradients
     torch.set_grad_enabled(False)
@@ -50,7 +51,6 @@ def hybrid(
         time_begin = datetime.now()
 
         # load train set as batched loader
-        # TODO: enable adaptive batch size
         train_loader = batch_loader(
             train_set,
             batch_size=batch_size,
@@ -61,7 +61,9 @@ def hybrid(
 
             # --- select by elite if is not first epoch else use queen
             selection: dict = (
-                elitism(swarm, 20) if (epoch > 0) else {queen: 0.0}
+                elitism(swarm, selection_rate)
+                if (epoch > 0)
+                else {queen: 0.0}
             )
             swarm.clear()
 

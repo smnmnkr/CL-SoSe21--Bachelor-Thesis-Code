@@ -23,11 +23,11 @@ def evolve(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     mutation_rate: float = 0.02,
-    convergence_min: int = 0.95,
+    convergence_min: int = 0.8,
     population_size: int = 80,
     selection_rate: float = 10,
     crossover_rate: float = 0.5,
-    report_rate: int = 50,
+    report_rate: int = 10,
     batch_size: int = 32,
 ):
     # disable gradients
