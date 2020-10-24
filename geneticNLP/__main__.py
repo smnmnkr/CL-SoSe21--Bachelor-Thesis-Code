@@ -1,6 +1,16 @@
 import argparse
 
+import torch
+import random
+
 from geneticNLP.tasks import do_evolve, do_train, do_hybrid
+
+# make pytorch computations deterministic
+# src: https://pytorch.org/docs/stable/notes/randomness.html
+random.seed(42)
+torch.manual_seed(42)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 #
 #
