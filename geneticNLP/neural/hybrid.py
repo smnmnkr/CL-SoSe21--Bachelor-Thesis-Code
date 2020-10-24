@@ -63,11 +63,6 @@ def hybrid(
             selection: dict = (
                 elitism(swarm, 20) if (epoch > 0) else {queen: 0.0}
             )
-
-            # --- add selection to next generation
-            next_generation: list = [
-                selected for selected, _ in selection.items()
-            ]
             swarm.clear()
 
             # --- mutation
