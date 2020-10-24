@@ -40,19 +40,16 @@ def evolve(
         num_workers=0,
     )
 
-    # start convergence, epoch
+    # start convergence, epoch, population
     convergence: float = 0.0
     epoch: int = 0
-
-    # generate base population
-    population: dict = {model: 0.0}
+    population: dict = {}
 
     # --
     while convergence < convergence_min:
         time_begin = datetime.now()
 
         # load train set as batched loader
-        # TODO: enable adaptive batch size
         train_loader = batch_loader(
             train_set,
             batch_size=batch_size,
@@ -65,42 +62,30 @@ def evolve(
             selection: dict = (
                 elitism(population, selection_rate)
                 if (epoch > 0)
-                else population
+                else {model: 0.0}
             )
-
-            # --- add selection to next generation
-            next_generation: list = [
-                selected for selected, _ in selection.items()
-            ]
+            population.clear()
 
             # --- mutation
-            for _ in range(population_size - selection_rate):
+            for _ in range(population_size):
 
                 # get random players from selection
-                random_selected_1, _ = random.choice(
-                    list(selection.items())
-                )
-                random_selected_2, _ = random.choice(
-                    list(selection.items())
-                )
+                rnd_entity, _ = random.choice(list(selection.items()))
 
                 # (optionally) cross random players
                 if crossover_rate > random.uniform(0, 1) and epoch > 0:
-                    random_selected_1 = cross(
-                        random_selected_1, random_selected_2
+
+                    rnd_recessive, _ = random.choice(
+                        list(selection.items())
                     )
 
+                    rnd_entity = cross(rnd_entity, rnd_recessive)
+
                 # mutate random selected
-                random_mutated = mutate(random_selected_1, mutation_rate)
+                mut_entity = mutate(rnd_entity, mutation_rate)
 
-                # mutate and append it
-                next_generation.append(random_mutated)
-
-            population = dict.fromkeys(next_generation, 0.0)
-
-            # --- evaluate score on batch
-            for item, _ in population.items():
-                population[item] = item.accuracy(batch)
+                # calculate score
+                population[mut_entity] = mut_entity.accuracy(batch)
 
         # --- increase epoch, get best
         epoch += 1
