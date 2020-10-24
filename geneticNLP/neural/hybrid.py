@@ -74,7 +74,7 @@ def hybrid(
                 # get random entitiy from selection
                 rnd_entitiy, _ = random.choice(list(selection.items()))
 
-                mut_entitiy = mutate(rnd_entitiy, 20)
+                mut_entitiy = mutate(rnd_entitiy, 1)
 
                 swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
 
