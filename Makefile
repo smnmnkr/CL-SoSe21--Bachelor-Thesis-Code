@@ -7,6 +7,8 @@ evolve_config := config_example/evolution.json
 hybrid_config := config_example/hybrid.json
 data_config := config_example/data.json
 
+# data server:
+data_server := https://simon-muenker.de
 
 train:
 	@python3 -m ${module} train -M ${tagger_config} -T ${train_config} -D ${data_config}
@@ -20,8 +22,15 @@ hybrid:
 test:
 	@python3 -m pytest -s -v
 
-install:
+install: download
 	@pip3 install -r requirements.txt
+
+download:
+	@mkdir -p ./data
+	@wget  ${data_server}/data/cc.en.32.bin -P ./data
+	@wget  ${data_server}/data/en_partut-ud-train.conllu -P ./data
+	@wget  ${data_server}/data/en_partut-ud-dev.conllu -P ./data
+	@wget  ${data_server}/data/en_partut-ud-test.conllu -P ./data
 
 lint:
 	@pre-commit run --all-files
