@@ -17,7 +17,8 @@
     "ADJ",
     "SYM",
     "DET",
-    "VERB"
+    "VERB",
+    "_"
   ],
   "preprocess": true,
   "train": "./data/en_partut-ud-dev.conllu",
