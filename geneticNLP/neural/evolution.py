@@ -22,7 +22,6 @@ def evolve(
     model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
-    mutation_rate: float = 0.02,
     convergence_min: int = 0.8,
     population_size: int = 80,
     selection_rate: float = 10,
@@ -70,7 +69,7 @@ def evolve(
             for _ in range(population_size):
 
                 # get random players from selection
-                rnd_entity, _ = random.choice(list(selection.items()))
+                rnd_entity, score = random.choice(list(selection.items()))
 
                 # (optionally) cross random players
                 if crossover_rate > random.uniform(0, 1) and epoch > 0:
@@ -82,7 +81,7 @@ def evolve(
                     rnd_entity = cross(rnd_entity, rnd_recessive)
 
                 # mutate random selected
-                mut_entity = mutate(rnd_entity, mutation_rate)
+                mut_entity = mutate(rnd_entity, 1 - score)
 
                 # calculate score
                 population[mut_entity] = mut_entity.accuracy(batch)
