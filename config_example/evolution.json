@@ -1,6 +1,6 @@
 {
   "mutation_rate": 0.02,
-  "convergence_min": 0.3,
+  "convergence_min": 0.8,
   "population_size": 200,
   "selection_rate": 20,
   "crossover_rate": 0.5,
