@@ -64,7 +64,7 @@ def hybrid(
             selection: dict = (
                 elitism(swarm, selection_rate)
                 if (epoch > 0)
-                else {queen: 0.0}
+                else {queen: queen.accuracy(batch)}
             )
             swarm.clear()
 
@@ -72,19 +72,19 @@ def hybrid(
             for _ in range(population_size):
 
                 # get random entitiy from selection
-                rnd_entitiy, _ = random.choice(list(selection.items()))
+                rnd_entitiy, score = random.choice(list(selection.items()))
 
-                mut_entitiy = mutate(rnd_entitiy, 1)
+                mut_entitiy = mutate(rnd_entitiy, 1 - score)
 
                 swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
 
-        # --- update queen model
-        optimize(
-            queen,
-            swarm,
-            noise_std,
-            learning_rate,
-        )
+            # --- update queen model
+            optimize(
+                queen,
+                swarm,
+                noise_std,
+                learning_rate,
+            )
 
         # --- increase epoch
         epoch += 1

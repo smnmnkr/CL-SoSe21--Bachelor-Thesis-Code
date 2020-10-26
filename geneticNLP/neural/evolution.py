@@ -62,7 +62,7 @@ def evolve(
             selection: dict = (
                 elitism(population, selection_rate)
                 if (epoch > 0)
-                else {model: 0.0}
+                else {model: model.accuracy(batch)}
             )
             population.clear()
 
