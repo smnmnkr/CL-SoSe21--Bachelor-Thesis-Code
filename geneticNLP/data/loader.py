@@ -10,7 +10,7 @@ def batch_loader(
     data_set: Union[IterableDataset, Dataset],
     batch_size: int = 32,
     shuffle: bool = False,
-    num_workers: int = 10,
+    num_workers: int = 0,
 ) -> DataLoader:
     """
     Create a batch data loader from the given data set.
