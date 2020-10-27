@@ -1,4 +1,4 @@
-import random
+import random, multiprocessing
 
 from datetime import datetime
 
@@ -32,13 +32,6 @@ def hybrid(
     # disable gradients
     torch.set_grad_enabled(False)
 
-    # load dev set as batched loader
-    dev_loader = batch_loader(
-        dev_set,
-        batch_size=batch_size,
-        num_workers=4,
-    )
-
     # start convergence, epoch
     convergence: float = 0.0
     epoch: int = 0
@@ -55,7 +48,6 @@ def hybrid(
         train_loader = batch_loader(
             train_set,
             batch_size=batch_size,
-            num_workers=4,
         )
 
         for batch in train_loader:
@@ -92,6 +84,24 @@ def hybrid(
         # --- report
         if (epoch + 1) % report_rate == 0:
             convergence = queen.evaluate(train_loader)
+
+            # load dev set as batched loader
+            dev_loader = batch_loader(
+                dev_set,
+                batch_size=batch_size,
+            )
+
+            # --- evaluate all models on train set
+            for item, _ in swarm.items():
+
+                def worker_eval(model):
+                    swarm[model] = model.evaluate(train_loader)
+
+                processes = multiprocessing.Process(
+                    target=worker_eval, args=(item,)
+                )
+
+                processes.start()
 
             print(
                 "[--- @{:02}: \t swarm(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
