@@ -47,7 +47,7 @@ def train(
         train_loader = batch_loader(
             train_set,
             batch_size=batch_size,
-            num_workers=0,
+            num_workers=4,
         )
 
         for batch in train_loader:
@@ -81,7 +81,7 @@ def train(
             dev_loader = batch_loader(
                 dev_set,
                 batch_size=batch_size,
-                num_workers=0,
+                num_workers=4,
             )
 
             print(
