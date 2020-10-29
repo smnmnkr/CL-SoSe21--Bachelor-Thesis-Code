@@ -4,7 +4,7 @@
   "population_size": 200,
   "selection_rate": 20,
   "crossover_rate": 1.0,
-  "convergence_min": 0.8,
+  "epoch_num": 1000,
   "report_rate": 50,
   "batch_size": 96
 }
