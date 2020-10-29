@@ -1,17 +1,16 @@
-import random, multiprocessing
-
 from datetime import datetime
 
 import torch
 import torch.nn as nn
 from torch.utils.data import IterableDataset
 
-from geneticNLP.neural.ga import mutate, elitism
-from geneticNLP.neural.ga.swarm import optimize
-
 from geneticNLP.data import batch_loader
-from geneticNLP.utils.methods import get_device
 
+from geneticNLP.neural.ga.swarm import optimize
+from geneticNLP.neural.ga.utils import (
+    evaluate_parallel,
+    process_non_parallel,
+)
 
 #
 #
@@ -26,11 +25,18 @@ def hybrid(
     convergence_min: int = 0.8,
     population_size: int = 80,
     selection_rate: float = 10,
+    crossover_rate: float = 0.5,
     report_rate: int = 10,
     batch_size: int = 32,
 ):
     # disable gradients
     torch.set_grad_enabled(False)
+
+    # load dev set as batched loader
+    dev_loader = batch_loader(
+        dev_set,
+        batch_size=batch_size,
+    )
 
     # start convergence, epoch
     convergence: float = 0.0
@@ -38,7 +44,7 @@ def hybrid(
 
     # generate queen, swarm
     queen: nn.Module = model
-    swarm: dict = {}
+    population: dict = {queen: queen.evaluate(dev_loader)}
 
     # --
     while convergence < convergence_min:
@@ -52,28 +58,19 @@ def hybrid(
 
         for batch in train_loader:
 
-            # --- selection if is not first epoch else use queen
-            selection: dict = (
-                elitism(swarm, selection_rate)
-                if (epoch > 0)
-                else {queen: queen.accuracy(batch)}
+            # --- process generation
+            population = process_non_parallel(
+                population,
+                batch,
+                population_size=population_size,
+                selection_rate=selection_rate,
+                crossover_rate=crossover_rate,
             )
-            swarm.clear()
-
-            # --- mutation
-            for _ in range(population_size):
-
-                # get random entitiy from selection
-                rnd_entitiy, score = random.choice(list(selection.items()))
-
-                mut_entitiy = mutate(rnd_entitiy, 1 - score)
-
-                swarm[mut_entitiy] = mut_entitiy.accuracy(batch)
 
             # --- update queen model
             optimize(
                 queen,
-                swarm,
+                population,
                 noise_std,
                 learning_rate,
             )
@@ -85,28 +82,13 @@ def hybrid(
         if (epoch + 1) % report_rate == 0:
             convergence = queen.evaluate(train_loader)
 
-            # load dev set as batched loader
-            dev_loader = batch_loader(
-                dev_set,
-                batch_size=batch_size,
-            )
-
             # --- evaluate all models on train set
-            for item, _ in swarm.items():
-
-                def worker_eval(model):
-                    swarm[model] = model.evaluate(train_loader)
-
-                processes = multiprocessing.Process(
-                    target=worker_eval, args=(item,)
-                )
-
-                processes.start()
+            evaluate_parallel(population, train_loader)
 
             print(
-                "[--- @{:02}: \t swarm(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
+                "[--- @{:02}: \t avg(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     (epoch + 1),
-                    sum(swarm.values()) / len(swarm),
+                    sum(population.values()) / len(population),
                     convergence,
                     queen.evaluate(dev_loader),
                     datetime.now() - time_begin,
