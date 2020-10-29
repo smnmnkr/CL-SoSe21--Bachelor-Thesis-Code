@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import IterableDataset
 
-from geneticNLP.data import batch_loader
+from geneticNLP.data import batch_loader, adpative_batch_loader
 
 #
 #
@@ -33,20 +33,17 @@ def train(
     )
 
     # Perform SGD in a loop
-    for t in range(epoch_num):
+    for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
         train_loss: float = 0.0
 
-        # handle aptative batch size
-        batch_size: int = (
-            batch_size if (t + 1) % batch_double != 0 else batch_size * 2
-        )
-
-        # create batched loader
-        train_loader = batch_loader(
+        # create apdative batched loader
+        train_loader = adpative_batch_loader(
             train_set,
+            epoch,
             batch_size=batch_size,
+            batch_double=batch_double,
         )
 
         for batch in train_loader:
@@ -74,7 +71,7 @@ def train(
             del loss
 
         # --- if is reporting epoch
-        if (t + 1) % report_rate == 0:
+        if epoch % report_rate == 0:
 
             # create dev loader
             dev_loader = batch_loader(
@@ -84,7 +81,7 @@ def train(
 
             print(
                 "[--- @{:02}: \t loss(train)={:2.4f} \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
-                    (t + 1),
+                    epoch,
                     train_loss / len(train_set),
                     model.evaluate(train_loader),
                     model.evaluate(dev_loader),
