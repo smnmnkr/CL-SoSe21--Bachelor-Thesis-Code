@@ -7,6 +7,7 @@ from functools import wraps
 
 from datetime import datetime
 
+import numpy as np
 import torch
 import torch.nn.utils.rnn as rnn
 
@@ -81,3 +82,11 @@ def load_json(path: str) -> dict:
     """Load JSON configuration file."""
     with open(path) as data:
         return json.load(data)
+
+
+#
+#
+#  -------- inverse_sigmoid -----------
+#
+def inverse_sigmoid(x) -> float:
+    return 1 - (0.5 * (1 + np.sin((x * np.pi) - (np.pi / 2))))
