@@ -7,11 +7,11 @@ Results of baseline gradient training on the POS-Tagger.
 Full training logs can be found in `full.txt`.
 
 ```
-[--- @200:       loss(train)=0.0191      acc(train)=0.9314       acc(dev)=0.7673         time(epoch)=0:00:00.150925 ---]
-[--- @400:       loss(train)=0.0091      acc(train)=0.9519       acc(dev)=0.7658         time(epoch)=0:00:00.130456 ---]
-[--- @600:       loss(train)=0.0090      acc(train)=0.9545       acc(dev)=0.7644         time(epoch)=0:00:00.134523 ---]
-[--- @800:       loss(train)=0.0089      acc(train)=0.9570       acc(dev)=0.7606         time(epoch)=0:00:00.158880 ---]
-[--- @1000:      loss(train)=0.0090      acc(train)=0.9578       acc(dev)=0.7553         time(epoch)=0:00:00.176035 ---]
+[--- @200:       loss(train)=0.0276      acc(train)=0.9421       acc(dev)=0.7791         time(epoch)=0:00:00.187853 ---]
+[--- @400:       loss(train)=0.0186      acc(train)=0.9504       acc(dev)=0.7731         time(epoch)=0:00:00.158674 ---]
+[--- @600:       loss(train)=0.0086      acc(train)=0.9607       acc(dev)=0.7728         time(epoch)=0:00:00.139725 ---]
+[--- @800:       loss(train)=0.0090      acc(train)=0.9614       acc(dev)=0.7673         time(epoch)=0:00:00.152693 ---]
+[--- @1000:      loss(train)=0.0088      acc(train)=0.9633       acc(dev)=0.7753         time(epoch)=0:00:00.152821 ---]
 ```
 
 ## Config
