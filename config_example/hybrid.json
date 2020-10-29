@@ -1,9 +1,10 @@
 {
   "noise_std": 0.2,
   "learning_rate": 0.1,
-  "convergence_min": 0.8,
   "population_size": 200,
   "selection_rate": 20,
+  "crossover_rate": 1.0,
+  "convergence_min": 0.8,
   "report_rate": 50,
   "batch_size": 96
 }
