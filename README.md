@@ -1,54 +1,102 @@
 # geneticNLP
 
-## Usage [tbc]
+## Install
 
 ```bash
+# install dependencies via pip3 (python 3 required)
+make install # or:
+pip3 install -r requirements.txt
+
+# download ParTUT and FastText [32, EN] data files (optional)
+make download
+```
+
+## Usage
+
+### Demo
+
+Required: `make download`
+
+```bash
+# run demo training
+make train
+
 # run demo evolution
 make evolve
 
-# run demo training
-make train
+# run demo swarm
+make swarm
 ```
 
-## Configuration [tbc]
+### Custom Configuration
+
+```bash
+# run demo training
+python3 -m geneticNLP train -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
+
+# run demo evolution
+python3 -m geneticNLP evolve -M ${tagger_config.json} -E ${evolve_config.json} -D ${data_config.json}
+
+# run demo swarm
+python3 -m geneticNLP swarm -M ${tagger_config.json} -S ${swarm_config.json} -D ${data_config.json}
+```
+
+## Configuration
 
 ### Model (POS-Tagger)
 
 ```json
 {
+  "embedding": {
+    "size": 32,
+    "dropout": 0.0
+  },
   "lstm": {
-    "hidden_size": 16,
+    "hid_size": 16,
     "depth": 1,
     "dropout": 0.5
   },
   "score": {
-    "hidden_size": 16,
     "dropout": 0.5
   }
 }
 ```
 
-### Evolution // Training
+### Training, Evolution, Swarm
 
 ```json
 {
-  "mutation_rate": 0.2,
-  "population_size": 40,
-  "selection_rate": 4,
-  "epoch_num": 60,
-  "report_rate": 5,
-  "batch_size": 32
+  "learning_rate": 5e-2,
+  "weight_decay": 1e-6,
+  "gradient_clip": 60.0,
+  "epoch_num": 1000,
+  "report_rate": 50,
+  "batch_size": 32,
+  "batch_double": 100
 }
 ```
 
 ```json
 {
-  "learning_rate": 1e-2,
-  "weight_decay": 1e-6,
-  "gradient_clip": 60.0,
-  "epoch_num": 60,
-  "report_rate": 5,
-  "batch_size": 32
+  "population_size": 200,
+  "selection_rate": 20,
+  "crossover_rate": 1.0,
+  "epoch_num": 1000,
+  "report_rate": 50,
+  "batch_size": 96
+}
+```
+
+```json
+{
+  "noise_std": 0.2,
+  "learning_rate": 0.1,
+  "population_size": 200,
+  "selection_rate": 20,
+  "crossover_rate": 1.0,
+  "epoch_num": 1000,
+  "report_rate": 50,
+  "batch_size": 96
 }
 ```
 
@@ -58,6 +106,7 @@ make train
 {
   "embedding": "path/to/fasttext-data.bin",
   "encoding": ["LIST", "OF", "POS", "TAGS"],
+  "preprocess": true,
   "train": "path/to/train.conllu",
   "dev": "path/to/dev.conllu",
   "test": "path/to/test.conllu"
@@ -85,8 +134,8 @@ make clean
 - 0.1.0 Included Genetic Algorithm Training
 - 1.0.0 Created stable Experimenting Environment
 - 1.0.1 Updated Unittests
+- 2.0.0 Include swarm training approach
 
 ## Roadmap
 
 - Major: Include Dependency Parser
-- Major: Include hybrid training approach
