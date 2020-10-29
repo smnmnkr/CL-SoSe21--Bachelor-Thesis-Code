@@ -1,6 +1,6 @@
 # Evolution Experiment on Fixed v. Flex Mutation Rate
 
-Results of the experiment, in which the mutation rate is fixed, linear or square root independent of the model scoring.
+Results of the experiment, in which the mutation rate is fixed, linear, square root or inverse sigmoid dependent of the model scoring.
 
 ## Results
 
@@ -33,6 +33,17 @@ Full training logs can be found in `full.*.txt`.
 [--- @400:       avg(train)=0.6054       best(train)=0.6202      best(dev)=0.6092        time(epoch)=0:00:10.745859 ---]
 [--- @600:       avg(train)=0.6164       best(train)=0.6344      best(dev)=0.6187        time(epoch)=0:00:10.777898 ---]
 [--- @1000:      avg(train)=0.6264       best(train)=0.6407      best(dev)=0.6145        time(epoch)=0:00:10.869540 ---]
+
+```
+
+#### Inverse Sigmoid
+
+```
+[--- @200:       avg(train)=0.5527       best(train)=0.5745      best(dev)=0.5562        time(epoch)=0:00:10.864475 ---]
+[--- @400:       avg(train)=0.5912       best(train)=0.6028      best(dev)=0.5819        time(epoch)=0:00:11.900924 ---]
+[--- @600:       avg(train)=0.6056       best(train)=0.6154      best(dev)=0.6108        time(epoch)=0:00:11.567459 ---]
+[--- @800:       avg(train)=0.6196       best(train)=0.6367      best(dev)=0.6114        time(epoch)=0:00:11.475933 ---]
+[--- @1000:      avg(train)=0.6322       best(train)=0.6399      best(dev)=0.6166        time(epoch)=0:00:12.592668 ---]
 
 ```
 
