@@ -4,7 +4,7 @@ module := geneticNLP
 tagger_config := config_example/postagger.json
 train_config := config_example/training.json
 evolve_config := config_example/evolution.json
-hybrid_config := config_example/hybrid.json
+swarm_config := config_example/swarm.json
 data_config := config_example/data.json
 
 # data server:
@@ -16,8 +16,8 @@ train:
 evolve:
 	@python3 -m ${module} evolve -M ${tagger_config} -E ${evolve_config} -D ${data_config}
 
-hybrid:
-	@python3 -m ${module} hybrid -M ${tagger_config} -H ${hybrid_config} -D ${data_config}
+swarm:
+	@python3 -m ${module} swarm -M ${tagger_config} -H ${swarm_config} -D ${data_config}
 
 test:
 	@python3 -m pytest -s -v

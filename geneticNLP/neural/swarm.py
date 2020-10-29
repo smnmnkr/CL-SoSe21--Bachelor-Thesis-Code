@@ -14,9 +14,9 @@ from geneticNLP.neural.ga.utils import (
 
 #
 #
-#  -------- hybrid -----------
+#  -------- swarm -----------
 #
-def hybrid(
+def swarm(
     model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,

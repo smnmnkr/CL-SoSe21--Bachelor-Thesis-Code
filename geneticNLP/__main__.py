@@ -3,7 +3,7 @@ import argparse
 import torch
 import random
 
-from geneticNLP.tasks import do_evolve, do_train, do_hybrid
+from geneticNLP.tasks import do_evolve, do_train, do_swarm
 
 # make pytorch computations deterministic
 # src: https://pytorch.org/docs/stable/notes/randomness.html
@@ -89,14 +89,14 @@ parser_train.add_argument(
 
 #
 #
-#  -------- HYBRID: -----------
+#  -------- SWARM: -----------
 #
-parser_hybrid = subparsers.add_parser(
-    "hybrid",
+parser_swarm = subparsers.add_parser(
+    "swarm",
     help="use gradient based training",
 )
 
-parser_hybrid.add_argument(
+parser_swarm.add_argument(
     "-M",
     dest="model_config",
     required=True,
@@ -104,15 +104,15 @@ parser_hybrid.add_argument(
     metavar="FILE",
 )
 
-parser_hybrid.add_argument(
+parser_swarm.add_argument(
     "-H",
-    dest="hybrid_config",
+    dest="swarm_config",
     required=True,
-    help="hybrid config.json file",
+    help="swarm config.json file",
     metavar="FILE",
 )
 
-parser_hybrid.add_argument(
+parser_swarm.add_argument(
     "-D",
     dest="data_config",
     required=True,
@@ -136,5 +136,5 @@ if __name__ == "__main__":
     if args.command == "train":
         do_train(args)
 
-    if args.command == "hybrid":
-        do_hybrid(args)
+    if args.command == "swarm":
+        do_swarm(args)

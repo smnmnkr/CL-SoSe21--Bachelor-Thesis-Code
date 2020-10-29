@@ -1,29 +1,27 @@
-from geneticNLP.neural import hybrid
+from geneticNLP.neural import swarm
 from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import setup
 
-from geneticNLP.models.postagger import POSstripped
-
 
 #
 #
-#  -------- do_hybrid -----------
+#  -------- do_swarm -----------
 #
 @time_track
-def do_hybrid(args: dict) -> None:
+def do_swarm(args: dict) -> None:
 
     # --- load config json files
     model_config: dict = load_json(args.model_config)
     data_config: dict = load_json(args.data_config)
-    hybrid_config: dict = load_json(args.hybrid_config)
+    swarm_config: dict = load_json(args.swarm_config)
 
     # --- setup experiment
     model, data = setup(model_config, data_config)
 
     # --- start hybrid
-    hybrid(
+    swarm(
         model,
         data.get("train"),
         data.get("dev"),
-        **hybrid_config,
+        **swarm_config,
     )
