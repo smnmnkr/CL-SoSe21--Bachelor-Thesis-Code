@@ -48,6 +48,7 @@ def hybrid(
 
     # --
     while convergence < convergence_min:
+        epoch += 1
         time_begin = datetime.now()
 
         # load train set as batched loader
@@ -75,11 +76,8 @@ def hybrid(
                 learning_rate,
             )
 
-        # --- increase epoch
-        epoch += 1
-
         # --- report
-        if (epoch + 1) % report_rate == 0:
+        if epoch % report_rate == 0:
             convergence = queen.evaluate(train_loader)
 
             # --- evaluate all models on train set
@@ -87,7 +85,7 @@ def hybrid(
 
             print(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
-                    (epoch + 1),
+                    epoch,
                     sum(population.values()) / len(population),
                     convergence,
                     queen.evaluate(dev_loader),
