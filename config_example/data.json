@@ -1,5 +1,5 @@
 {
-  "embedding": "./data/fasttext--cc.en.300.bin",
+  "embedding": "./data/cc.en.32.bin",
   "encoding": [
     "ADV",
     "SCONJ",
@@ -17,9 +17,11 @@
     "ADJ",
     "SYM",
     "DET",
-    "VERB"
+    "VERB",
+    "_"
   ],
-  "train": "./data/universal-dependencies--en-dev.conllu",
-  "dev": "./data/universal-dependencies--en-test.conllu",
+  "preprocess": true,
+  "train": "./data/en_partut-ud-dev.conllu",
+  "dev": "./data/en_partut-ud-test.conllu",
   "test": null
 }

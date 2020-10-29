@@ -1,4 +1,5 @@
 # __init__.py
-from .interface import Interface
+from ._interface import Embedding
 
+from .untrained import Untrained
 from .fasttext import FastText

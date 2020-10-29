@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from geneticNLP.utils.types import TT
 
 
-class Interface(ABC):
+class Embedding(ABC):
     """
     Abstract embedder interface for word vector representations.
 

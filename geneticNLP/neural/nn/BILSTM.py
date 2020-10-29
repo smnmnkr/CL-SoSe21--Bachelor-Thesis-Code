@@ -31,6 +31,26 @@ class BILSTM(nn.Module):
         )
         self.acf = nn.LeakyReLU()
 
+        # custom init weights
+        self.init_weights()
+
+    #
+    #
+    #  -------- init_weights -----------
+    #
+    def init_weights(self):
+
+        for name, param in self.net.named_parameters():
+
+            if "weight_ih" in name:
+                nn.init.xavier_uniform_(param.data)
+
+            elif "weight_hh" in name:
+                nn.init.orthogonal_(param.data)
+
+            elif "bias" in name:
+                param.data.uniform_()
+
     #
     #
     #  -------- forward -----------

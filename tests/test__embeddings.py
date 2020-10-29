@@ -7,7 +7,7 @@ from geneticNLP.embeddings import FastText, Untrained
 fasttext_file: str = "./data/fasttext--cc.en.300.bin"
 
 # config
-dimension: int = 300
+dimension: int = 48
 
 word: str = "connection"
 sent: list = [
@@ -25,7 +25,7 @@ sent: list = [
 # src: https://docs.pytest.org/en/2.8.7/fixture.html
 @pytest.fixture(scope="module")
 def fs_fixture():
-    return FastText(fasttext_file)
+    return FastText(fasttext_file, dimension=dimension)
 
 
 # share fixed Untrained object across module test

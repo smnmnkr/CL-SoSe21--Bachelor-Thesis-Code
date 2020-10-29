@@ -1,15 +1,16 @@
 import fasttext
+import fasttext.util
 
 import torch
 import torch.nn as nn
 
-from geneticNLP.embeddings import Interface
+from geneticNLP.embeddings import Embedding
 
 from geneticNLP.utils import get_device
 from geneticNLP.utils.types import TT
 
 
-class FastText(Interface):
+class FastText(Embedding):
     """Module for FastText (binary) word embedding."""
 
     #
@@ -19,11 +20,17 @@ class FastText(Interface):
     def __init__(
         self,
         data_path,
+        dimension: int = 300,
         dropout: float = 0.0,
     ):
 
-        # save model
+        # load model optionally reduce dimension
         self.model = self.load_model(data_path)
+
+        # optionally reduce dimension, and save new file
+        if dimension != self.dimension:
+            fasttext.util.reduce_model(self.model, dimension)
+            self.model.save_model(f"{data_path}_{dimension}.bin")
 
         # save dropout
         self.dropout = nn.Dropout(p=dropout, inplace=False)

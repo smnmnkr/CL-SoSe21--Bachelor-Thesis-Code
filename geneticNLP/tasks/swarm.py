@@ -1,28 +1,27 @@
-from geneticNLP.neural import train
-
+from geneticNLP.neural import swarm
 from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import setup
 
 
 #
 #
-#  -------- do_train -----------
+#  -------- do_swarm -----------
 #
 @time_track
-def do_train(args: dict) -> None:
+def do_swarm(args: dict) -> None:
 
     # --- load config json files
     model_config: dict = load_json(args.model_config)
-    training_config: dict = load_json(args.training_config)
     data_config: dict = load_json(args.data_config)
+    swarm_config: dict = load_json(args.swarm_config)
 
     # --- setup experiment
     model, data = setup(model_config, data_config)
 
-    # --- start training
-    train(
+    # --- start hybrid
+    swarm(
         model,
         data.get("train"),
         data.get("dev"),
-        **training_config,
+        **swarm_config,
     )

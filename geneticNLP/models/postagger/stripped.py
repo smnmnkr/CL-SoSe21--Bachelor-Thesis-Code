@@ -1,13 +1,12 @@
 import torch
 import torch.nn as nn
-import torch.nn.utils.rnn as rnn
 
 from geneticNLP.neural.nn import MLP, BILSTM
 
 from geneticNLP.utils import unpad, flatten, get_device
 
 
-class POSTagger(nn.Module):
+class POSstripped(nn.Module):
 
     #
     #
@@ -15,6 +14,9 @@ class POSTagger(nn.Module):
     #
     def __init__(self, config: dict):
         super().__init__()
+
+        # save config
+        self.config = config
 
         # BILSTM to calculate contextualized word embeddings
         self.context = BILSTM(
@@ -54,16 +56,9 @@ class POSTagger(nn.Module):
         batch: list,
     ) -> tuple:
 
-        embeds: list = []
-        encods: list = []
+        embeds, encods = zip(*batch)
 
-        for sent in batch:
-            embeds.append(sent[0])
-            encods.append(sent[1])
-
-        predictions: list = self.forward(embeds)
-
-        return predictions, encods
+        return self.forward(embeds), encods
 
     #
     #

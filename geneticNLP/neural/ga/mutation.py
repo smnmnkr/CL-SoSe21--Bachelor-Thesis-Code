@@ -1,6 +1,8 @@
 import copy
 import torch
 
+from geneticNLP.utils import get_device
+
 #
 #
 #  -------- mutate -----------
@@ -14,6 +16,16 @@ def mutate(
     child_network = copy.deepcopy(parent_network)
 
     for param in child_network.parameters():
-        param.data += mutation_rate * torch.randn_like(param)
+
+        mut_tensor = (
+            torch.empty(param.shape)
+            .normal_(
+                mean=0,
+                std=mutation_rate,
+            )
+            .to(get_device())
+        )
+
+        param.data += mut_tensor
 
     return child_network
