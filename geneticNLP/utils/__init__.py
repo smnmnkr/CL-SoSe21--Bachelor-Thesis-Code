@@ -8,4 +8,5 @@ from .methods import (
     flatten,
     load_json,
     inverse_sigmoid,
+    dict_max,
 )

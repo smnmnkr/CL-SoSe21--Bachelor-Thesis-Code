@@ -1,18 +1,17 @@
-import random, operator, multiprocessing
-
 from datetime import datetime
 
 import torch
 import torch.nn as nn
 from torch.utils.data import IterableDataset
 
-from geneticNLP.neural.ga import mutate, elitism, cross
-
 from geneticNLP.data import batch_loader
+from geneticNLP.utils import dict_max
 
-# prevent MAC OSX multiprocessing bug
-# src: https://github.com/pytest-dev/pytest-flask/issues/104
-multiprocessing.set_start_method("fork")
+from geneticNLP.neural.ga.utils import (
+    evaluate_parallel,
+    process_non_parallel,
+)
+
 
 #
 #
@@ -24,7 +23,7 @@ def evolve(
     dev_set: IterableDataset,
     convergence_min: int = 0.8,
     population_size: int = 80,
-    selection_rate: float = 10,
+    selection_rate: int = 10,
     crossover_rate: float = 0.5,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -42,72 +41,38 @@ def evolve(
     # start convergence, epoch, population
     convergence: float = 0.0
     epoch: int = 0
-    population: dict = {}
+    population: dict = {model: model.evaluate(dev_loader)}
 
     # --
     while convergence < convergence_min:
+        epoch += 1
         time_begin = datetime.now()
 
         # load train set as batched loader
         train_loader = batch_loader(
             train_set,
             batch_size=batch_size,
-            num_workers=0,
         )
 
         for batch in train_loader:
 
-            # --- select by elite if is not first epoch else use only input model
-            selection: dict = (
-                elitism(population, selection_rate)
-                if (epoch > 0)
-                else {model: model.accuracy(batch)}
+            # --- process generation
+            population = process_non_parallel(
+                population,
+                batch,
+                population_size=population_size,
+                selection_rate=selection_rate,
+                crossover_rate=crossover_rate,
             )
-            population.clear()
-
-            # --- mutation
-            for _ in range(population_size):
-
-                # get random players from selection
-                rnd_entity, score = random.choice(list(selection.items()))
-
-                # (optionally) cross random players
-                if crossover_rate > random.uniform(0, 1) and epoch > 0:
-
-                    rnd_recessive, _ = random.choice(
-                        list(selection.items())
-                    )
-
-                    rnd_entity = cross(rnd_entity, rnd_recessive)
-
-                # mutate random selected
-                mut_entity = mutate(rnd_entity, 1 - score)
-
-                # calculate score
-                population[mut_entity] = mut_entity.accuracy(batch)
-
-        # --- increase epoch, get best
-        epoch += 1
 
         # --- report
         if (epoch + 1) % report_rate == 0:
 
             # --- evaluate all models on train set
-            for item, _ in population.items():
-
-                def worker_eval(model):
-                    population[model] = model.evaluate(train_loader)
-
-                processes = multiprocessing.Process(
-                    target=worker_eval, args=(item,)
-                )
-
-                processes.start()
+            evaluate_parallel(population, train_loader)
 
             # --- find best model and corresponding score
-            best, score = max(
-                population.items(), key=operator.itemgetter(1)
-            )
+            best, score = dict_max(population)
             convergence = score
 
             print(

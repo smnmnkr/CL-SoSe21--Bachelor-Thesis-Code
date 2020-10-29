@@ -90,3 +90,11 @@ def load_json(path: str) -> dict:
 #
 def inverse_sigmoid(x) -> float:
     return 1 - (0.5 * (1 + np.sin((x * np.pi) - (np.pi / 2))))
+
+
+#
+#
+#  -------- dict_max -----------
+#
+def dict_max(d: dict):
+    return max(d.items(), key=operator.itemgetter(1))
