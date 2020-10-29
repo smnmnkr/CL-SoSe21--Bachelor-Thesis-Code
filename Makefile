@@ -17,12 +17,12 @@ evolve:
 	@python3 -m ${module} evolve -M ${tagger_config} -E ${evolve_config} -D ${data_config}
 
 swarm:
-	@python3 -m ${module} swarm -M ${tagger_config} -H ${swarm_config} -D ${data_config}
+	@python3 -m ${module} swarm -M ${tagger_config} -S ${swarm_config} -D ${data_config}
 
 test:
 	@python3 -m pytest -s -v
 
-install: download
+install:
 	@pip3 install -r requirements.txt
 
 download:

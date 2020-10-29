@@ -105,7 +105,7 @@ parser_swarm.add_argument(
 )
 
 parser_swarm.add_argument(
-    "-H",
+    "-S",
     dest="swarm_config",
     required=True,
     help="swarm config.json file",
