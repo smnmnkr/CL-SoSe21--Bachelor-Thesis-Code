@@ -1,5 +1,4 @@
 # __init__.py
-
 from .encoding import Encoding
 from .methods import (
     time_track,
@@ -8,4 +7,5 @@ from .methods import (
     unpad,
     flatten,
     load_json,
+    inverse_sigmoid,
 )
