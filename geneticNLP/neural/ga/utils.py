@@ -63,7 +63,7 @@ def process_parallel(
     population_size: int,
     selection_rate: int,
     crossover_rate: int,
-    max_processes_active: int = 24,
+    max_processes_active: int = 8,
 ):
     #
     #  -------- worker_process -----------
