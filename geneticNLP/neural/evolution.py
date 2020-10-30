@@ -10,6 +10,7 @@ from geneticNLP.utils import dict_max
 from geneticNLP.neural.ga.utils import (
     evaluate_parallel,
     process_parallel,
+    process_linear,
 )
 
 
@@ -53,7 +54,7 @@ def evolve(
         for batch in train_loader:
 
             # --- process generation
-            population = process_parallel(
+            population = process_linear(
                 population,
                 batch,
                 population_size=population_size,

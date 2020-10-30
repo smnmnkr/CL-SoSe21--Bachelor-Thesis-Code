@@ -10,6 +10,7 @@ from geneticNLP.neural.ga.swarm import optimize
 from geneticNLP.neural.ga.utils import (
     evaluate_parallel,
     process_parallel,
+    process_linear,
 )
 
 #
@@ -55,7 +56,7 @@ def swarm(
         for batch in train_loader:
 
             # --- process generation
-            population = process_parallel(
+            population = process_linear(
                 population,
                 batch,
                 population_size=population_size,
