@@ -1,29 +1,30 @@
 from datetime import datetime
 
 import torch
-import torch.nn as nn
-from torch.utils.data import IterableDataset
 
 from geneticNLP.data import batch_loader
 
 from geneticNLP.neural.ga.swarm import optimize
 from geneticNLP.neural.ga.utils import (
     evaluate_parallel,
-    process_non_parallel,
+    process_linear,
 )
+
+from geneticNLP.utils.types import Module, IterableDataset
+
 
 #
 #
 #  -------- swarm -----------
 #
 def swarm(
-    model: nn.Module,
+    model: Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
     population_size: int = 80,
-    selection_rate: float = 10,
+    selection_rate: int = 10,
     crossover_rate: float = 0.5,
     epoch_num: int = 200,
     report_rate: int = 10,
@@ -38,9 +39,9 @@ def swarm(
         batch_size=batch_size,
     )
 
-    # generate queen, swarm
-    queen: nn.Module = model
-    population: dict = {queen: queen.evaluate(dev_loader)}
+    # generate queen, population
+    queen: Module = model
+    population: dict = {}
 
     # --
     for epoch in range(1, epoch_num + 1):
@@ -55,7 +56,8 @@ def swarm(
         for batch in train_loader:
 
             # --- process generation
-            population = process_non_parallel(
+            population = process_linear(
+                model,
                 population,
                 batch,
                 population_size=population_size,

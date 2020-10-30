@@ -1,6 +1,9 @@
 import random, multiprocessing
+import torch.multiprocessing as mp
 
 from geneticNLP.neural.ga import mutate, cross, elitism
+
+from geneticNLP.utils.types import Module, IterableDataset
 
 
 # prevent MAC OSX multiprocessing bug
@@ -13,30 +16,57 @@ multiprocessing.set_start_method("fork")
 #  -------- evaluate_parallel -----------
 #  !!! mutable object population !!!
 #
-def evaluate_parallel(population: dict, data_loader):
+def evaluate_parallel(
+    population: dict,
+    data_loader: IterableDataset,
+):
 
-    # --- evaluate all models on train set
+    #
+    #  -------- worker_eval -----------
+    def worker_eval(entity):
+        population[entity] = entity.evaluate(data_loader)
+
+    #
+    # --- begin method:
+
+    processes: list = []
+
     for entity, _ in population.items():
 
-        def worker_eval(entity):
-            population[entity] = entity.evaluate(data_loader)
+        p = mp.Process(target=worker_eval, args=(entity,))
+        p.start()
+        processes.append(p)
 
-        processes = multiprocessing.Process(
-            target=worker_eval, args=(entity,)
-        )
-
-        processes.start()
+    for p in processes:
+        p.join()
 
     return None
 
 
 #
 #
-#  -------- process_non_parallel -----------
+#  -------- evaluate_linear -----------
 #  !!! mutable object population !!!
-def process_non_parallel(
+#
+def evaluate_linear(
     population: dict,
-    batch,
+    data_loader: IterableDataset,
+):
+
+    for entity, _ in population.items():
+        population[entity] = entity.evaluate(data_loader)
+
+    return None
+
+
+#
+#
+#  -------- process_linear -----------
+#  !!! mutable object population !!!
+def process_linear(
+    model: Module,
+    population: dict,
+    batch: list,
     population_size: int,
     selection_rate: int,
     crossover_rate: int,
@@ -47,8 +77,8 @@ def process_non_parallel(
     # --- select by elite if is not first epoch else use only input model
     selection: dict = (
         elitism(population, selection_rate)
-        if (len(population) > 1)
-        else population
+        if (len(population) > 0)
+        else {model: model.accuracy(batch)}
     )
 
     # --- fill new population with mutated, crossed entities

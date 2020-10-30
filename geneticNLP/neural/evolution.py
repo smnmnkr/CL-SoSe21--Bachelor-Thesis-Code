@@ -1,16 +1,16 @@
 from datetime import datetime
 
 import torch
-import torch.nn as nn
-from torch.utils.data import IterableDataset
 
 from geneticNLP.data import batch_loader
 from geneticNLP.utils import dict_max
 
 from geneticNLP.neural.ga.utils import (
     evaluate_parallel,
-    process_non_parallel,
+    process_linear,
 )
+
+from geneticNLP.utils.types import Module, IterableDataset
 
 
 #
@@ -18,7 +18,7 @@ from geneticNLP.neural.ga.utils import (
 #  -------- evolve -----------
 #
 def evolve(
-    model: nn.Module,
+    model: Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     population_size: int = 80,
@@ -31,14 +31,7 @@ def evolve(
     # disable gradients
     torch.set_grad_enabled(False)
 
-    # load dev set as batched loader
-    dev_loader = batch_loader(
-        dev_set,
-        batch_size=batch_size,
-        num_workers=0,
-    )
-
-    population: dict = {model: model.evaluate(dev_loader)}
+    population: dict = {}
 
     # --
     for epoch in range(1, epoch_num + 1):
@@ -53,7 +46,8 @@ def evolve(
         for batch in train_loader:
 
             # --- process generation
-            population = process_non_parallel(
+            population = process_linear(
+                model,
                 population,
                 batch,
                 population_size=population_size,
@@ -69,6 +63,13 @@ def evolve(
 
             # --- find best model and corresponding score
             best, score = dict_max(population)
+
+            # load dev set as batched loader
+            dev_loader = batch_loader(
+                dev_set,
+                batch_size=batch_size,
+                num_workers=0,
+            )
 
             print(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
