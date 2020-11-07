@@ -19,7 +19,7 @@ def do_evolve(args: dict) -> None:
     model, data, encoding = setup(model_config, data_config)
 
     # --- start evolution
-    evolve(
+    model = evolve(
         model,
         data.get("train"),
         data.get("dev"),
