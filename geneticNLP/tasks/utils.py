@@ -1,9 +1,11 @@
 from geneticNLP.models import Model
 from geneticNLP.models.postagger import POSstripped, POSfull
+
+from geneticNLP.encoding import Encoding
 from geneticNLP.embeddings import FastText
 
 from geneticNLP.data import PreProcessed, CONLLU
-from geneticNLP.utils import Encoding, time_track, get_device
+from geneticNLP.utils import time_track, get_device
 
 
 #
@@ -24,7 +26,7 @@ def setup(
         model_config, data_config, embedding, encoding
     )
 
-    return (model, data)
+    return (model, data, encoding)
 
 
 #

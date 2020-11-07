@@ -1,9 +1,9 @@
 import torch.utils.data as data
 
 from geneticNLP.data import CONLLU
-from geneticNLP.embeddings import FastText
 
-from geneticNLP.utils import Encoding
+from geneticNLP.encoding import Encoding
+from geneticNLP.embeddings import FastText
 
 
 class PreProcessed(data.IterableDataset):
