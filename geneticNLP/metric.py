@@ -157,7 +157,7 @@ class Metric:
         all_classes = self.get_classes()
         all_classes = [None] + all_classes
         all_lines = [
-            "[--- {:8}\t quantity={:4} \t precision={:.4f} \t recall={:.4f} \t accuracy={:.4f} \t f1-score={:.4f}".format(
+            "[--- {:8}\t quantity={:4} \t precision={:.4f} \t recall={:.4f} \t accuracy={:.4f} \t f1-score={:.4f} ---]".format(
                 self.name if class_name is None else class_name,
                 self.get_tp(class_name)
                 + self.get_fp(class_name)
