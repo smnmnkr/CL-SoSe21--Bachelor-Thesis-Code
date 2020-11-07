@@ -1,6 +1,6 @@
 from geneticNLP.neural import swarm
 from geneticNLP.utils import load_json, time_track
-from geneticNLP.tasks.utils import setup
+from geneticNLP.tasks.utils import setup, evaluate
 
 
 #
@@ -16,7 +16,7 @@ def do_swarm(args: dict) -> None:
     swarm_config: dict = load_json(args.swarm_config)
 
     # --- setup experiment
-    model, data = setup(model_config, data_config)
+    model, data, encoding = setup(model_config, data_config)
 
     # --- start hybrid
     swarm(
@@ -24,4 +24,11 @@ def do_swarm(args: dict) -> None:
         data.get("train"),
         data.get("dev"),
         **swarm_config,
+    )
+
+    # --- run metric
+    evaluate(
+        model,
+        encoding,
+        data.get("test"),
     )

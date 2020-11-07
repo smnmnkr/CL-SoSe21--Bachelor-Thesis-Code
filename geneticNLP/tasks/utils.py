@@ -3,6 +3,7 @@ from geneticNLP.models.postagger import POSstripped, POSfull
 
 from geneticNLP.encoding import Encoding
 from geneticNLP.embeddings import FastText
+from geneticNLP.metric import Metric
 
 from geneticNLP.data import PreProcessed, CONLLU
 from geneticNLP.utils import time_track, get_device
@@ -112,3 +113,17 @@ def load_resources(
         encoding,
         {"train": data_train, "dev": data_dev, "test": data_test},
     )
+
+
+#
+#
+#  -------- evaluate -----------
+#
+def evaluate(
+    model,
+    encoding: Encoding,
+    data,
+) -> None:
+
+    if data:
+        print(Metric(model, encoding, data))
