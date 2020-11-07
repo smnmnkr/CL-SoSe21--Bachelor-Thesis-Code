@@ -68,12 +68,17 @@ def load_resources(
 
     # --- try loading external resources
     try:
+        # --- get POS-Tags from train and dev set
+        taglist = CONLLU(data_config.get("train")).taglist.union(
+            CONLLU(data_config.get("dev")).taglist
+        )
+
         # --- create embedding and encoding objects
         embedding = FastText(
             data_config.get("embedding"),
             dimension=model_config.get("embedding")["size"],
         )
-        encoding = Encoding(data_config.get("encoding"))
+        encoding = Encoding(taglist)
 
         # --- load and preprocess train and dev data
         if data_config.get("preprocess"):
