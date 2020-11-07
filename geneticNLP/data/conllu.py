@@ -14,8 +14,9 @@ class CONLLU(data.IterableDataset):
     #
     def __init__(self, data_path):
 
-        # save data
+        # save data, taglist
         self.data = list(self.load_data(data_path))
+        self.taglist: set = {tok.pos for sent in self.data for tok in sent}
 
     #
     #

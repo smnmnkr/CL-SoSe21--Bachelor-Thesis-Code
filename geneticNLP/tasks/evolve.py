@@ -1,7 +1,7 @@
 from geneticNLP.neural import evolve
 
 from geneticNLP.utils import load_json, time_track
-from geneticNLP.tasks.utils import setup
+from geneticNLP.tasks.utils import setup, evaluate
 
 #
 #
@@ -16,12 +16,19 @@ def do_evolve(args: dict) -> None:
     data_config: dict = load_json(args.data_config)
 
     # --- setup experiment
-    model, data = setup(model_config, data_config)
+    model, data, encoding = setup(model_config, data_config)
 
     # --- start evolution
-    evolve(
+    model = evolve(
         model,
         data.get("train"),
         data.get("dev"),
         **evolution_config,
+    )
+
+    # --- run metric
+    evaluate(
+        model,
+        encoding,
+        data.get("test"),
     )

@@ -80,3 +80,7 @@ def evolve(
                     datetime.now() - time_begin,
                 )
             )
+
+    # --- return best model
+    model, _ = dict_max(population)
+    return model
