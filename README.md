@@ -105,7 +105,6 @@ python3 -m geneticNLP swarm -M ${tagger_config.json} -S ${swarm_config.json} -D 
 ```json
 {
   "embedding": "path/to/fasttext-data.bin",
-  "encoding": ["LIST", "OF", "POS", "TAGS"],
   "preprocess": true,
   "train": "path/to/train.conllu",
   "dev": "path/to/dev.conllu",

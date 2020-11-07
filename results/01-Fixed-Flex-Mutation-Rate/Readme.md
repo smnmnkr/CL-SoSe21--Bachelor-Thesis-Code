@@ -86,26 +86,6 @@ Full training logs can be found in `full.*.txt`.
 ```json
 {
   "embedding": "./data/cc.en.32.bin",
-  "encoding": [
-    "ADV",
-    "SCONJ",
-    "ADP",
-    "PRON",
-    "PUNCT",
-    "AUX",
-    "NOUN",
-    "PROPN",
-    "INTJ",
-    "CCONJ",
-    "PART",
-    "X",
-    "NUM",
-    "ADJ",
-    "SYM",
-    "DET",
-    "VERB",
-    "_"
-  ],
   "preprocess": true,
   "train": "./data/en_partut-ud-dev.conllu",
   "dev": "./data/en_partut-ud-test.conllu",
