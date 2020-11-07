@@ -127,14 +127,14 @@ make clean
 
 ## History
 
-- 0.0.1 POS-Tagger preliminary beta
-- 0.0.2 Optimized POS-Tagger
-- 0.0.3 Optimized Gradient Descent Training
-- 0.1.0 Included Genetic Algorithm Training
-- 1.0.0 Created stable Experimenting Environment
-- 1.0.1 Updated Unittests
-- 2.0.0 Include swarm training approach
+- 0.1 POS-Tagger preliminary beta
+- 0.2 Optimized POS-Tagger
+- 0.3 Optimized Gradient Descent Training
+- 0.4 Included Genetic Algorithm Training
+- 1.0 Created stable Experimenting Environment
+- 2.0 Include swarm training approach
+- 2.1 Include advance metrics
 
 ## Roadmap
 
-- Major: Include Dependency Parser
+- Optional: Include Dependency Parser
