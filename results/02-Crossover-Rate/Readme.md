@@ -30,11 +30,30 @@ Full training logs can be found in `full.*.txt`.
 #### 1.0
 
 ```
-[--- @200:       avg(train)=0.6242       best(train)=0.6454      best(dev)=0.6455        time(epoch)=0:00:11.149978 ---]
-[--- @400:       avg(train)=0.6640       best(train)=0.6895      best(dev)=0.6515        time(epoch)=0:00:11.325888 ---]
-[--- @600:       avg(train)=0.6844       best(train)=0.7013      best(dev)=0.6635        time(epoch)=0:00:11.458000 ---]
-[--- @800:       avg(train)=0.6953       best(train)=0.7139      best(dev)=0.6614        time(epoch)=0:00:11.610022 ---]
-[--- @1000:      avg(train)=0.7016       best(train)=0.7132      best(dev)=0.6652        time(epoch)=0:00:11.531929 ---]
+[--- @200:       avg(train)=0.6190       best(train)=0.6336      best(dev)=0.6261        time(epoch)=0:00:11.141119 ---]
+[--- @400:       avg(train)=0.6678       best(train)=0.6824      best(dev)=0.6553        time(epoch)=0:00:11.273738 ---]
+[--- @600:       avg(train)=0.6764       best(train)=0.6911      best(dev)=0.6530        time(epoch)=0:00:11.459302 ---]
+[--- @800:       avg(train)=0.6865       best(train)=0.6990      best(dev)=0.6520        time(epoch)=0:00:11.398416 ---]
+[--- @1000:      avg(train)=0.6867       best(train)=0.6974      best(dev)=0.6550        time(epoch)=0:00:11.540944 ---]
+[--- AVG         quantity=4576   precision=0.6589        recall=0.6589   accuracy=0.4913         f1-score=0.6589 ---]
+[--- ADJ         quantity= 297   precision=0.6054        recall=0.5000   accuracy=0.3771         f1-score=0.5477 ---]
+[--- ADP         quantity= 719   precision=0.6603        recall=0.9201   accuracy=0.6245         f1-score=0.7688 ---]
+[--- ADV         quantity= 128   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- AUX         quantity= 234   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- CCONJ       quantity= 109   precision=0.4583        recall=0.1146   accuracy=0.1009         f1-score=0.1833 ---]
+[--- DET         quantity= 500   precision=0.8674        recall=0.9089   accuracy=0.7980         f1-score=0.8877 ---]
+[--- INTJ        quantity=   2   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- NOUN        quantity=1058   precision=0.6830        recall=0.8725   accuracy=0.6210         f1-score=0.7662 ---]
+[--- NUM         quantity=  61   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- PART        quantity=  66   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- PRON        quantity= 246   precision=0.3687        recall=0.7339   accuracy=0.3252         f1-score=0.4908 ---]
+[--- PROPN       quantity=  90   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- PUNCT       quantity= 443   precision=0.7631        recall=0.9882   accuracy=0.7562         f1-score=0.8612 ---]
+[--- SCONJ       quantity=  58   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- SYM         quantity=   1   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- VERB        quantity= 557   precision=0.4702        recall=0.6288   accuracy=0.3680         f1-score=0.5381 ---]
+[--- X           quantity=   2   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
+[--- _           quantity=   5   precision=0.0000        recall=0.0000   accuracy=0.0000         f1-score=0.0000 ---]
 ```
 
 ## Config
