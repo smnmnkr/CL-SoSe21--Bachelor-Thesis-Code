@@ -18,7 +18,8 @@ from geneticNLP.utils.types import Module, IterableDataset
 #  -------- evolve -----------
 #
 def evolve(
-    model: Module,
+    model_CLS: Module,
+    config: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     population_size: int = 80,
@@ -31,7 +32,10 @@ def evolve(
     # disable gradients
     torch.set_grad_enabled(False)
 
-    population: dict = {}
+    # generate base population
+    population: dict = {
+        model_CLS(config): 0.0 for _ in range(population_size)
+    }
 
     # --
     for epoch in range(1, epoch_num + 1):
@@ -43,11 +47,14 @@ def evolve(
             batch_size=batch_size,
         )
 
+        # --- if is first epoch evaluate models at first
+        if epoch == 1:
+            evaluate_parallel(population, train_loader)
+
         for batch in train_loader:
 
             # --- process generation
             population = process_linear(
-                model,
                 population,
                 batch,
                 population_size=population_size,

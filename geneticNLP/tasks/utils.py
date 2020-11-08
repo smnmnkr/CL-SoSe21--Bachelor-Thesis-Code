@@ -1,3 +1,4 @@
+from typing import ClassVar
 from geneticNLP.models import Model
 from geneticNLP.models.postagger import POSstripped, POSfull
 
@@ -23,11 +24,19 @@ def setup(
     embedding, encoding, data = load_resources(data_config, model_config)
 
     # --- load model
-    model, model_config = load_tagger(
+    model, CLS, model_config = load_tagger(
         model_config, data_config, embedding, encoding
     )
 
-    return (model, data, encoding)
+    return (
+        model,
+        data,
+        {
+            "encoding": encoding,
+            "model_class": CLS,
+            "model_config": model_config,
+        },
+    )
 
 
 #
@@ -45,16 +54,18 @@ def load_tagger(
     model_config["lstm"]["in_size"] = embedding.dimension
     model_config["score"]["hid_size"] = len(encoding)
 
-    # --- load stripped model
+    # --- set, load stripped model
     if data_config.get("preprocess"):
-        model = POSstripped(model_config).to(get_device())
+        CLS: Model = POSstripped
+        model = CLS(model_config).to(get_device())
 
-    # --- load full model
+    # --- set, load full model
     else:
-        model = POSfull(model_config, embedding, encoding).to(get_device())
+        CLS: Model = POSfull
+        model = CLS(model_config, embedding, encoding).to(get_device())
 
     # --- return model and updated config
-    return (model, model_config)
+    return (model, CLS, model_config)
 
 
 #
