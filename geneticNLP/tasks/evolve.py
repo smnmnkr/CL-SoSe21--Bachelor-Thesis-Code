@@ -16,11 +16,12 @@ def do_evolve(args: dict) -> None:
     data_config: dict = load_json(args.data_config)
 
     # --- setup experiment
-    model, data, encoding = setup(model_config, data_config)
+    model, data, utils = setup(model_config, data_config)
 
     # --- start evolution
     model = evolve(
-        model,
+        utils.get("model_class"),
+        utils.get("model_config"),
         data.get("train"),
         data.get("dev"),
         **evolution_config,
@@ -29,6 +30,6 @@ def do_evolve(args: dict) -> None:
     # --- run metric
     evaluate(
         model,
-        encoding,
+        utils.get("encoding"),
         data.get("test"),
     )

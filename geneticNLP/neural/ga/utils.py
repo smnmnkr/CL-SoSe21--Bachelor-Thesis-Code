@@ -64,22 +64,18 @@ def evaluate_linear(
 #  -------- process_linear -----------
 #  !!! mutable object population !!!
 def process_linear(
-    model: Module,
     population: dict,
     batch: list,
     population_size: int,
     selection_rate: int,
     crossover_rate: int,
 ):
+
     # create empty new generation
     new_population: dict = {}
 
-    # --- select by elite if is not first epoch else use only input model
-    selection: dict = (
-        elitism(population, selection_rate)
-        if (len(population) > 0)
-        else {model: model.accuracy(batch)}
-    )
+    # --- select by elite
+    selection: dict = elitism(population, selection_rate)
 
     # --- fill new population with mutated, crossed entities
     for _ in range(population_size):
