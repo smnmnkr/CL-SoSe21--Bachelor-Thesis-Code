@@ -32,7 +32,7 @@ def train(
         weight_decay=weight_decay,
     )
 
-    # Perform SGD in a loop
+    # --- perform SGD in a loop
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
