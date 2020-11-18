@@ -1,10 +1,6 @@
 import itertools
 from collections import defaultdict
 
-import torch
-
-from geneticNLP.data import batch_loader
-
 
 class Metric:
 
@@ -16,14 +12,7 @@ class Metric:
         """
         inspired by flairNLP: https://github.com/flairNLP/flair/blob/master/flair/training_utils.py
         """
-
-        #
-        self.name = "AVG"
-
-        self._tps = defaultdict(int)
-        self._fps = defaultdict(int)
-        self._tns = defaultdict(int)
-        self._fns = defaultdict(int)
+        self.reset()
 
     #
     #
@@ -111,18 +100,28 @@ class Metric:
 
     #
     #
-    #  -------- __str__ -----------
+    #  -------- show -----------
     #
-    def __str__(self):
+    def show(
+        self,
+        encoding=None,
+    ):
+        def encode(n: int) -> str:
+            if encoding:
+                return encoding.decode(n)
+
+            else:
+                return n
+
         all_classes = self.get_classes()
         all_classes = [None] + all_classes
         all_lines = [
-            "[--- {:8}\t quantity={:4} \t precision={:.4f} \t recall={:.4f} \t accuracy={:.4f} \t f1-score={:.4f} ---]".format(
-                self.name if class_name is None else class_name,
-                self.get_tp(class_name)
-                + self.get_fp(class_name)
-                + self.get_fn(class_name)
-                + self.get_tn(class_name),
+            "[--- {:8}\t tp: {:5} \t fp: {:5} \t fn: {:5} \t tn: {:5} \t prec={:.3f} \t rec={:.3f} \t acc={:.3f} \t f1={:.3f} ---]".format(
+                "_AVG_" if class_name is None else encode(class_name),
+                self.get_tp(class_name),
+                self.get_fp(class_name),
+                self.get_fn(class_name),
+                self.get_tn(class_name),
                 self.precision(class_name),
                 self.recall(class_name),
                 self.accuracy(class_name),
@@ -130,15 +129,16 @@ class Metric:
             )
             for class_name in all_classes
         ]
-        return "\n".join(all_lines)
+        print("[--- METRIC ---]")
+        print("\n".join(all_lines))
 
     #  -------- reset -----------
     #
     def reset(self):
-        self._tps.clear()
-        self._fps.clear()
-        self._tns.clear()
-        self._fns.clear()
+        self._tps = defaultdict(int)
+        self._fps = defaultdict(int)
+        self._tns = defaultdict(int)
+        self._fns = defaultdict(int)
 
     #  -------- add_tp -----------
     #

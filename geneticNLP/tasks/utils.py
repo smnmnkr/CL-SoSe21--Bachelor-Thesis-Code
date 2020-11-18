@@ -142,4 +142,4 @@ def evaluate(
     test_loader = batch_loader(data_set)
 
     model.evaluate(test_loader)
-    print(model.metric)
+    model.metric.show(encoding=encoding)
