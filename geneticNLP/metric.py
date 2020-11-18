@@ -12,12 +12,7 @@ class Metric:
     #
     #  -------- __init__ -----------
     #
-    def __init__(
-        self,
-        model,
-        encoding,
-        data,
-    ) -> None:
+    def __init__(self) -> None:
         """
         inspired by flairNLP: https://github.com/flairNLP/flair/blob/master/flair/training_utils.py
         """
@@ -25,45 +20,10 @@ class Metric:
         #
         self.name = "AVG"
 
-        self.model = model
-        self.encoding = encoding
-        self.data = data
-
         self._tps = defaultdict(int)
         self._fps = defaultdict(int)
         self._tns = defaultdict(int)
         self._fns = defaultdict(int)
-
-        self.evaluate()
-
-    #
-    #
-    #  -------- evaluate -----------
-    #
-    def evaluate(self):
-
-        # create batched loader
-        data_loader = batch_loader(self.data)
-
-        for batch in data_loader:
-
-            predictions, target_ids = self.model.predict(batch)
-
-            # Process the predictions and compare with the gold labels
-            for pred, gold in zip(predictions, target_ids):
-                for (p, g) in zip(pred, gold):
-
-                    p: int = torch.argmax(p).item()
-
-                    decoded_pred: str = self.encoding.decode(p)
-                    decoded_gold: str = self.encoding.decode(g)
-
-                    if decoded_pred == decoded_gold:
-                        self.add_tp(decoded_pred)
-
-                    if decoded_pred != decoded_gold:
-                        self.add_fp(decoded_pred)
-                        self.add_fn(decoded_gold)
 
     #
     #
@@ -171,6 +131,14 @@ class Metric:
             for class_name in all_classes
         ]
         return "\n".join(all_lines)
+
+    #  -------- reset -----------
+    #
+    def reset(self):
+        self._tps.clear()
+        self._fps.clear()
+        self._tns.clear()
+        self._fns.clear()
 
     #  -------- add_tp -----------
     #

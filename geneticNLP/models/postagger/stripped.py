@@ -3,6 +3,7 @@ import torch.nn as nn
 
 from geneticNLP.neural.nn import MLP, BILSTM
 
+from geneticNLP.metric import Metric
 from geneticNLP.utils import unpad, flatten, get_device
 
 
@@ -17,6 +18,7 @@ class POSstripped(nn.Module):
 
         # save config
         self.config = config
+        self.metric = Metric()
 
         # BILSTM to calculate contextualized word embeddings
         self.context = BILSTM(
@@ -62,28 +64,6 @@ class POSstripped(nn.Module):
 
     #
     #
-    #  -------- accuracy -----------
-    #
-    @torch.no_grad()
-    def accuracy(self, batch: list) -> float:
-
-        k: float = 0.0
-        n: float = 0.0
-
-        predictions, target_ids = self.predict(batch)
-
-        # Process the predictions and compare with the gold labels
-        for pred, gold in zip(predictions, target_ids):
-            for (p, g) in zip(pred, gold):
-
-                if torch.argmax(p).item() == g:
-                    k += 1.0
-                n += 1.0
-
-        return k / n
-
-    #
-    #
     #  -------- loss -----------
     #
     def loss(
@@ -100,14 +80,53 @@ class POSstripped(nn.Module):
 
     #
     #
+    #  -------- accuracy -----------
+    #
+    @torch.no_grad()
+    def accuracy(
+        self,
+        batch: list,
+        reset: bool = True,
+        category: str = None,
+    ) -> float:
+
+        if reset:
+            self.metric.reset()
+
+        predictions, target_ids = self.predict(batch)
+
+        # Process the predictions and compare with the gold labels
+        for pred, gold in zip(predictions, target_ids):
+            for (p, g) in zip(pred, gold):
+
+                p_idx: int = torch.argmax(p).item()
+
+                if p_idx == g:
+                    self.metric.add_tp(p_idx)
+
+                    for idx in range(len(p)):
+                        if idx != p_idx:
+                            self.metric.add_tn(idx)
+
+                if p_idx != g:
+                    self.metric.add_fp(p_idx)
+                    self.metric.add_fn(g)
+
+        return self.metric.accuracy(class_name=category)
+
+    #
+    #
     #  -------- evalutate -----------
     #
     @torch.no_grad()
-    def evaluate(self, data_loader) -> float:
-        self.eval()
+    def evaluate(
+        self,
+        data_loader,
+        category: str = None,
+    ) -> float:
+        self.metric.reset()
 
-        accuracy_per_batch: list = [
-            self.accuracy(batch) for batch in data_loader
-        ]
+        for batch in data_loader:
+            _ = self.accuracy(batch, reset=False)
 
-        return sum(accuracy_per_batch) / len(accuracy_per_batch)
+        return self.metric.accuracy(class_name=category)
