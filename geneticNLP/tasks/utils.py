@@ -1,4 +1,3 @@
-from typing import ClassVar
 from geneticNLP.models import Model
 from geneticNLP.models.postagger import POSstripped, POSfull
 
