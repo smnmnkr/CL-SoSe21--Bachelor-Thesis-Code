@@ -1,4 +1,5 @@
 from geneticNLP.neural import swarm
+
 from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import setup, evaluate
 
