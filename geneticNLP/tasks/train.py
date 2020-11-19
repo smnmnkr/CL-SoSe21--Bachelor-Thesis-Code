@@ -10,6 +10,7 @@ from geneticNLP.tasks.utils import setup, evaluate
 #
 @time_track
 def do_train(args: dict) -> None:
+    print("\n[--- TRAINING ---]")
 
     # --- load config json files
     model_config: dict = load_json(args.model_config)

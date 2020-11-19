@@ -139,6 +139,8 @@ def evaluate(
     data_set,
 ) -> None:
 
+    print("[--- EVALUATION ---]")
+
     test_loader = batch_loader(data_set)
 
     model.evaluate(test_loader)

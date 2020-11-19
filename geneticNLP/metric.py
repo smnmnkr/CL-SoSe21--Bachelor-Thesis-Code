@@ -129,7 +129,6 @@ class Metric:
             )
             for class_name in all_classes
         ]
-        print("[--- METRIC ---]")
         print("\n".join(all_lines))
 
     #  -------- reset -----------
