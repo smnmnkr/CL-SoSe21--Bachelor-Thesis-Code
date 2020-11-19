@@ -1,5 +1,7 @@
 import copy
 import torch
+from geneticNLP.utils import get_device
+
 
 #
 #
@@ -21,11 +23,13 @@ def cross(
 
         # create mask, which determines the retained weights
         mask_positive = (
-            torch.FloatTensor(c_layer.shape).uniform_() > dominance
-        ).int()
+            (torch.FloatTensor(c_layer.shape).uniform_() > dominance)
+            .int()
+            .to(get_device())
+        )
 
         # create inverted mask
-        mask_negativ = torch.abs(mask_positive - 1)
+        mask_negativ = torch.abs(mask_positive - 1).to(get_device())
 
         # combine the two layers
         c_layer.data = c_layer * mask_positive + r_layer * mask_negativ

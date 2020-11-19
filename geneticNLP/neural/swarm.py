@@ -10,6 +10,7 @@ from geneticNLP.neural.ga.utils import (
     process_linear,
 )
 
+from geneticNLP.utils import get_device
 from geneticNLP.utils.types import Module, IterableDataset
 
 
@@ -41,9 +42,10 @@ def swarm(
     )
 
     # generate queen, base population
-    queen: Module = model_CLS(config)
+    queen: Module = model_CLS(config).to(get_device())
     population: dict = {
-        model_CLS(config): 0.0 for _ in range(population_size)
+        model_CLS(config).to(get_device()): 0.0
+        for _ in range(population_size)
     }
 
     # --
