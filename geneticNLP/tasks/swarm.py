@@ -1,4 +1,5 @@
 from geneticNLP.neural import swarm
+
 from geneticNLP.utils import load_json, time_track
 from geneticNLP.tasks.utils import setup, evaluate
 
@@ -9,6 +10,7 @@ from geneticNLP.tasks.utils import setup, evaluate
 #
 @time_track
 def do_swarm(args: dict) -> None:
+    print("\n[--- SWARM OPTIMIZATION ---]")
 
     # --- load config json files
     model_config: dict = load_json(args.model_config)

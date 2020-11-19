@@ -1,12 +1,10 @@
-from typing import ClassVar
 from geneticNLP.models import Model
 from geneticNLP.models.postagger import POSstripped, POSfull
 
 from geneticNLP.encoding import Encoding
 from geneticNLP.embeddings import FastText
-from geneticNLP.metric import Metric
 
-from geneticNLP.data import PreProcessed, CONLLU
+from geneticNLP.data import PreProcessed, CONLLU, batch_loader
 from geneticNLP.utils import time_track, get_device
 
 
@@ -136,10 +134,14 @@ def load_resources(
 #  -------- evaluate -----------
 #
 def evaluate(
-    model,
+    model: Model,
     encoding: Encoding,
-    data,
+    data_set,
 ) -> None:
 
-    if data:
-        print(Metric(model, encoding, data))
+    print("[--- EVALUATION ---]")
+
+    test_loader = batch_loader(data_set)
+
+    model.evaluate(test_loader)
+    model.metric.show(encoding=encoding)

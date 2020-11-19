@@ -9,6 +9,7 @@ from geneticNLP.tasks.utils import setup, evaluate
 #
 @time_track
 def do_evolve(args: dict) -> None:
+    print("\n[--- EVOLUTION ---]")
 
     # --- load config json files
     model_config: dict = load_json(args.model_config)
