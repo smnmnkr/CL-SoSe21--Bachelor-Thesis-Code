@@ -112,6 +112,10 @@ class POSstripped(nn.Module):
                     self.metric.add_fp(p_idx)
                     self.metric.add_fn(g)
 
+                    for idx in range(len(p)):
+                        if idx != p_idx and idx != g:
+                            self.metric.add_tn(idx)
+
         return self.metric.accuracy(class_name=category)
 
     #
