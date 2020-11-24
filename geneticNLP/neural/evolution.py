@@ -6,7 +6,7 @@ from geneticNLP.data import batch_loader
 from geneticNLP.utils import dict_max
 
 from geneticNLP.neural.ga.utils import (
-    evaluate_parallel,
+    evaluate_linear,
     process_linear,
 )
 
@@ -51,7 +51,7 @@ def evolve(
 
         # --- if is first epoch evaluate models at first
         if epoch == 1:
-            evaluate_parallel(population, train_loader)
+            evaluate_linear(population, train_loader)
 
         for batch in train_loader:
 
@@ -68,7 +68,7 @@ def evolve(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_parallel(population, train_loader)
+            evaluate_linear(population, train_loader)
 
             # --- find best model and corresponding score
             best, score = dict_max(population)
