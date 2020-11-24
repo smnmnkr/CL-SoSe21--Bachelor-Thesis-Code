@@ -89,6 +89,7 @@ class POSstripped(nn.Module):
         reset: bool = True,
         category: str = None,
     ) -> float:
+        self.eval()
 
         if reset:
             self.metric.reset()
@@ -108,10 +109,6 @@ class POSstripped(nn.Module):
                     self.metric.add_fp(p_idx)
                     self.metric.add_fn(g)
 
-                for idx in range(len(p)):
-                    if idx != p_idx and idx != g:
-                        self.metric.add_tn(idx)
-
         return self.metric.accuracy(class_name=category)
 
     #
@@ -124,6 +121,7 @@ class POSstripped(nn.Module):
         data_loader,
         category: str = None,
     ) -> float:
+        self.eval()
         self.metric.reset()
 
         for batch in data_loader:
@@ -137,6 +135,7 @@ class POSstripped(nn.Module):
     #
     @torch.no_grad()
     def fitness(self, batch: list) -> float:
+        self.eval()
 
         # create batch metric with accuracy function
         _ = self.accuracy(batch)
