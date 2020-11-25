@@ -126,15 +126,21 @@ parser_swarm.add_argument(
 #
 if __name__ == "__main__":
 
-    # get console arguments
-    args = parser.parse_args()
+    try:
 
-    # choose task
-    if args.command == "evolve":
-        do_evolve(args)
+        # get console arguments
+        args = parser.parse_args()
 
-    if args.command == "train":
-        do_train(args)
+        # choose task
+        if args.command == "evolve":
+            do_evolve(args)
 
-    if args.command == "swarm":
-        do_swarm(args)
+        if args.command == "train":
+            do_train(args)
+
+        if args.command == "swarm":
+            do_swarm(args)
+
+    except KeyboardInterrupt:
+        print("[-- Process was interrupted by user, aborting. --]")
+        exit()
