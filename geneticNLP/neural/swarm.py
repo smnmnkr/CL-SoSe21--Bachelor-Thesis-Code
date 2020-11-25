@@ -6,7 +6,7 @@ from geneticNLP.data import batch_loader
 
 from geneticNLP.neural.ga.swarm import optimize
 from geneticNLP.neural.ga.utils import (
-    evaluate_parallel,
+    evaluate_linear,
     process_linear,
 )
 
@@ -26,8 +26,6 @@ def swarm(
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
     population_size: int = 80,
-    selection_rate: int = 10,
-    crossover_rate: float = 0.5,
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -60,7 +58,7 @@ def swarm(
 
         # --- if is first epoch evaluate models at first
         if epoch == 1:
-            evaluate_parallel(population, train_loader)
+            evaluate_linear(population, train_loader)
 
         for batch in train_loader:
 
@@ -69,8 +67,8 @@ def swarm(
                 population,
                 batch,
                 population_size=population_size,
-                selection_rate=selection_rate,
-                crossover_rate=crossover_rate,
+                selection_rate=1,
+                crossover_rate=0.0,
             )
 
             # --- update queen model
@@ -85,7 +83,7 @@ def swarm(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_parallel(population, train_loader)
+            evaluate_linear(population, train_loader)
 
             print(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
