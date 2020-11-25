@@ -128,19 +128,3 @@ class POSstripped(nn.Module):
             _ = self.accuracy(batch, reset=False)
 
         return self.metric.accuracy(class_name=category)
-
-    #
-    #
-    #  -------- fitness -----------
-    #
-    @torch.no_grad()
-    def fitness(self, batch: list) -> float:
-        self.eval()
-
-        # create batch metric with accuracy function
-        _ = self.accuracy(batch)
-
-        for i in range(self.metric.get_classes()):
-            pass
-
-        return 0.0
