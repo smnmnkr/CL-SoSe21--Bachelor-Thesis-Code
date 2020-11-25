@@ -9,28 +9,26 @@ from geneticNLP.utils.methods import get_device
 #  -------- optimize -----------
 #
 def optimize(
-    queen: nn.Module,
-    swarm: dict,
+    model: nn.Module,
+    noise_tensors_w_score: list,
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
 ):
 
     #
-    scores = torch.tensor(list(swarm.values())).to(get_device())
+    for p_id, m_param in enumerate(model.parameters()):
 
-    #
-    swarm_params: list = [
-        [param for param in worker.parameters()] for worker in swarm
-    ]
+        sigma = torch.empty(m_param.shape).to(get_device())
 
-    #
-    for id_p, q_param in enumerate(queen.parameters()):
+        sigma += sum(
+            [
+                noise_tensors[p_id] * score * 100
+                for (noise_tensors, score) in noise_tensors_w_score
+            ]
+        )
 
-        for id_s, s_param in enumerate(
-            [worker[id_p] for worker in swarm_params]
-        ):
-            q_param.data += (
-                learning_rate
-                / (len(swarm) * noise_std)
-                * (s_param * scores[id_s])
-            )
+        step = learning_rate * (
+            (1 / (len(noise_tensors_w_score) * noise_std ** 2)) * sigma
+        )
+
+        m_param.data += torch.clamp(step, min=-0.5, max=0.5)

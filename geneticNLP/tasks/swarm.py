@@ -22,8 +22,7 @@ def do_swarm(args: dict) -> None:
 
     # --- start hybrid
     model = swarm(
-        utils.get("model_class"),
-        utils.get("model_config"),
+        model,
         data.get("train"),
         data.get("dev"),
         **swarm_config,

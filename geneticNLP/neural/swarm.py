@@ -4,13 +4,9 @@ import torch
 
 from geneticNLP.data import batch_loader
 
+from geneticNLP.neural.ga import mutate
 from geneticNLP.neural.ga.swarm import optimize
-from geneticNLP.neural.ga.utils import (
-    evaluate_linear,
-    process_linear,
-)
 
-from geneticNLP.utils import get_device
 from geneticNLP.utils.types import Module, IterableDataset
 
 
@@ -19,8 +15,7 @@ from geneticNLP.utils.types import Module, IterableDataset
 #  -------- swarm -----------
 #
 def swarm(
-    model_CLS: Module,
-    config: dict,
+    model: Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     noise_std: float = 0.1,
@@ -39,13 +34,6 @@ def swarm(
         batch_size=batch_size,
     )
 
-    # generate queen, base population
-    queen: Module = model_CLS(config).to(get_device())
-    population: dict = {
-        model_CLS(config).to(get_device()): 0.0
-        for _ in range(population_size)
-    }
-
     # --
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
@@ -56,44 +44,48 @@ def swarm(
             batch_size=batch_size,
         )
 
-        # --- if is first epoch evaluate models at first
-        if epoch == 1:
-            evaluate_linear(population, train_loader)
-
         for batch in train_loader:
 
-            # --- process generation
-            population = process_linear(
-                population,
-                batch,
-                population_size=population_size,
-                selection_rate=1,
-                crossover_rate=0.0,
-            )
+            noise_tensors_w_score: list = []
 
-            # --- update queen model
+            # --- fill new population
+            for i in range(population_size):
+
+                # created mutated pseudo child
+                pseudo_offspring, noise_tensors = mutate(model, noise_std)
+
+                # print("child", i, ":", pseudo_offspring.accuracy(batch))
+
+                # calculate score
+                noise_tensors_w_score.append(
+                    [noise_tensors, pseudo_offspring.accuracy(batch)]
+                )
+
+            # print("model before update: ", model.accuracy(batch))
+            # --- update model
             optimize(
-                queen,
-                population,
+                model,
+                noise_tensors_w_score,
                 noise_std,
                 learning_rate,
             )
+            noise_tensors_w_score.clear()
+            # print(list(model.parameters()))
+            # print("model after update: ", model.accuracy(batch))
+            # print()
+        # exit()
 
         # --- report
         if epoch % report_rate == 0:
 
-            # --- evaluate all models on train set
-            evaluate_linear(population, train_loader)
-
             print(
-                "[--- @{:02}: \t avg(train)={:2.4f} \t queen(train)={:2.4f} \t queen(dev)={:2.4f} \t time(epoch)={} ---]".format(
+                "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
-                    sum(population.values()) / len(population),
-                    queen.evaluate(train_loader),
-                    queen.evaluate(dev_loader),
+                    model.evaluate(train_loader),
+                    model.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
             )
 
-    # --- return queen
-    return queen
+    # --- return model
+    return model
