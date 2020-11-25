@@ -91,7 +91,7 @@ def process_linear(
             rnd_entity = cross(rnd_entity, rnd_recessive)
 
         # mutate random selected
-        mut_entity = mutate(rnd_entity, 1)  # mutate(rnd_entity, 1 - score)
+        mut_entity, _ = mutate(rnd_entity, 1 - score)
 
         # calculate score
         new_population[mut_entity] = mut_entity.accuracy(batch)

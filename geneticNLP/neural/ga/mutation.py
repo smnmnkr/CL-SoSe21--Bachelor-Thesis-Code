@@ -14,6 +14,7 @@ def mutate(
 ):
 
     child_network = copy.deepcopy(parent_network)
+    noise_tensors: list = []
 
     for param in child_network.parameters():
 
@@ -26,6 +27,7 @@ def mutate(
             .to(get_device())
         )
 
+        noise_tensors.append(mut_tensor)
         param.data += mut_tensor
 
-    return child_network
+    return child_network, noise_tensors
