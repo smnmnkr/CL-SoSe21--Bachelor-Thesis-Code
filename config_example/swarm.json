@@ -2,8 +2,6 @@
   "noise_std": 0.2,
   "learning_rate": 0.1,
   "population_size": 200,
-  "selection_rate": 20,
-  "crossover_rate": 1.0,
   "epoch_num": 50,
   "report_rate": 5,
   "batch_size": 96
