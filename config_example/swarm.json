@@ -1,8 +1,8 @@
 {
-  "noise_std": 0.2,
-  "learning_rate": 0.1,
-  "population_size": 200,
+  "noise_std": 0.5,
+  "learning_rate": 0.001,
+  "population_size": 40,
   "epoch_num": 50,
-  "report_rate": 5,
-  "batch_size": 96
+  "report_rate": 2,
+  "batch_size": 32
 }

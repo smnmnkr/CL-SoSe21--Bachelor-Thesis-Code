@@ -54,14 +54,11 @@ def swarm(
                 # created mutated pseudo child
                 pseudo_offspring, noise_tensors = mutate(model, noise_std)
 
-                # print("child", i, ":", pseudo_offspring.accuracy(batch))
-
                 # calculate score
                 noise_tensors_w_score.append(
                     [noise_tensors, pseudo_offspring.accuracy(batch)]
                 )
 
-            # print("model before update: ", model.accuracy(batch))
             # --- update model
             optimize(
                 model,
@@ -69,11 +66,6 @@ def swarm(
                 noise_std,
                 learning_rate,
             )
-            noise_tensors_w_score.clear()
-            # print(list(model.parameters()))
-            # print("model after update: ", model.accuracy(batch))
-            # print()
-        # exit()
 
         # --- report
         if epoch % report_rate == 0:
