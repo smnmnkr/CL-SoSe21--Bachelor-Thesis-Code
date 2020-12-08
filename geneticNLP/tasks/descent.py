@@ -1,23 +1,23 @@
-from geneticNLP.neural import evolve
+from geneticNLP.neural import descent
 
 from geneticNLP.utils import time_track
 from geneticNLP.tasks.utils import setup, evaluate
 
+
 #
 #
-#  -------- do_evolve -----------
+#  -------- do_train -----------
 #
 @time_track
-def do_evolve(args: dict) -> None:
-    print("\n[--- EVOLUTION ---]")
+def do_descent(args: dict) -> None:
+    print("\n[--- GRADIENT DESCENT ---]")
 
     # --- setup experiment
     model, data, utils = setup(args)
 
-    # --- start evolution
-    model = evolve(
-        utils.get("model_class"),
-        utils.get("model_config"),
+    # --- start training
+    descent(
+        model,
         data.get("train"),
         data.get("dev"),
         **utils.get("train_config"),

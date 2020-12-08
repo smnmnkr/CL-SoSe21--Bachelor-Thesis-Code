@@ -2,22 +2,26 @@ module := geneticNLP
 
 # config files:
 tagger_config := config_example/postagger.json
-train_config := config_example/training.json
-evolve_config := config_example/evolution.json
-swarm_config := config_example/swarm.json
+train_config := config_example/train_descent.json
+evolve_config := config_example/train_evolution.json
+swarm_config := config_example/train_swarm.json
+amoeba_config := config_example/train_amoeba.json
 data_config := config_example/data.json
 
 # data server:
 data_server := https://simon-muenker.de
 
-train:
-	@python3 -m ${module} train -M ${tagger_config} -T ${train_config} -D ${data_config}
+descent:
+	@python3 -m ${module} descent -M ${tagger_config} -T ${train_config} -D ${data_config}
 
 evolve:
-	@python3 -m ${module} evolve -M ${tagger_config} -E ${evolve_config} -D ${data_config}
+	@python3 -m ${module} evolve -M ${tagger_config} -T ${evolve_config} -D ${data_config}
 
 swarm:
-	@python3 -m ${module} swarm -M ${tagger_config} -S ${swarm_config} -D ${data_config}
+	@python3 -m ${module} swarm -M ${tagger_config} -T ${swarm_config} -D ${data_config}
+
+amoeba:
+	@python3 -m ${module} amoeba -M ${tagger_config} -T ${amoeba_config} -D ${data_config}
 
 test:
 	@python3 -m pytest -s -v

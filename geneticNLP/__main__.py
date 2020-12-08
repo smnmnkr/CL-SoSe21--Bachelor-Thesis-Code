@@ -3,7 +3,12 @@ import argparse
 import torch
 import random
 
-from geneticNLP.tasks import do_evolve, do_train, do_swarm
+from geneticNLP.tasks import (
+    do_evolve,
+    do_descent,
+    do_swarm,
+    do_amoeba,
+)
 
 # make pytorch computations deterministic
 # src: https://pytorch.org/docs/stable/notes/randomness.html
@@ -21,104 +26,76 @@ subparsers = parser.add_subparsers(
     dest="command", help="available commands"
 )
 
-#
-#
-#  -------- EVOLUTION: -----------
-#
-parser_evolve = subparsers.add_parser(
-    "evolve",
-    help="use neural evolution",
-)
+parser_task: list = [
+    #
+    #  -------- GRADIENT DESCENT: -----------
+    {
+        "ref": "parser_descent",
+        "command": "descent",
+        "description": "use gradient descent training",
+        "task": do_descent,
+    },
+    #
+    #  -------- EVOLUTION: -----------
+    {
+        "ref": "parser_evolve",
+        "command": "evolve",
+        "description": "use neural evolution",
+        "task": do_evolve,
+    },
+    #
+    #  -------- SWARM OPTIMIZE: -----------
+    {
+        "ref": "parser_swarm",
+        "command": "swarm",
+        "description": "use particle swarm optimize",
+        "task": do_swarm,
+    },
+    #
+    #  -------- AMOEBA: -----------
+    {
+        "ref": "parser_amoeba",
+        "command": "amoeba",
+        "description": "use amoeba optimize",
+        "task": do_amoeba,
+    },
+]
 
-parser_evolve.add_argument(
-    "-M",
-    dest="model_config",
-    required=True,
-    help="model config.json file",
-    metavar="FILE",
-)
+# setup each subparser
+for task_subparser in parser_task:
 
-parser_evolve.add_argument(
-    "-E",
-    dest="evolution_config",
-    required=True,
-    help="evolution config.json file",
-    metavar="FILE",
-)
+    #  add subparser
+    task_subparser["ref"] = subparsers.add_parser(
+        task_subparser["command"],
+        help=task_subparser["description"],
+    )
 
-parser_evolve.add_argument(
-    "-D",
-    dest="data_config",
-    required=True,
-    help="data config.json file",
-    metavar="FILE",
-)
+    # add model config arg
+    task_subparser["ref"].add_argument(
+        "-M",
+        dest="model_config",
+        required=True,
+        help="model config.json file",
+        metavar="FILE",
+    )
 
-#
-#
-#  -------- TRAINING: -----------
-#
-parser_train = subparsers.add_parser(
-    "train",
-    help="use gradient based training",
-)
+    # add training config arg
+    task_subparser["ref"].add_argument(
+        "-T",
+        dest="training_config",
+        required=True,
+        help="training config.json file",
+        metavar="FILE",
+    )
 
-parser_train.add_argument(
-    "-M",
-    dest="model_config",
-    required=True,
-    help="model config.json file",
-    metavar="FILE",
-)
-
-parser_train.add_argument(
-    "-T",
-    dest="training_config",
-    required=True,
-    help="training config.json file",
-    metavar="FILE",
-)
-
-parser_train.add_argument(
-    "-D",
-    dest="data_config",
-    required=True,
-    help="data config.json file",
-    metavar="FILE",
-)
-
-#
-#
-#  -------- SWARM: -----------
-#
-parser_swarm = subparsers.add_parser(
-    "swarm",
-    help="use gradient based training",
-)
-
-parser_swarm.add_argument(
-    "-M",
-    dest="model_config",
-    required=True,
-    help="model config.json file",
-    metavar="FILE",
-)
-
-parser_swarm.add_argument(
-    "-S",
-    dest="swarm_config",
-    required=True,
-    help="swarm config.json file",
-    metavar="FILE",
-)
-
-parser_swarm.add_argument(
-    "-D",
-    dest="data_config",
-    required=True,
-    help="data config.json file",
-    metavar="FILE",
-)
+    # add data config arg
+    task_subparser["ref"].add_argument(
+        "-D",
+        dest="data_config",
+        required=True,
+        help="data config.json file",
+        metavar="FILE",
+    )
 
 #
 #
@@ -131,15 +108,10 @@ if __name__ == "__main__":
         # get console arguments
         args = parser.parse_args()
 
-        # choose task
-        if args.command == "evolve":
-            do_evolve(args)
-
-        if args.command == "train":
-            do_train(args)
-
-        if args.command == "swarm":
-            do_swarm(args)
+        # choose, run task
+        for task_subparser in parser_task:
+            if args.command == task_subparser["command"]:
+                task_subparser["task"](args)
 
     except KeyboardInterrupt:
         print("[-- Process was interrupted by user, aborting. --]")

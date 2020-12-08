@@ -18,27 +18,33 @@ make download
 Required: `make download`
 
 ```bash
-# run demo training
-make train
+# run demo gradien descent
+make descent
 
 # run demo evolution
 make evolve
 
 # run demo swarm
 make swarm
+
+# run demo amoeba
+make amoeba
 ```
 
 ### Custom Configuration
 
 ```bash
 # run demo training
-python3 -m geneticNLP train -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
+python3 -m geneticNLP descent -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
 
 # run demo evolution
-python3 -m geneticNLP evolve -M ${tagger_config.json} -E ${evolve_config.json} -D ${data_config.json}
+python3 -m geneticNLP evolve -M ${tagger_config.json} -T ${evolve_config.json} -D ${data_config.json}
 
 # run demo swarm
-python3 -m geneticNLP swarm -M ${tagger_config.json} -S ${swarm_config.json} -D ${data_config.json}
+python3 -m geneticNLP swarm -M ${tagger_config.json} -T ${swarm_config.json} -D ${data_config.json}
+
+# run demo amoeba
+python3 -m geneticNLP amoeba -M ${tagger_config.json} -T ${amobea_config.json} -D ${data_config.json}
 ```
 
 ## Configuration
@@ -62,7 +68,7 @@ python3 -m geneticNLP swarm -M ${tagger_config.json} -S ${swarm_config.json} -D 
 }
 ```
 
-### Training, Evolution, Swarm
+### Training, Evolution, Swarm, Amoeba
 
 ```json
 {
@@ -94,6 +100,15 @@ python3 -m geneticNLP swarm -M ${tagger_config.json} -S ${swarm_config.json} -D 
   "population_size": 200,
   "selection_rate": 20,
   "crossover_rate": 1.0,
+  "epoch_num": 1000,
+  "report_rate": 50,
+  "batch_size": 96
+}
+```
+
+```json
+{
+  "population_size": 200,
   "epoch_num": 1000,
   "report_rate": 50,
   "batch_size": 96
@@ -134,7 +149,5 @@ make clean
 - 1.0 Created stable Experimenting Environment
 - 2.0 Include swarm training approach
 - 2.1 Include advance metrics
-
-## Roadmap
-
-- Optional: Include Dependency Parser
+- 3.0 Include amoeba training
+- 3.1 Reworked tasks interface

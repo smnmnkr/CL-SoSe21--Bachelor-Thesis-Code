@@ -11,7 +11,7 @@ from geneticNLP.data import batch_loader, adpative_batch_loader
 #
 #  -------- train -----------
 #
-def train(
+def descent(
     model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,

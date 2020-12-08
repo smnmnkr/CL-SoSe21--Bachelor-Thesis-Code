@@ -1,7 +1,7 @@
 {
   "embedding": "./data/cc.en.32.bin",
   "preprocess": true,
-  "train": "./data/en_partut-ud-train.conllu",
+  "train": "./data/en_partut-ud-dev.conllu",
   "dev": "./data/en_partut-ud-test.conllu",
   "test": "./data/en_partut-ud-test.conllu"
 }
