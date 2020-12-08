@@ -106,3 +106,22 @@ def dict_max(d: dict):
 #
 def dict_min(d: dict):
     return min(d.items(), key=operator.itemgetter(1))
+
+
+#
+#
+#  -------- smooth_gradient -----------
+#
+def smooth_gradient(tensor: TT, clip: float = 60.0):
+
+    # possible problem: vanishing gradient
+    # solution: set nan tensors to zero
+    # src: https://discuss.pytorch.org/t/how-to-set-nan-in-tensor-to-0/3918
+    tensor[tensor != tensor] = 0.0
+
+    # possible problem: exploding gradient
+    # solution: clamp all into the range [ min, max ]
+    # src: https://pytorch.org/docs/stable/generated/torch.clamp.html
+    torch.clamp(tensor, min=-clip, max=clip)
+
+    return tensor

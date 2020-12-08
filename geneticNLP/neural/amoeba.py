@@ -5,9 +5,10 @@ import torch
 from geneticNLP.data import batch_loader
 from geneticNLP.utils import dict_max, dict_min
 
+from geneticNLP.neural.ga import mutate
 from geneticNLP.neural.ga.utils import evaluate_linear
 
-from geneticNLP.utils import get_device
+from geneticNLP.utils import get_device, smooth_gradient
 from geneticNLP.utils.types import Module, IterableDataset
 
 
@@ -21,6 +22,7 @@ def amoeba(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     population_size: int = 80,
+    step_size: float = 0.1,
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -28,8 +30,8 @@ def amoeba(
     # disable gradients
     torch.set_grad_enabled(False)
 
-    # generate set of arbitrary models
-    X: dict = {
+    # generate set $P$ of arbitrary models (particles)
+    P: dict = {
         model_CLS(config).to(get_device()): 0.0
         for _ in range(population_size)
     }
@@ -46,52 +48,77 @@ def amoeba(
 
         for batch in train_loader:
 
-            # calculate score of each entity
-            for entity, _ in X.items():
-                X[entity] = entity.accuracy(batch)
+            # calculate score of each model in $P$
+            for particle, _ in P.items():
+                P[particle] = particle.accuracy(batch)
 
-            # get worst point
-            worst, score = dict_min(X)
-
-            # calculate the center of mass of the remaining points
+            # get the best, worst model
+            best, b_score = dict_max(P)
+            worst, w_score = dict_min(P)
 
             # remove worst
-            all(map(X.pop, {worst: score}))
+            all(map(P.pop, {worst: w_score}))
 
-            # get the mass of each object in X
+            # get the score (mass) of each model in $P$
             # TODO: consider normalizing the mass values
-            X_mass = torch.tensor(list(X.values())).to(get_device())
+            P_mass = torch.tensor(list(P.values())).to(get_device())
 
-            # get the parameters/location of each object in X
-            X_params: list = [
-                [param for param in entity.parameters()] for entity in X
+            # get the parameters $param$ as tensors (coordinates) in $P$
+            P_params: list = [
+                [param for param in entity.parameters()] for entity in P
             ]
 
-            # optimize the parameters of the worst entity
+            # center of masses for every $param$:
+            R_params: list = []
+
+            # calcuate the center of mass $R$ for every parameter $param$ in every particle in $P$
             for w_id, w_param in enumerate(worst.parameters()):
 
-                center_of_mass = torch.empty(w_param.shape).to(get_device())
+                # where $R$ is the center of mass
+                # calculate: (1/M) * sum_{i=1}^{n} m_i*r_i
+                R = torch.empty(w_param.shape).to(get_device())
 
-                for id_s, s_param in enumerate(
-                    [param[w_id] for param in X_params]
-                ):
-                    center_of_mass += (s_param * X_mass[id_s]) / X_mass[
-                        id_s
-                    ]
+                # where M is the total mass
+                # calculate: sum_{i=1}^{n} m
+                M = torch.empty(w_param.shape).to(get_device())
 
-                w_param.data += center_of_mass
+                # where $n$ is the id of the particle,
+                # and $r$ the values (coordinates) as a tensor
+                for n, r in enumerate([param[w_id] for param in P_params]):
 
-            # insert worst back into X as best, skip accuracy calc
-            X[worst] = 0.0
+                    # add the values $r$ with respect to the mass $m$, here P_mass[n]
+                    R += r * P_mass[n]
+
+                    # add to the total mass $M$
+                    M += P_mass[n]
+
+                # calculate center of mass with respect to the total mass
+                R *= 1 / M
+
+                # add total mass to tensor
+                R_params.append(R)
+
+            last_w_score: float = -1.0
+
+            while w_score <= b_score * 0.6 and last_w_score != w_score:
+                # move $worst$ through the center of mass $R$ for every $param$
+                for param, R in zip(worst.parameters(), R_params):
+
+                    param.data += step_size * smooth_gradient(R)
+
+                last_w_score = w_score
+                w_score = worst.accuracy(batch)
+
+            P[worst] = 0.0
 
         # --- report
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_linear(X, train_loader)
+            evaluate_linear(P, train_loader)
 
             # --- find best model and corresponding score
-            best, score = dict_max(X)
+            best, score = dict_max(P)
 
             # load dev set as batched loader
             dev_loader = batch_loader(
@@ -103,7 +130,7 @@ def amoeba(
             print(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
-                    sum(X.values()) / len(X),
+                    sum(P.values()) / len(P),
                     score,
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
@@ -111,5 +138,5 @@ def amoeba(
             )
 
     # --- return best model
-    model, _ = dict_max(X)
+    model, _ = dict_max(P)
     return model

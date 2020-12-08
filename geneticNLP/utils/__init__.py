@@ -9,4 +9,5 @@ from .methods import (
     inverse_sigmoid,
     dict_max,
     dict_min,
+    smooth_gradient,
 )

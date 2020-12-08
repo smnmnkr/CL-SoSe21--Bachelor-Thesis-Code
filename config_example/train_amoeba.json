@@ -1,6 +1,6 @@
 {
-  "population_size": 200,
-  "epoch_num": 5,
+  "population_size": 8000,
+  "epoch_num": 400,
   "report_rate": 1,
   "batch_size": 96
 }
