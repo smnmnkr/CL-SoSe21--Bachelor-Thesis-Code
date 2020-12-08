@@ -98,3 +98,11 @@ def inverse_sigmoid(x) -> float:
 #
 def dict_max(d: dict):
     return max(d.items(), key=operator.itemgetter(1))
+
+
+#
+#
+#  -------- dict_min -----------
+#
+def dict_min(d: dict):
+    return min(d.items(), key=operator.itemgetter(1))
