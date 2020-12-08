@@ -128,3 +128,8 @@ class POSstripped(nn.Module):
             _ = self.accuracy(batch, reset=False)
 
         return self.metric.accuracy(class_name=category)
+
+    #  -------- __len__ -----------
+    #
+    def __len__(self) -> int:
+        return sum(p.numel() for p in self.parameters())
