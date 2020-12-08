@@ -1,4 +1,5 @@
 # __init__.py
 from .evolve import do_evolve
-from .train import do_train
+from .descent import do_descent
 from .swarm import do_swarm
+from .amoeba import do_amoeba
