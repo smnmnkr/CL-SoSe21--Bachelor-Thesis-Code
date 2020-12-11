@@ -5,7 +5,6 @@ import torch
 from geneticNLP.data import batch_loader
 from geneticNLP.utils import dict_max, dict_min
 
-from geneticNLP.neural.ga import mutate
 from geneticNLP.neural.ga.utils import evaluate_linear
 
 from geneticNLP.utils import get_device, smooth_gradient
