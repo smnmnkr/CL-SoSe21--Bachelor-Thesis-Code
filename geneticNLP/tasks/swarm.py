@@ -17,7 +17,7 @@ def do_swarm(args: dict) -> None:
     print("\n[--- SWARM OPTIMIZATION ---]")
 
     # --- setup experiment
-    model, data, utils = setup(args)
+    _, data, utils = setup(args)
 
     # --- init population
     population = init_population(
