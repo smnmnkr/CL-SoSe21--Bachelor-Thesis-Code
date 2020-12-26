@@ -8,7 +8,7 @@ from geneticNLP.utils import dict_max, dict_min
 from geneticNLP.neural.ga.utils import evaluate_linear
 
 from geneticNLP.utils import get_device, smooth_gradient
-from geneticNLP.utils.types import Module, IterableDataset
+from geneticNLP.utils.types import IterableDataset
 
 
 #
@@ -16,11 +16,9 @@ from geneticNLP.utils.types import Module, IterableDataset
 #  -------- amoeba -----------
 #
 def amoeba(
-    model_CLS: Module,
-    config: dict,
+    population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
-    population_size: int = 80,
     step_size: float = 0.1,
     epoch_num: int = 200,
     report_rate: int = 10,
@@ -29,42 +27,39 @@ def amoeba(
     # disable gradients
     torch.set_grad_enabled(False)
 
-    # generate set $P$ of arbitrary models (particles)
-    P: dict = {
-        model_CLS(config).to(get_device()): 0.0
-        for _ in range(population_size)
-    }
+    # load train set as batched loader
+    train_loader = batch_loader(
+        train_set,
+        batch_size=batch_size,
+    )
 
     # --
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
-        # load train set as batched loader
-        train_loader = batch_loader(
-            train_set,
-            batch_size=batch_size,
-        )
-
         for batch in train_loader:
 
             # calculate score of each model in $P$
-            for particle, _ in P.items():
-                P[particle] = particle.accuracy(batch)
+            for particle, _ in population.items():
+                population[particle] = particle.accuracy(batch)
 
             # get the best, worst model
-            best, b_score = dict_max(P)
-            worst, w_score = dict_min(P)
+            best, b_score = dict_max(population)
+            worst, w_score = dict_min(population)
 
             # remove worst
-            all(map(P.pop, {worst: w_score}))
+            all(map(population.pop, {worst: w_score}))
 
             # get the score (mass) of each model in $P$
             # TODO: consider normalizing the mass values
-            P_mass = torch.tensor(list(P.values())).to(get_device())
+            P_mass = torch.tensor(list(population.values())).to(
+                get_device()
+            )
 
             # get the parameters $param$ as tensors (coordinates) in $P$
             P_params: list = [
-                [param for param in entity.parameters()] for entity in P
+                [param for param in entity.parameters()]
+                for entity in population
             ]
 
             # center of masses for every $param$:
@@ -108,16 +103,16 @@ def amoeba(
                 last_w_score = w_score
                 w_score = worst.accuracy(batch)
 
-            P[worst] = 0.0
+            population[worst] = 0.0
 
         # --- report
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_linear(P, train_loader)
+            evaluate_linear(population, train_loader)
 
             # --- find best model and corresponding score
-            best, score = dict_max(P)
+            best, score = dict_max(population)
 
             # load dev set as batched loader
             dev_loader = batch_loader(
@@ -129,13 +124,9 @@ def amoeba(
             print(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
-                    sum(P.values()) / len(P),
+                    sum(population.values()) / len(population),
                     score,
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
             )
-
-    # --- return best model
-    model, _ = dict_max(P)
-    return model

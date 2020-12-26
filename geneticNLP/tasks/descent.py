@@ -20,7 +20,7 @@ def do_descent(args: dict) -> None:
         model,
         data.get("train"),
         data.get("dev"),
-        **utils.get("train_config"),
+        **utils.get("train_config").get("parameters"),
     )
 
     # --- run metric

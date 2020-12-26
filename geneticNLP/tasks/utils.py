@@ -158,6 +158,18 @@ def load_resources(
 
 #
 #
+#  -------- init_population -----------
+#
+def init_population(
+    model_CLS: object,
+    config: dict,
+    size: int,
+) -> dict:
+    return {model_CLS(config).to(get_device()): 0.0 for _ in range(size)}
+
+
+#
+#
 #  -------- evaluate -----------
 #
 def evaluate(

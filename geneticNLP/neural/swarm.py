@@ -9,8 +9,8 @@ from geneticNLP.neural.ga.swarm import optimize, optimize_mod
 
 from geneticNLP.neural.ga.utils import evaluate_linear
 
-from geneticNLP.utils import get_device, dict_max
-from geneticNLP.utils.types import Module, IterableDataset
+from geneticNLP.utils import dict_max
+from geneticNLP.utils.types import IterableDataset
 
 
 #
@@ -18,13 +18,11 @@ from geneticNLP.utils.types import Module, IterableDataset
 #  -------- swarm -----------
 #
 def swarm(
-    model_CLS: Module,
-    config: dict,
+    population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
-    population_size: int = 80,
     optimizer: str = None,
     epoch_num: int = 200,
     report_rate: int = 10,
@@ -39,13 +37,8 @@ def swarm(
         batch_size=batch_size,
     )
 
-    # generate _base population to choose beginning model
-    _base: dict = {
-        model_CLS(config).to(get_device()): 0.0
-        for _ in range(population_size)
-    }
-    evaluate_linear(_base, train_loader)
-    model, _ = dict_max(_base)
+    evaluate_linear(population, train_loader)
+    model, _ = dict_max(population)
 
     # --
     for epoch in range(1, epoch_num + 1):
@@ -56,7 +49,7 @@ def swarm(
             noise_tensors_w_score: list = []
 
             # --- fill new population
-            for _ in range(population_size):
+            for _ in range(len(population)):
 
                 # created mutated pseudo child
                 pseudo_offspring, noise_tensors = mutate(model, noise_std)
