@@ -8,6 +8,7 @@ from geneticNLP.tasks import (
     do_descent,
     do_swarm,
     do_amoeba,
+    do_orchestra,
 )
 
 # make pytorch computations deterministic
@@ -58,6 +59,14 @@ parser_task: list = [
         "command": "amoeba",
         "description": "use amoeba optimize",
         "task": do_amoeba,
+    },
+    #
+    #  -------- ORCHESTRA: -----------
+    {
+        "ref": "parser_orchestra",
+        "command": "orchestra",
+        "description": "use orchestration of methods",
+        "task": do_orchestra,
     },
 ]
 
