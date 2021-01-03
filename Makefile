@@ -15,19 +15,19 @@ orchestra_config := config_example/train_orchestra.json
 data_server := https://simon-muenker.de
 
 descent:
-	@python3 -m ${module} descent -M ${model_config} -T ${descent_config} -D ${data_config}
+	@python3 -m ${module} -M ${model_config} -T ${descent_config} -D ${data_config}
 
 evolve:
-	@python3 -m ${module} evolve -M ${model_config} -T ${evolve_config} -D ${data_config}
+	@python3 -m ${module} -M ${model_config} -T ${evolve_config} -D ${data_config}
 
 swarm:
-	@python3 -m ${module} swarm -M ${model_config} -T ${swarm_config} -D ${data_config}
+	@python3 -m ${module} -M ${model_config} -T ${swarm_config} -D ${data_config}
 
 amoeba:
-	@python3 -m ${module} amoeba -M ${model_config} -T ${amoeba_config} -D ${data_config}
+	@python3 -m ${module} -M ${model_config} -T ${amoeba_config} -D ${data_config}
 
 orchestra:
-	@python3 -m ${module} orchestra -M ${model_config} -T ${orchestra_config} -D ${data_config}
+	@python3 -m ${module} -M ${model_config} -T ${orchestra_config} -D ${data_config}
 
 test:
 	@python3 -m pytest -s -v

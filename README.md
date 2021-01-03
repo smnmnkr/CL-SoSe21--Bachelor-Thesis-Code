@@ -18,7 +18,7 @@ make download
 Required: `make download`
 
 ```bash
-# run demo gradien descent
+# run demo gradient descent
 make descent
 
 # run demo evolution
@@ -29,22 +29,16 @@ make swarm
 
 # run demo amoeba
 make amoeba
+
+# run demo orchestra
+make orchestra
 ```
 
 ### Custom Configuration
 
 ```bash
-# run demo training
-python3 -m geneticNLP descent -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
-
-# run demo evolution
-python3 -m geneticNLP evolve -M ${tagger_config.json} -T ${evolve_config.json} -D ${data_config.json}
-
-# run demo swarm
-python3 -m geneticNLP swarm -M ${tagger_config.json} -T ${swarm_config.json} -D ${data_config.json}
-
-# run demo amoeba
-python3 -m geneticNLP amoeba -M ${tagger_config.json} -T ${amobea_config.json} -D ${data_config.json}
+# run custom training
+python3 -m geneticNLP -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
 ```
 
 ## Configuration
@@ -68,50 +62,32 @@ python3 -m geneticNLP amoeba -M ${tagger_config.json} -T ${amobea_config.json} -
 }
 ```
 
-### Training, Evolution, Swarm, Amoeba
+### Training
+
+Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimiziation _(PSO)_, and the Nelder–Mead method _(Amoeba)_.
+It is possible to orchestrate the tasks individually in the training process.
 
 ```json
 {
-  "learning_rate": 5e-2,
-  "weight_decay": 1e-6,
-  "gradient_clip": 60.0,
-  "epoch_num": 1000,
-  "report_rate": 50,
-  "batch_size": 32,
-  "batch_double": 100
-}
-```
-
-```json
-{
-  "population_size": 200,
-  "selection_rate": 20,
-  "crossover_rate": 1.0,
-  "epoch_num": 1000,
-  "report_rate": 50,
-  "batch_size": 96
-}
-```
-
-```json
-{
-  "noise_std": 0.2,
-  "learning_rate": 0.1,
-  "population_size": 200,
-  "selection_rate": 20,
-  "crossover_rate": 1.0,
-  "epoch_num": 1000,
-  "report_rate": 50,
-  "batch_size": 96
-}
-```
-
-```json
-{
-  "population_size": 200,
-  "epoch_num": 1000,
-  "report_rate": 50,
-  "batch_size": 96
+  "tasks": [
+    {
+      "type": "string", // Supports: [descent, evolve, swarm, amoeba]
+      "population_size": 200, // Only: [evolve, swarm, amoeba]
+      "parameters": {
+        "learning_rate": 5e-2, // Only: [descent, evolve, swarm]
+        "weight_decay": 1e-6, // Only: [descent]
+        "gradient_clip": 60.0, // Only: [descent]
+        "batch_double": 100, // Only: [descent]
+        "selection_rate": 4, // Only: [evolve]
+        "crossover_rate": 1.0, // Only: [evolve]
+        "noise_std": 0.75, // Only: [swarm]
+        "optimizer": "custom", // Only: [swarm]
+        "epoch_num": 5,
+        "report_rate": 1,
+        "batch_size": 32
+      }
+    }
+  ]
 }
 ```
 
@@ -151,3 +127,4 @@ make clean
 - 2.1 Include advance metrics
 - 3.0 Include amoeba training
 - 3.1 Reworked tasks interface
+- 4.0 Reworked into orchestrated training process
