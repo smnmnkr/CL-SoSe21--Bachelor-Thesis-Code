@@ -77,3 +77,5 @@ def evolve(
                     datetime.now() - time_begin,
                 )
             )
+
+    return population

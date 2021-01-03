@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import torch
 import torch.nn as nn
 
 from torch.optim import Adam
@@ -23,6 +24,9 @@ def descent(
     batch_size: int = 32,
     batch_double: float = 40,
 ):
+
+    # enable gradients
+    torch.set_grad_enabled(True)
 
     # choose Adam for optimization
     # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
@@ -88,3 +92,5 @@ def descent(
                     datetime.now() - time_begin,
                 )
             )
+
+    return model

@@ -178,7 +178,7 @@ def evaluate(
     data_set,
 ) -> None:
 
-    print("[--- EVALUATION ---]")
+    print("\n[--- EVALUATION ---]")
 
     test_loader = batch_loader(data_set)
 
