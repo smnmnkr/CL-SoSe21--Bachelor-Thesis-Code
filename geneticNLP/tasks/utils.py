@@ -5,7 +5,7 @@ from geneticNLP.encoding import Encoding
 from geneticNLP.embeddings import FastText
 
 from geneticNLP.data import PreProcessed, CONLLU, batch_loader
-from geneticNLP.utils import time_track, get_device
+from geneticNLP.utils import load_json, time_track, get_device
 
 
 #
@@ -13,10 +13,10 @@ from geneticNLP.utils import time_track, get_device
 #  -------- setup -----------
 #
 @time_track
-def setup(
-    model_config: dict,
-    data_config: dict,
-):
+def setup(args: dict):
+
+    # load config files from json
+    model_config, train_config, data_config = load_config(args)
 
     # --- load external data sources
     embedding, encoding, data = load_resources(data_config, model_config)
@@ -29,12 +29,35 @@ def setup(
     return (
         model,
         data,
+        # -- optional utils
         {
             "encoding": encoding,
+            "embedding": embedding,
             "model_class": CLS,
             "model_config": model_config,
+            "train_config": train_config,
+            "data_config": data_config,
         },
     )
+
+
+#
+#
+#  -------- load_config -----------
+#
+def load_config(args: dict) -> tuple:
+
+    # --- load config json files
+    try:
+        model_config: dict = load_json(args.model_config)
+        training_config: dict = load_json(args.training_config)
+        data_config: dict = load_json(args.data_config)
+
+    # TODO: handle error while loading
+    except:
+        raise Exception
+
+    return (model_config, training_config, data_config)
 
 
 #
@@ -125,8 +148,24 @@ def load_resources(
     return (
         embedding,
         encoding,
-        {"train": data_train, "dev": data_dev, "test": data_test},
+        {
+            "train": data_train,
+            "dev": data_dev,
+            "test": data_test,
+        },
     )
+
+
+#
+#
+#  -------- init_population -----------
+#
+def init_population(
+    model_CLS: object,
+    config: dict,
+    size: int,
+) -> dict:
+    return {model_CLS(config).to(get_device()): 0.0 for _ in range(size)}
 
 
 #
@@ -139,7 +178,7 @@ def evaluate(
     data_set,
 ) -> None:
 
-    print("[--- EVALUATION ---]")
+    print("\n[--- EVALUATION ---]")
 
     test_loader = batch_loader(data_set)
 

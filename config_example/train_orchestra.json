@@ -1,0 +1,27 @@
+{
+  "tasks": [
+    {
+      "type": "evolve",
+      "population_size": 40,
+      "parameters": {
+        "selection_rate": 4,
+        "crossover_rate": 1.0,
+        "epoch_num": 2,
+        "report_rate": 1,
+        "batch_size": 96
+      }
+    },
+    {
+      "type": "descent",
+      "parameters": {
+        "learning_rate": 5e-2,
+        "weight_decay": 1e-6,
+        "gradient_clip": 60.0,
+        "epoch_num": 2,
+        "report_rate": 1,
+        "batch_size": 32,
+        "batch_double": 100
+      }
+    }
+  ]
+}

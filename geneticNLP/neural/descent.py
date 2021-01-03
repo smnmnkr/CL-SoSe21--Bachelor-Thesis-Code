@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import torch
 import torch.nn as nn
 
 from torch.optim import Adam
@@ -11,7 +12,7 @@ from geneticNLP.data import batch_loader, adpative_batch_loader
 #
 #  -------- train -----------
 #
-def train(
+def descent(
     model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
@@ -23,6 +24,9 @@ def train(
     batch_size: int = 32,
     batch_double: float = 40,
 ):
+
+    # enable gradients
+    torch.set_grad_enabled(True)
 
     # choose Adam for optimization
     # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
@@ -88,3 +92,5 @@ def train(
                     datetime.now() - time_begin,
                 )
             )
+
+    return model

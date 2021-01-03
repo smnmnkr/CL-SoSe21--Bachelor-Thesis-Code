@@ -66,7 +66,6 @@ def evaluate_linear(
 def process_linear(
     population: dict,
     batch: list,
-    population_size: int,
     selection_rate: int,
     crossover_rate: int,
 ):
@@ -78,7 +77,7 @@ def process_linear(
     selection: dict = elitism(population, selection_rate)
 
     # --- fill new population with mutated, crossed entities
-    for _ in range(population_size):
+    for _ in range(len(population)):
 
         # get random players from selection
         rnd_entity, score = random.choice(list(selection.items()))
@@ -91,7 +90,7 @@ def process_linear(
             rnd_entity = cross(rnd_entity, rnd_recessive)
 
         # mutate random selected
-        mut_entity = mutate(rnd_entity, 1 - score)
+        mut_entity, _ = mutate(rnd_entity, 1 - score)
 
         # calculate score
         new_population[mut_entity] = mut_entity.accuracy(batch)

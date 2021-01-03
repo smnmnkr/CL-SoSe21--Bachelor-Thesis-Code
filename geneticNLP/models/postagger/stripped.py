@@ -89,6 +89,7 @@ class POSstripped(nn.Module):
         reset: bool = True,
         category: str = None,
     ) -> float:
+        self.eval()
 
         if reset:
             self.metric.reset()
@@ -103,10 +104,6 @@ class POSstripped(nn.Module):
 
                 if p_idx == g:
                     self.metric.add_tp(p_idx)
-
-                    for idx in range(len(p)):
-                        if idx != p_idx:
-                            self.metric.add_tn(idx)
 
                 if p_idx != g:
                     self.metric.add_fp(p_idx)
@@ -124,9 +121,15 @@ class POSstripped(nn.Module):
         data_loader,
         category: str = None,
     ) -> float:
+        self.eval()
         self.metric.reset()
 
         for batch in data_loader:
             _ = self.accuracy(batch, reset=False)
 
         return self.metric.accuracy(class_name=category)
+
+    #  -------- __len__ -----------
+    #
+    def __len__(self) -> int:
+        return sum(p.numel() for p in self.parameters())

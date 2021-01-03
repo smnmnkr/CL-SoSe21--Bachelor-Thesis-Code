@@ -1,8 +1,19 @@
-from geneticNLP.neural import train
+from geneticNLP.neural import descent, evolve, swarm, amoeba
 
-from geneticNLP.utils import load_json, time_track
-from geneticNLP.tasks.utils import setup, evaluate
+from geneticNLP.utils import time_track, dict_max
+from geneticNLP.tasks.utils import (
+    setup,
+    init_population,
+    evaluate,
+)
 
+# --- map tasks to string args
+tasks: dict = {
+    "descent": descent,
+    "evolve": evolve,
+    "swarm": swarm,
+    "amoeba": amoeba,
+}
 
 #
 #
@@ -12,25 +23,87 @@ from geneticNLP.tasks.utils import setup, evaluate
 def do_train(args: dict) -> None:
     print("\n[--- TRAINING ---]")
 
-    # --- load config json files
-    model_config: dict = load_json(args.model_config)
-    training_config: dict = load_json(args.training_config)
-    data_config: dict = load_json(args.data_config)
-
     # --- setup experiment
-    model, data, utils = setup(model_config, data_config)
+    model, data, utils = setup(args)
+
+    # create empty population, return type holder
+    population: dict = {}
+    last_return_type: str = None
+
+    # log that training is orchestra
+    if len(utils.get("train_config").get("tasks")) > 1:
+        print("\n[--- ORCHESTRA ---]")
 
     # --- start training
-    train(
-        model,
-        data.get("train"),
-        data.get("dev"),
-        **training_config,
-    )
+    for task in utils.get("train_config").get("tasks"):
+
+        # --- init population, if is first task and not gradient descent
+        if task.get("type") != ("descent") and not population:
+            population = init_population(
+                utils.get("model_class"),
+                utils.get("model_config"),
+                task.get("population_size"),
+            )
+
+        # --- create population from last task model
+        if last_return_type == "model":
+            # TODO: get population from model
+            pass
+
+        # --- start task
+        print(f"\n[--- {task.get('type').upper()} ---]")
+
+        # handle task, which take and return population
+        if task.get("type") == ("evolve" or "amoeba"):
+            population = tasks.get(task.get("type"))(
+                population,
+                data.get("train"),
+                data.get("dev"),
+                **task.get("parameters"),
+            )
+
+            last_return_type = "population"
+
+        # handle task, which take population and return model
+        elif task.get("type") == "swarm":
+            model = tasks.get(task.get("type"))(
+                population,
+                data.get("train"),
+                data.get("dev"),
+                **task.get("parameters"),
+            )
+
+            last_return_type = "model"
+
+        # handle task, which take and return model
+        elif task.get("type") == "descent":
+
+            if last_return_type != None:
+                best, _ = dict_max(population)
+
+            else:
+                best = model
+
+            model = tasks.get(task.get("type"))(
+                best,
+                data.get("train"),
+                data.get("dev"),
+                **task.get("parameters"),
+            )
+
+            last_return_type = "model"
+
+    # --- get best model from population
+    if last_return_type == "population":
+        best, _ = dict_max(population)
+
+    # --- last model equals best model
+    else:
+        best = model
 
     # --- run metric
     evaluate(
-        model,
+        best,
         utils.get("encoding"),
         data.get("test"),
     )

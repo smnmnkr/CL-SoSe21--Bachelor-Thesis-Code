@@ -8,4 +8,6 @@ from .methods import (
     load_json,
     inverse_sigmoid,
     dict_max,
+    dict_min,
+    smooth_gradient,
 )
