@@ -21,7 +21,6 @@ tasks: dict = {
 #
 @time_track
 def do_train(args: dict) -> None:
-    print("\n[--- TRAINING ---]")
 
     # --- setup experiment
     model, data, utils = setup(args)
