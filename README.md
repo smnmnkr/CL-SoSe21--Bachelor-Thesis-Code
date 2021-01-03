@@ -45,7 +45,7 @@ python3 -m geneticNLP -M ${tagger_config.json} -T ${train_config.json} -D ${data
 
 ### Model (POS-Tagger)
 
-```json
+```jsonc
 {
   "embedding": {
     "size": 32,
@@ -67,7 +67,7 @@ python3 -m geneticNLP -M ${tagger_config.json} -T ${train_config.json} -D ${data
 Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimiziation _(PSO)_, and the Nelder–Mead method _(Amoeba)_.
 It is possible to orchestrate the tasks individually in the training process.
 
-```json
+```jsonc
 {
   "tasks": [
     {
@@ -93,7 +93,7 @@ It is possible to orchestrate the tasks individually in the training process.
 
 ### Data
 
-```json
+```jsonc
 {
   "embedding": "path/to/fasttext-data.bin",
   "preprocess": true,
