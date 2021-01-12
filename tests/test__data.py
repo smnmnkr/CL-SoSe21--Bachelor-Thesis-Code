@@ -1,9 +1,9 @@
 from geneticNLP.data import CONLLU
 
 # NOTE: user dependent file
-conllu_file: str = "./data/universal-dependencies--en-dev.conllu"
+conllu_file: str = "./data/en_partut-ud-test.conllu"
 
-data_quantity: int = 2002
+data_quantity: int = 153
 
 
 def test_loader():
