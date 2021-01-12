@@ -4,6 +4,7 @@ from geneticNLP.utils import time_track, dict_max
 from geneticNLP.tasks.utils import (
     setup,
     init_population,
+    population_from_model,
     evaluate,
 )
 
@@ -45,9 +46,12 @@ def do_train(args: dict) -> None:
             )
 
         # --- create population from last task model
-        if last_return_type == "model":
-            # TODO: get population from model
-            pass
+        if last_return_type == "model" and task.get("type") != "descent":
+            population = population_from_model(
+                utils.get("model_class"),
+                model,
+                task.get("population_size"),
+            )
 
         # --- start task
         print(f"\n[--- {task.get('type').upper()} ---]")
@@ -77,12 +81,15 @@ def do_train(args: dict) -> None:
         # handle task, which take and return model
         elif task.get("type") == "descent":
 
-            if last_return_type != None:
+            # if last task has returned a population, extract the best model
+            if last_return_type == "population":
                 best, _ = dict_max(population)
 
+            # else use the model as best
             else:
                 best = model
 
+            # train gradient descent
             model = tasks.get(task.get("type"))(
                 best,
                 data.get("train"),
