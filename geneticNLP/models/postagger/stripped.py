@@ -144,12 +144,12 @@ class POSstripped(nn.Module):
 
     #  -------- load -----------
     #
-    @staticmethod
-    def load(CLS: nn.Module, path: str) -> nn.Module:
+    @classmethod
+    def load(cls: nn.Module, path: str) -> nn.Module:
 
-        data = torch.load(path)
+        data = torch.load(path + ".pickle")
 
-        model: nn.Module = CLS(data["config"]).to(get_device())
+        model: nn.Module = cls(data["config"]).to(get_device())
         model.load_state_dict(data["state_dict"])
 
         return model
