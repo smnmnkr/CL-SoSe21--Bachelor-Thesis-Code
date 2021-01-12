@@ -145,7 +145,7 @@ class POSstripped(nn.Module):
     #  -------- load -----------
     #
     @classmethod
-    def load(cls: nn.Module, path: str) -> nn.Module:
+    def load(cls, path: str) -> nn.Module:
 
         data = torch.load(path + ".pickle")
 
@@ -153,6 +153,14 @@ class POSstripped(nn.Module):
         model.load_state_dict(data["state_dict"])
 
         return model
+
+    @classmethod
+    def copy(cls, model: nn.Module) -> nn.Module:
+
+        copy: nn.Module = cls(model.config).to(get_device())
+        copy.load_state_dict(model.state_dict())
+
+        return copy
 
     #  -------- __len__ -----------
     #
