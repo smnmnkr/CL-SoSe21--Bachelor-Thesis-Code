@@ -129,6 +129,31 @@ class POSstripped(nn.Module):
 
         return self.metric.accuracy(class_name=category)
 
+    #  -------- save -----------
+    #
+    def save(self, path: str) -> None:
+
+        torch.save(
+            {
+                "config": self.config,
+                "state_dict": self.state_dict(),
+                "metric": self.metric,
+            },
+            path + ".pickle",
+        )
+
+    #  -------- load -----------
+    #
+    @staticmethod
+    def load(CLS: nn.Module, path: str) -> nn.Module:
+
+        data = torch.load(path)
+
+        model: nn.Module = CLS(data["config"]).to(get_device())
+        model.load_state_dict(data["state_dict"])
+
+        return model
+
     #  -------- __len__ -----------
     #
     def __len__(self) -> int:
