@@ -56,3 +56,17 @@ def test_POSstripped_save_load(POSstripped_fixture):
         assert p1.data.ne(p2.data).sum() == 0
 
     os.remove(save_path + ".pickle")
+
+
+def test_POSstripped_copy(POSstripped_fixture):
+
+    copy = POSstripped.copy(POSstripped_fixture)
+
+    assert id(POSstripped_fixture) != id(copy)
+    assert POSstripped_fixture.config == copy.config
+
+    for p1, p2 in zip(
+        POSstripped_fixture.parameters(),
+        copy.parameters(),
+    ):
+        assert p1.data.ne(p2.data).sum() == 0
