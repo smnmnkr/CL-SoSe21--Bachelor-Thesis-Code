@@ -94,6 +94,14 @@ def inverse_sigmoid(x) -> float:
 
 #
 #
+#  -------- inverse_logistic -----------
+#
+def inverse_logistic(x, grow_rate: int = 3) -> float:
+    return 1 / (1 + (x / (1 - x)) ** grow_rate)
+
+
+#
+#
 #  -------- dict_max -----------
 #
 def dict_max(d: dict):

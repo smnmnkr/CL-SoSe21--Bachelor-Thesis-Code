@@ -7,6 +7,7 @@ from .methods import (
     flatten,
     load_json,
     inverse_sigmoid,
+    inverse_logistic,
     dict_max,
     dict_min,
     smooth_gradient,
