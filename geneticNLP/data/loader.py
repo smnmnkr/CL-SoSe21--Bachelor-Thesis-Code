@@ -2,7 +2,11 @@ from typing import Union
 
 import math
 
-from torch.utils.data import Dataset, IterableDataset, DataLoader
+from torch.utils.data import (
+    Dataset,
+    IterableDataset,
+    DataLoader,
+)
 
 #
 #
