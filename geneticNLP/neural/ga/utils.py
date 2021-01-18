@@ -3,7 +3,9 @@ import torch.multiprocessing as mp
 
 from geneticNLP.neural.ga import mutate, cross, elitism
 
-from geneticNLP.utils.types import Module, IterableDataset
+from geneticNLP.utils.types import IterableDataset
+
+from geneticNLP.utils import inverse_logistic
 
 
 # prevent MAC OSX multiprocessing bug
@@ -80,17 +82,26 @@ def process_linear(
     for _ in range(len(population)):
 
         # get random players from selection
-        rnd_entity, score = random.choice(list(selection.items()))
+        rnd_entity, score = random.choice(
+            list(selection.items())
+        )
 
         # (optionally) cross random players
-        if crossover_rate > random.uniform(0, 1) and len(selection) > 1:
+        if (
+            crossover_rate > random.uniform(0, 1)
+            and len(selection) > 1
+        ):
 
-            rnd_recessive, _ = random.choice(list(selection.items()))
+            rnd_recessive, _ = random.choice(
+                list(selection.items())
+            )
 
             rnd_entity = cross(rnd_entity, rnd_recessive)
 
         # mutate random selected
-        mut_entity, _ = mutate(rnd_entity, 1 - score)
+        mut_entity, _ = mutate(
+            rnd_entity, inverse_logistic(1 - score)
+        )
 
         # calculate score
         new_population[mut_entity] = mut_entity.accuracy(batch)
