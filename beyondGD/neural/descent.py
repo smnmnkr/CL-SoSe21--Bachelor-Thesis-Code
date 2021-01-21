@@ -6,7 +6,7 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import IterableDataset
 
-from geneticNLP.data import batch_loader, adpative_batch_loader
+from beyondGD.data import batch_loader, adpative_batch_loader
 
 
 #

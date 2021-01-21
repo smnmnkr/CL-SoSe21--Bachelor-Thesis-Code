@@ -2,13 +2,13 @@ from datetime import datetime
 
 import torch
 
-from geneticNLP.data import batch_loader
-from geneticNLP.utils import dict_max, dict_min
+from beyondGD.data import batch_loader
+from beyondGD.utils import dict_max, dict_min
 
-from geneticNLP.neural.ga.utils import evaluate_linear
+from beyondGD.neural.ga.utils import evaluate_linear
 
-from geneticNLP.utils import get_device, smooth_gradient
-from geneticNLP.utils.types import IterableDataset
+from beyondGD.utils import get_device, smooth_gradient
+from beyondGD.utils.types import IterableDataset
 
 
 #
@@ -130,3 +130,6 @@ def amoeba(
                     datetime.now() - time_begin,
                 )
             )
+
+    # --- return population
+    return population

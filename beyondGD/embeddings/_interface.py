@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from geneticNLP.utils.types import TT
+from beyondGD.utils.types import TT
 
 
 class Embedding(ABC):

@@ -1,6 +1,6 @@
 import torch
 
-from geneticNLP.neural.nn import MLP, BILSTM
+from beyondGD.neural.nn import MLP, BILSTM
 
 # config
 in_size: int = 16

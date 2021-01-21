@@ -1,11 +1,11 @@
-from geneticNLP.models import Model
-from geneticNLP.models.postagger import POSstripped, POSfull
+from beyondGD.models import Model
+from beyondGD.models.postagger import POSstripped, POSfull
 
-from geneticNLP.encoding import Encoding
-from geneticNLP.embeddings import FastText
+from beyondGD.encoding import Encoding
+from beyondGD.embeddings import FastText
 
-from geneticNLP.data import PreProcessed, CONLLU, batch_loader
-from geneticNLP.utils import load_json, time_track, get_device
+from beyondGD.data import PreProcessed, CONLLU, batch_loader
+from beyondGD.utils import load_json, time_track, get_device
 
 
 #

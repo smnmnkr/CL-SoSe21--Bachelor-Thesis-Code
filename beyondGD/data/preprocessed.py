@@ -1,9 +1,9 @@
 import torch.utils.data as data
 
-from geneticNLP.data import CONLLU
+from beyondGD.data import CONLLU
 
-from geneticNLP.encoding import Encoding
-from geneticNLP.embeddings import FastText
+from beyondGD.encoding import Encoding
+from beyondGD.embeddings import FastText
 
 
 class PreProcessed(data.IterableDataset):
@@ -13,7 +13,12 @@ class PreProcessed(data.IterableDataset):
     #
     #  -------- __init__ -----------
     #
-    def __init__(self, data_path, embeddings: FastText, encoding: Encoding):
+    def __init__(
+        self,
+        data_path,
+        embeddings: FastText,
+        encoding: Encoding,
+    ):
 
         self.embeddings = embeddings
         self.encoding = encoding

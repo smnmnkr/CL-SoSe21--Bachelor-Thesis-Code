@@ -2,15 +2,15 @@ from datetime import datetime
 
 import torch
 
-from geneticNLP.data import batch_loader
-from geneticNLP.utils import dict_max
+from beyondGD.data import batch_loader
+from beyondGD.utils import dict_max
 
-from geneticNLP.neural.ga.utils import (
+from beyondGD.neural.ga.utils import (
     evaluate_linear,
     process_linear,
 )
 
-from geneticNLP.utils.types import IterableDataset
+from beyondGD.utils.types import IterableDataset
 
 
 #

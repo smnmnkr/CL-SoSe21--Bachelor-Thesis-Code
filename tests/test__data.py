@@ -1,4 +1,4 @@
-from geneticNLP.data import CONLLU
+from beyondGD.data import CONLLU
 
 # NOTE: user dependent file
 conllu_file: str = "./data/en_partut-ud-test.conllu"

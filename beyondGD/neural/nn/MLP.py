@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-from geneticNLP.utils.types import TT
+from beyondGD.utils.types import TT
 
 
 class MLP(nn.Module):

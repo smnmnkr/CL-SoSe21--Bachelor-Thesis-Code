@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-from geneticNLP.utils.methods import get_device, smooth_gradient
+from beyondGD.utils.methods import get_device, smooth_gradient
 
 #
 #
@@ -54,6 +54,8 @@ def optimize_mod(
         for noise_tensors, score in noise_tensors_w_score
         if score > model_score
     ]
+
+    print(len(filtered_noise_tensors_w_score))
 
     #
     for p_id, m_param in enumerate(model.parameters()):

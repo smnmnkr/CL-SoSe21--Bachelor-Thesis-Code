@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from geneticNLP.embeddings import FastText, Untrained
+from beyondGD.embeddings import FastText, Untrained
 
 # NOTE: user dependent file
 fasttext_file: str = "./data/cc.en.32.bin"

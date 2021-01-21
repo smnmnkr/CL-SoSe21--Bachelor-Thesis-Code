@@ -3,7 +3,7 @@ import pytest
 import torch
 
 
-from geneticNLP.models.postagger import POSstripped
+from beyondGD.models.postagger import POSstripped
 
 config: dict = {
     "lstm": {

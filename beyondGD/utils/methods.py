@@ -11,7 +11,7 @@ import numpy as np
 import torch
 import torch.nn.utils.rnn as rnn
 
-from geneticNLP.utils.types import TT
+from beyondGD.utils.types import TT
 
 #
 #

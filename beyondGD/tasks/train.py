@@ -1,7 +1,7 @@
-from geneticNLP.neural import descent, evolve, swarm, amoeba
+from beyondGD.neural import descent, evolve, swarm, amoeba
 
-from geneticNLP.utils import time_track, dict_max
-from geneticNLP.tasks.utils import (
+from beyondGD.utils import time_track, dict_max
+from beyondGD.tasks.utils import (
     setup,
     init_population,
     population_from_model,
@@ -57,7 +57,7 @@ def do_train(args: dict) -> None:
         print(f"\n[--- {task.get('type').upper()} ---]")
 
         # handle task, which take and return population
-        if task.get("type") == ("evolve" or "amoeba"):
+        if task.get("type") in ("evolve", "amoeba"):
             population = tasks.get(task.get("type"))(
                 population,
                 data.get("train"),
@@ -67,19 +67,8 @@ def do_train(args: dict) -> None:
 
             last_return_type = "population"
 
-        # handle task, which take population and return model
-        elif task.get("type") == "swarm":
-            model = tasks.get(task.get("type"))(
-                population,
-                data.get("train"),
-                data.get("dev"),
-                **task.get("parameters"),
-            )
-
-            last_return_type = "model"
-
         # handle task, which take and return model
-        elif task.get("type") == "descent":
+        elif task.get("type") in ("descent", "swarm"):
 
             # if last task has returned a population, extract the best model
             if last_return_type == "population":

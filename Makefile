@@ -1,4 +1,4 @@
-module := geneticNLP
+module := beyondGD
 
 # config files:
 model_config := config_example/model.json

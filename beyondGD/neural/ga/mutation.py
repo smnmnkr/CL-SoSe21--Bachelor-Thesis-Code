@@ -1,7 +1,7 @@
 import copy
 import torch
 
-from geneticNLP.utils import get_device
+from beyondGD.utils import get_device
 
 #
 #

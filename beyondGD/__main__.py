@@ -3,7 +3,7 @@ import argparse
 import torch
 import random
 
-from geneticNLP.tasks import do_train
+from beyondGD.tasks import do_train
 
 
 # make pytorch computations deterministic
@@ -17,7 +17,7 @@ torch.backends.cudnn.benchmark = False
 #
 #  -------- ARGPARSER: -----------
 #
-parser = argparse.ArgumentParser(description="geneticNLP")
+parser = argparse.ArgumentParser(description="beyondGD")
 
 # add model config arg
 parser.add_argument(

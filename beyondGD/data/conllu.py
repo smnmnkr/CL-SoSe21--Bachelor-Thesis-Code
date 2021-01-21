@@ -2,7 +2,7 @@ from conllu import parse_incr
 
 import torch.utils.data as data
 
-from geneticNLP.utils.types import Token
+from beyondGD.utils.types import Token
 
 
 class CONLLU(data.IterableDataset):

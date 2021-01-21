@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 
-from geneticNLP.neural.nn import MLP, BILSTM
+from beyondGD.neural.nn import MLP, BILSTM
 
-from geneticNLP.metric import Metric
-from geneticNLP.utils import unpad, flatten, get_device
+from beyondGD.metric import Metric
+from beyondGD.utils import unpad, flatten, get_device
 
 
 class POSstripped(nn.Module):

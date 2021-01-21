@@ -4,10 +4,10 @@ import fasttext.util
 import torch
 import torch.nn as nn
 
-from geneticNLP.embeddings import Embedding
+from beyondGD.embeddings import Embedding
 
-from geneticNLP.utils import get_device
-from geneticNLP.utils.types import TT
+from beyondGD.utils import get_device
+from beyondGD.utils.types import TT
 
 
 class FastText(Embedding):
