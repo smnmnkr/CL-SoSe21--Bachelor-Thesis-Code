@@ -1,4 +1,4 @@
-# geneticNLP
+# beyond Gradient Descent
 
 ## Install
 
@@ -38,7 +38,7 @@ make orchestra
 
 ```bash
 # run custom training
-python3 -m geneticNLP -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
+python3 -m beyondGD -M ${tagger_config.json} -T ${train_config.json} -D ${data_config.json}
 ```
 
 ## Configuration

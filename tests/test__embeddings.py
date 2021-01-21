@@ -1,13 +1,13 @@
 import pytest
 import torch
 
-from geneticNLP.embeddings import FastText, Untrained
+from beyondGD.embeddings import FastText, Untrained
 
 # NOTE: user dependent file
-fasttext_file: str = "./data/fasttext--cc.en.300.bin"
+fasttext_file: str = "./data/cc.en.32.bin"
 
 # config
-dimension: int = 48
+dimension: int = 32
 
 word: str = "connection"
 sent: list = [
