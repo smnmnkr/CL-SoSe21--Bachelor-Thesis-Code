@@ -46,7 +46,10 @@ def do_train(args: dict) -> None:
             )
 
         # --- create population from last task model
-        if last_return_type == "model" and task.get("type") != "descent":
+        if (
+            last_return_type == "model"
+            and task.get("type") != "descent"
+        ):
             population = population_from_model(
                 utils.get("model_class"),
                 model,
