@@ -69,6 +69,7 @@ def process_linear(
     population: dict,
     batch: list,
     selection_rate: int,
+    mutation_rate: float,
     crossover_rate: int,
 ):
 
@@ -82,17 +83,24 @@ def process_linear(
     for _ in range(len(population)):
 
         # get random players from selection
-        rnd_entity, score = random.choice(list(selection.items()))
+        rnd_entity, score = random.choice(
+            list(selection.items())
+        )
 
         # (optionally) cross random players
-        if crossover_rate > random.uniform(0, 1) and len(selection) > 1:
+        if (
+            crossover_rate > random.uniform(0, 1)
+            and len(selection) > 1
+        ):
 
-            rnd_recessive, _ = random.choice(list(selection.items()))
+            rnd_recessive, _ = random.choice(
+                list(selection.items())
+            )
 
             rnd_entity = cross(rnd_entity, rnd_recessive)
 
         # mutate random selected
-        mut_entity, _ = mutate(rnd_entity, inverse_logistic(1 - score))
+        mut_entity, _ = mutate(rnd_entity, mutation_rate)
 
         # calculate score
         new_population[mut_entity] = mut_entity.accuracy(batch)
