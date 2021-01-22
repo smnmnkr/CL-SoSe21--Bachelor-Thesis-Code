@@ -5,6 +5,7 @@ import torch
 from beyondGD.data import batch_loader
 from beyondGD.utils import dict_max, dict_min
 
+from beyondGD.neural.ga import mutate
 from beyondGD.neural.ga.utils import evaluate_linear
 
 from beyondGD.utils import get_device, smooth_gradient
@@ -39,19 +40,18 @@ def amoeba(
 
         for batch in train_loader:
 
-            # calculate score of each model in $P$
+            # calculate score of each particle in population
             for particle, _ in population.items():
                 population[particle] = particle.accuracy(batch)
 
-            # get the best, worst model
-            best, b_score = dict_max(population)
-            worst, w_score = dict_min(population)
+            # get the best, worst particle
+            p_best, b_score = dict_max(population)
+            p_worst, w_score = dict_min(population)
 
             # remove worst
-            all(map(population.pop, {worst: w_score}))
+            all(map(population.pop, {p_worst: w_score}))
 
             # get the score (mass) of each model in $P$
-            # TODO: consider normalizing the mass values
             P_mass = torch.tensor(list(population.values())).to(
                 get_device()
             )
@@ -63,10 +63,12 @@ def amoeba(
             ]
 
             # center of masses for every $param$:
-            R_params: list = []
+            C_params: list = []
 
             # calcuate the center of mass $R$ for every parameter $param$ in every particle in $P$
-            for w_id, w_param in enumerate(worst.parameters()):
+            for w_id, w_param in enumerate(
+                p_worst.parameters()
+            ):
 
                 # where $R$ is the center of mass
                 # calculate: (1/M) * sum_{i=1}^{n} m_i*r_i
@@ -78,7 +80,9 @@ def amoeba(
 
                 # where $n$ is the id of the particle,
                 # and $r$ the values (coordinates) as a tensor
-                for n, r in enumerate([param[w_id] for param in P_params]):
+                for n, r in enumerate(
+                    [param[w_id] for param in P_params]
+                ):
 
                     # add the values $r$ with respect to the mass $m$, here P_mass[n]
                     R += r * P_mass[n]
@@ -90,20 +94,71 @@ def amoeba(
                 R *= 1 / M
 
                 # add total mass to tensor
-                R_params.append(R)
+                C_params.append(R)
 
-            last_w_score: float = -1.0
+            p_ref = p_worst.copy(p_worst)
+            p_new = p_worst.copy(p_worst)
 
-            while w_score <= b_score * 0.6 and last_w_score != w_score:
-                # move $worst$ through the center of mass $R$ for every $param$
-                for param, R in zip(worst.parameters(), R_params):
+            for param, R in zip(p_ref.parameters(), C_params):
+                param.data = 2 * smooth_gradient(R) - param.data
 
-                    param.data += step_size * smooth_gradient(R)
+            # Expansion Case: Reflection Particle is the new best
+            if p_ref.accuracy(batch) > b_score:
 
-                last_w_score = w_score
-                w_score = worst.accuracy(batch)
+                p_exp = p_ref.copy(p_ref)
 
-            population[worst] = 0.0
+                for param, R in zip(
+                    p_exp.parameters(), C_params
+                ):
+                    param.data = (
+                        2 * param.data - smooth_gradient(R)
+                    )
+
+                if p_exp.accuracy(batch) > p_ref.accuracy(
+                    batch
+                ):
+                    p_new = p_exp
+
+                else:
+                    p_new = p_ref
+
+            # Case: Reflection Particle performs better then the worst
+            elif b_score >= p_ref.accuracy(batch) > w_score:
+                p_new = p_ref
+
+            # Contraction Case: Reflection Particle performs the worst
+            elif w_score > p_ref.accuracy(batch):
+                for param, R in zip(
+                    p_ref.parameters(), C_params
+                ):
+                    param.data = 2 ** -1 * (
+                        param.data - smooth_gradient(R)
+                    )
+
+            population[p_new] = 0.0
+
+            # Shrinkage Case:
+            if p_new.accuracy(batch) <= w_score:
+
+                # remove worst
+                all(map(population.pop, {p_new: 0.0}))
+
+                len_pop = len(population)
+
+                population.clear()
+
+                population[p_best] = 0.0
+
+                for _ in range(len_pop - 1):
+
+                    p_i, _ = mutate(p_best, 0.02)
+                    population[p_i] = 0.0
+
+                    # for param, P in zip(
+                    #     particle.parameters(),
+                    #     p_best.parameters(),
+                    # ):
+                    #     param.data = 2 ** -1 * (param.data + P)
 
         # --- report
         if epoch % report_rate == 0:
@@ -122,8 +177,9 @@ def amoeba(
             )
 
             print(
-                "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
+                "[--- @{:02}: \t size={:02} \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
+                    len(population),
                     sum(population.values()) / len(population),
                     score,
                     best.evaluate(dev_loader),
