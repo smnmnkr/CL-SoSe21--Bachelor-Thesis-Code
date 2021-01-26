@@ -37,11 +37,12 @@ def amoeba(
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
-        if len(population) == 1:
-            return population
-
         # -- batch loop
         for batch in train_loader:
+
+            if len(population) == 1:
+                return population
+
 
             # calculate score of each particle in population
             for particle, _ in population.items():
