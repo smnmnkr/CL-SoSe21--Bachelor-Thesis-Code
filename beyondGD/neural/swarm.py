@@ -6,7 +6,7 @@ import torch.nn as nn
 from beyondGD.data import batch_loader
 
 from beyondGD.neural.ga import mutate
-from beyondGD.neural.ga.swarm import optimize, optimize_mod
+from beyondGD.neural.ga.swarm import optimize
 
 
 from beyondGD.utils.types import IterableDataset
@@ -23,7 +23,7 @@ def swarm(
     noise_std: float = 0.1,
     learning_rate: float = 0.001,
     population_size: int = 200,
-    optimizer: str = None,
+    filter_offspring: bool = False,
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -49,7 +49,9 @@ def swarm(
             for _ in range(population_size):
 
                 # created mutated pseudo child
-                pseudo_offspring, noise_tensors = mutate(model, noise_std)
+                pseudo_offspring, noise_tensors = mutate(
+                    model, noise_std
+                )
 
                 # calculate score
                 noise_tensors_w_score.append(
@@ -59,24 +61,14 @@ def swarm(
                     ]
                 )
 
-            # --- update model, using custom optimizer
-            if optimizer == "custom":
-                optimize_mod(
-                    model,
-                    model.accuracy(batch),
-                    noise_tensors_w_score,
-                    noise_std,
-                    learning_rate,
-                )
-
-            # --- update model, using optimizer proposed in Zhang et al.
-            else:
-                optimize(
-                    model,
-                    noise_tensors_w_score,
-                    noise_std,
-                    learning_rate,
-                )
+            # --- update model, using optimizer proposed in Zhang et al. (with optional filtering)
+            model = optimize(
+                model,
+                noise_tensors_w_score,
+                noise_std,
+                learning_rate,
+                filter=filter_offspring,
+            )
 
         # --- report
         if epoch % report_rate == 0:
