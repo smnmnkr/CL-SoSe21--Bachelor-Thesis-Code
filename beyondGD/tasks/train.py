@@ -30,6 +30,19 @@ def do_train(args: dict) -> None:
     population: dict = {}
     last_return_type: str = None
 
+    # load model from file
+    if utils["data_config"].get("load_model"):
+        try:
+            model = utils.get("model_class").load(
+                utils["data_config"].get("load_model")
+            )
+            last_return_type: str = "model"
+
+        except FileNotFoundError:
+            print(
+                "\n[--- File not found, continuing with fresh model. ---]"
+            )
+
     # log that training is orchestra
     if len(utils.get("train_config").get("tasks")) > 1:
         print("\n[--- ORCHESTRA ---]")
@@ -38,7 +51,10 @@ def do_train(args: dict) -> None:
     for task in utils.get("train_config").get("tasks"):
 
         # --- init population, if is first task and not gradient descent
-        if task.get("type") != ("descent") and not population:
+        if (
+            task.get("type") != ("descent")
+            and not last_return_type
+        ):
             population = init_population(
                 utils.get("model_class"),
                 utils.get("model_config"),
@@ -46,9 +62,9 @@ def do_train(args: dict) -> None:
             )
 
         # --- create population from last task model
-        if (
-            last_return_type == "model"
-            and task.get("type") != "descent"
+        elif (
+            task.get("type") != "descent"
+            and last_return_type == "model"
         ):
             population = population_from_model(
                 utils.get("model_class"),
@@ -105,3 +121,7 @@ def do_train(args: dict) -> None:
         utils.get("encoding"),
         data.get("test"),
     )
+
+    # --- save model
+    if utils["data_config"].get("save_model"):
+        best.save(utils["data_config"].get("save_model"))
