@@ -21,6 +21,7 @@ def evolve(
     population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
+    mutation_rate: float = 0.02,
     selection_rate: int = 10,
     crossover_rate: float = 0.5,
     epoch_num: int = 200,
@@ -41,9 +42,6 @@ def evolve(
     # count plateau length with last best model
     last_best_score: float = 0.0
     plateau_length: int = 0
-
-    # TODO:
-    mutation_rate: float = 0.5
 
     # --
     for epoch in range(1, epoch_num + 1):
