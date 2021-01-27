@@ -99,7 +99,9 @@ It is possible to orchestrate the tasks individually in the training process.
   "preprocess": true,
   "train": "path/to/train.conllu",
   "dev": "path/to/dev.conllu",
-  "test": "path/to/test.conllu"
+  "test": "path/to/test.conllu",
+  "load_model": "path/to/existing_model", // load existing model from .pickle file
+  "save_model": "path/to/trained_model" // save model after training as .pickle file
 }
 ```
 
@@ -128,3 +130,4 @@ make clean
 - 3.0 Include amoeba training
 - 3.1 Reworked tasks interface
 - 4.0 Reworked into orchestrated training process
+- 4.1 Added model load/save function
