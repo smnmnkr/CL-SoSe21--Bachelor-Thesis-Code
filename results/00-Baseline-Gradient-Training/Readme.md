@@ -8,16 +8,16 @@ Full training logs can be found in `full.txt`.
 
 ```
 [--- TIMETRACK || method: setup -- time: 0:00:06.621022 ---]
-[--- @50:        loss(train)=0.0476      acc(train)=0.9165       acc(dev)=0.8884         time(epoch)=0:00:02.549536 ---]
-[--- @100:       loss(train)=0.0461      acc(train)=0.9266       acc(dev)=0.8928         time(epoch)=0:00:02.540303 ---]
-[--- @150:       loss(train)=0.0452      acc(train)=0.9315       acc(dev)=0.8873         time(epoch)=0:00:02.535433 ---]
-[--- @200:       loss(train)=0.0224      acc(train)=0.9375       acc(dev)=0.8986         time(epoch)=0:00:01.912087 ---]
-[--- @250:       loss(train)=0.0218      acc(train)=0.9394       acc(dev)=0.8935         time(epoch)=0:00:01.910737 ---]
-[--- @300:       loss(train)=0.0148      acc(train)=0.9419       acc(dev)=0.8935         time(epoch)=0:00:01.734768 ---]
-[--- @350:       loss(train)=0.0145      acc(train)=0.9462       acc(dev)=0.8957         time(epoch)=0:00:01.724351 ---]
-[--- @400:       loss(train)=0.0108      acc(train)=0.9458       acc(dev)=0.8997         time(epoch)=0:00:01.631581 ---]
-[--- @450:       loss(train)=0.0106      acc(train)=0.9504       acc(dev)=0.9008         time(epoch)=0:00:01.600112 ---]
-[--- @500:       loss(train)=0.0091      acc(train)=0.9496       acc(dev)=0.8917         time(epoch)=0:00:01.674434 ---]
+[--- @50:        loss(train)=0.0476      acc(train)=0.9253       acc(dev)=0.8825         time(epoch)=0:00:02.841823 ---]
+[--- @100:       loss(train)=0.0460      acc(train)=0.9260       acc(dev)=0.8873         time(epoch)=0:00:02.585115 ---]
+[--- @150:       loss(train)=0.0455      acc(train)=0.9225       acc(dev)=0.8806         time(epoch)=0:00:03.080652 ---]
+[--- @200:       loss(train)=0.0225      acc(train)=0.9350       acc(dev)=0.8858         time(epoch)=0:00:02.809413 ---]
+[--- @250:       loss(train)=0.0218      acc(train)=0.9395       acc(dev)=0.8924         time(epoch)=0:00:02.447783 ---]
+[--- @300:       loss(train)=0.0148      acc(train)=0.9426       acc(dev)=0.8902         time(epoch)=0:00:01.922497 ---]
+[--- @350:       loss(train)=0.0147      acc(train)=0.9400       acc(dev)=0.8799         time(epoch)=0:00:01.886083 ---]
+[--- @400:       loss(train)=0.0108      acc(train)=0.9425       acc(dev)=0.8898         time(epoch)=0:00:01.812832 ---]
+[--- @450:       loss(train)=0.0107      acc(train)=0.9463       acc(dev)=0.8913         time(epoch)=0:00:01.826183 ---]
+[--- @500:       loss(train)=0.0092      acc(train)=0.9345       acc(dev)=0.8832         time(epoch)=0:00:01.844635 ---]
 
 [--- _AVG_       tp:  3071       fp:   341       fn:   341       tn:     0       prec=0.900      rec=0.900       acc=0.900       f1=0.900 ---]
 [--- ADJ         tp:   132       fp:    29       fn:    92       tn:     0       prec=0.820      rec=0.589       acc=0.589       f1=0.686 ---]
@@ -82,6 +82,7 @@ Full training logs can be found in `full.txt`.
   "preprocess": true,
   "train": "./data/en_partut-ud-train.conllu",
   "dev": "./data/en_partut-ud-dev.conllu",
-  "test": "./data/en_partut-ud-test.conllu"
+  "test": "./data/en_partut-ud-test.conllu",
+  "test": "./.../model"
 }
 ```
