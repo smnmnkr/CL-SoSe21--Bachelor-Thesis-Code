@@ -43,7 +43,6 @@ def amoeba(
             if len(population) == 1:
                 return population
 
-
             # calculate score of each particle in population
             for particle, _ in population.items():
                 population[particle] = particle.accuracy(batch)
@@ -202,8 +201,8 @@ def shrinkage(
     population: dict,
     p_new,
     p_best,
-    mutation_rate: float = 0.5,
-    mode: int = 1,
+    mutation_rate: float = 0.02,
+    mode: int = 0,
 ) -> None:
 
     # remove worst
