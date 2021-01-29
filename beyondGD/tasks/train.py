@@ -52,7 +52,7 @@ def do_train(args: dict) -> None:
 
         # --- init population, if is first task and not gradient descent
         if (
-            task.get("type") != ("descent")
+            task.get("type") not in ("descent", "swarm")
             and not last_return_type
         ):
             population = init_population(
