@@ -7,7 +7,6 @@ Results of baseline gradient training on the POS-Tagger.
 Full training logs can be found in `full.txt`.
 
 ```
-[--- TIMETRACK || method: setup -- time: 0:00:06.621022 ---]
 [--- @50:        loss(train)=0.0476      acc(train)=0.9253       acc(dev)=0.8825         time(epoch)=0:00:02.841823 ---]
 [--- @100:       loss(train)=0.0460      acc(train)=0.9260       acc(dev)=0.8873         time(epoch)=0:00:02.585115 ---]
 [--- @150:       loss(train)=0.0455      acc(train)=0.9225       acc(dev)=0.8806         time(epoch)=0:00:03.080652 ---]
@@ -64,13 +63,20 @@ Full training logs can be found in `full.txt`.
 
 ```json
 {
-  "learning_rate": 5e-2,
-  "weight_decay": 1e-6,
-  "gradient_clip": 60.0,
-  "epoch_num": 500,
-  "report_rate": 50,
-  "batch_size": 32,
-  "batch_double": 100
+  "tasks": [
+    {
+      "type": "descent",
+      "parameters": {
+        "learning_rate": 5e-2,
+        "weight_decay": 1e-6,
+        "gradient_clip": 60.0,
+        "epoch_num": 500,
+        "report_rate": 50,
+        "batch_size": 32,
+        "batch_double": 100
+      }
+    }
+  ]
 }
 ```
 
