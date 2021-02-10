@@ -5,7 +5,6 @@ import torch
 from beyondGD.data import batch_loader
 from beyondGD.utils import dict_max, dict_min
 
-from beyondGD.neural.ga import mutate
 from beyondGD.neural.ga.utils import evaluate_linear
 
 from beyondGD.utils import get_device, smooth_gradient
@@ -14,13 +13,16 @@ from beyondGD.utils.types import IterableDataset
 
 #
 #
-#  -------- amoeba -----------
+#  -------- simplex -----------
 #
-def amoeba(
+def simplex(
     population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     epoch_num: int = 200,
+    expansion_rate: float = 2.0,
+    contraction_rate: float = 0.5,
+    shrink_rate: float = 0.02,
     report_rate: int = 10,
     batch_size: int = 32,
 ):
@@ -40,9 +42,6 @@ def amoeba(
         # -- batch loop
         for batch in train_loader:
 
-            if len(population) == 1:
-                return population
-
             # calculate score of each particle in population
             for particle, _ in population.items():
                 population[particle] = particle.accuracy(batch)
@@ -54,39 +53,50 @@ def amoeba(
             # remove worst
             all(map(population.pop, {p_worst: w_score}))
 
-            # calculate center of mass :
+            _, sec_w_score = dict_min(population)
+
+            # calculate center of mass
             C: list = centroid(population)
 
-            p_ref = p_worst.copy(p_worst)
-            p_new = p_worst.copy(p_worst)
+            p_ref = reflect(p_worst, C)
+            p_new = None
 
-            for ref_param, c_param in zip(
-                p_ref.parameters(), C
-            ):
-                ref_param.data = (
-                    2 * smooth_gradient(c_param)
-                    - ref_param.data
-                )
+            #
+            # --- Case Handling
 
-            # Expansion Case: Reflection Particle is the new best
-            if p_ref.accuracy(batch) > b_score:
-                p_new = expansion(p_ref, C, batch)
-
-            # Median Case: Reflection Particle performs better then the worst
-            elif b_score >= p_ref.accuracy(batch) > w_score:
+            # Reflect Case: Reflection Particle performs better then the worst
+            if b_score >= p_ref.accuracy(batch) > sec_w_score:
                 p_new = p_ref
 
-            # Contraction Case: Reflection Particle performs the worst
-            elif w_score > p_ref.accuracy(batch):
-                contraction(p_ref, C)
+            # Expansion Case: Reflection Particle is the new best
+            elif p_ref.accuracy(batch) > b_score:
+                p_new = expansion(
+                    p_worst, p_ref, C, batch, expansion_rate
+                )
 
-            population[p_new] = 0.0
+            # Outside Contraction Case: Reflection Particle performs as the second worst
+            elif sec_w_score >= p_ref.accuracy(batch) > w_score:
+                p_new = outside_contraction(
+                    p_worst, p_ref, C, batch, contraction_rate
+                )
 
-            # Shrinkage Case:
-            if p_new.accuracy(batch) <= w_score:
-                shrinkage(population, p_new, p_best)
+            # Inside Contraction Case: Reflection Particle performs worst
+            elif w_score >= p_ref.accuracy(batch):
+                p_new = inside_contraction(
+                    p_worst, p_ref, C, batch, -contraction_rate
+                )
 
-        # --- report
+            # Shrinkage Case: Inside Contracted Particle performs worst
+            if p_new is None:
+                population = shrinkage(
+                    population, p_best, shrink_rate
+                )
+
+            else:
+                population[p_new] = 0.0
+
+        #
+        # --- Report
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
@@ -103,9 +113,8 @@ def amoeba(
             )
 
             print(
-                "[--- @{:02}: \t size={:02} \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
+                "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
-                    len(population),
                     sum(population.values()) / len(population),
                     score,
                     best.evaluate(dev_loader),
@@ -168,16 +177,34 @@ def centroid(population: dict) -> list:
     return C
 
 
+#  -------- reflect -----------
+#
+def reflect(p, C, reflection_param: float = 1):
+
+    p_ref = p.copy(p)
+
+    for param_ref, param_c in zip(p_ref.parameters(), C):
+
+        param_c_smoothed = smooth_gradient(param_c).data
+
+        param_ref.data = param_c_smoothed + reflection_param * (
+            param_c_smoothed - param_ref.data
+        )
+
+    return p_ref
+
+
 #  -------- expansion -----------
 #
-def expansion(p_ref, C, batch) -> None:
+def expansion(
+    p_worst,
+    p_ref,
+    C,
+    batch,
+    expansion_rate: float = 2.0,
+):
 
-    p_exp = p_ref.copy(p_ref)
-
-    for param_ref, param_c in zip(p_exp.parameters(), C):
-        param_ref.data = (
-            2 * param_ref.data - smooth_gradient(param_c).data
-        )
+    p_exp = reflect(p_worst, C, expansion_rate)
 
     if p_exp.accuracy(batch) > p_ref.accuracy(batch):
         return p_exp
@@ -186,49 +213,58 @@ def expansion(p_ref, C, batch) -> None:
         return p_ref
 
 
-#  -------- shrinkage -----------
+#  -------- outside_contraction -----------
 #
-def contraction(p_ref, C) -> None:
-    for param_ref, param_c in zip(p_ref.parameters(), C):
-        param_ref.data = 2 ** -1 * (
-            param_ref.data - smooth_gradient(param_c).data
-        )
+def outside_contraction(
+    p_worst,
+    p_ref,
+    C,
+    batch,
+    outside_contraction_rate: float = 0.5,
+):
+
+    p_contract = reflect(p_worst, C, outside_contraction_rate)
+
+    if p_contract.accuracy(batch) > p_ref.accuracy(batch):
+        return p_contract
+
+    else:
+        return p_ref
+
+
+#  -------- inside_contraction -----------
+#
+def inside_contraction(
+    p_worst,
+    p_ref,
+    C,
+    batch,
+    inside_contraction_rate: float = -0.5,
+):
+
+    p_contract = reflect(p_worst, C, inside_contraction_rate)
+
+    if p_contract.accuracy(batch) > p_ref.accuracy(batch):
+        return p_contract
+
+    else:
+        return None
 
 
 #  -------- shrinkage -----------
 #
 def shrinkage(
     population: dict,
-    p_new,
     p_best,
-    mutation_rate: float = 0.02,
-    mode: int = 0,
-) -> None:
+    shrink_rate: float = 0.02,
+) -> dict:
 
-    # remove worst
-    all(map(population.pop, {p_new: 0.0}))
+    new_population: dict = {p_best: 0.0}
 
-    # custom approach:
-    if mode == 0:
+    for p in population:
 
-        len_pop = len(population)
+        p_new = reflect(p, p_best.parameters(), shrink_rate)
 
-        population.clear()
+        new_population[p_new] = 0.0
 
-        population[p_best] = 0.0
-
-        for _ in range(len_pop - 1):
-
-            p_i, _ = mutate(p_best, mutation_rate)
-            population[p_i] = 0.0
-
-    # original approach:
-    elif mode == 1:
-        for p in population:
-            for param_p, param_best in zip(
-                p.parameters(),
-                p_best.parameters(),
-            ):
-                param_p.data = 2 ** -1 * (
-                    param_p.data + param_best.data
-                )
+    return new_population

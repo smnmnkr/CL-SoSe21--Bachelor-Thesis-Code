@@ -2,4 +2,4 @@
 from .descent import descent
 from .evolution import evolve
 from .swarm import swarm
-from .amoeba import amoeba
+from .simplex import simplex

@@ -1,4 +1,4 @@
-from beyondGD.neural import descent, evolve, swarm, amoeba
+from beyondGD.neural import descent, evolve, swarm, simplex
 
 from beyondGD.utils import time_track, dict_max
 from beyondGD.tasks.utils import (
@@ -13,7 +13,7 @@ tasks: dict = {
     "descent": descent,
     "evolve": evolve,
     "swarm": swarm,
-    "amoeba": amoeba,
+    "simplex": simplex,
 }
 
 #
@@ -76,7 +76,7 @@ def do_train(args: dict) -> None:
         print(f"\n[--- {task.get('type').upper()} ---]")
 
         # handle task, which take and return population
-        if task.get("type") in ("evolve", "amoeba"):
+        if task.get("type") in ("evolve", "simplex"):
             population = tasks.get(task.get("type"))(
                 population,
                 data.get("train"),

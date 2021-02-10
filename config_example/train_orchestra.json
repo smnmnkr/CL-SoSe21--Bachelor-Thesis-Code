@@ -2,25 +2,25 @@
   "tasks": [
     {
       "type": "evolve",
-      "population_size": 40,
+      "population_size": 200,
       "parameters": {
-        "selection_rate": 4,
-        "crossover_rate": 1.0,
-        "epoch_num": 2,
-        "report_rate": 1,
+        "selection_rate": 20,
+        "crossover_rate": 1,
+        "epoch_num": 300,
+        "report_rate": 50,
         "batch_size": 96
       }
     },
     {
-      "type": "descent",
+      "type": "simplex",
+      "population_size": 200,
       "parameters": {
-        "learning_rate": 5e-2,
-        "weight_decay": 1e-6,
-        "gradient_clip": 60.0,
-        "epoch_num": 2,
-        "report_rate": 1,
-        "batch_size": 32,
-        "batch_double": 100
+        "epoch_num": 200,
+        "expansion_rate": 2.0,
+        "contraction_rate": 0.5,
+        "shrink_rate": 0.02,
+        "report_rate": 20,
+        "batch_size": 96
       }
     }
   ]
