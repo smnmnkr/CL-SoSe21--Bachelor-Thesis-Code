@@ -1,9 +1,9 @@
 {
-  "embedding": "./data/cc.en.300.bin",
+  "embedding": "./data/cc.en.32.bin",
   "preprocess": true,
   "train": "./data/en_proof_of_concept.conllu",
   "dev": "./data/en_partut-ud-test.conllu",
   "test": "./data/en_partut-ud-test.conllu",
-  "load_model": "./data/model__descent_400_epochs",
-  "save_model": "./data/model__descent_400_epochs"
+  "load_model": null,
+  "save_model": null
 }
