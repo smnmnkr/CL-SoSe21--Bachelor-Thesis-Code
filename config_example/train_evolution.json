@@ -2,11 +2,12 @@
   "tasks": [
     {
       "type": "evolve",
-      "population_size": 40,
+      "population_size": 50,
       "parameters": {
-        "selection_rate": 4,
-        "crossover_rate": 1.0,
-        "epoch_num": 5,
+        "mutation_rate": 0.02,
+        "selection_rate": 5,
+        "crossover_rate": 1,
+        "epoch_num": 20,
         "report_rate": 1,
         "batch_size": 96
       }

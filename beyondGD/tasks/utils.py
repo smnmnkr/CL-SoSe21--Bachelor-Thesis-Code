@@ -19,7 +19,9 @@ def setup(args: dict):
     model_config, train_config, data_config = load_config(args)
 
     # --- load external data sources
-    embedding, encoding, data = load_resources(data_config, model_config)
+    embedding, encoding, data = load_resources(
+        data_config, model_config
+    )
 
     # --- load model
     model, CLS, model_config = load_tagger(
@@ -83,7 +85,9 @@ def load_tagger(
     # --- set, load full model
     else:
         CLS: Model = POSfull
-        model = CLS(model_config, embedding, encoding).to(get_device())
+        model = CLS(model_config, embedding, encoding).to(
+            get_device()
+        )
 
     # --- return model and updated config
     return (model, CLS, model_config)
@@ -101,9 +105,9 @@ def load_resources(
     # --- try loading external resources
     try:
         # --- get POS-Tags from train and dev set
-        taglist = CONLLU(data_config.get("train")).taglist.union(
-            CONLLU(data_config.get("dev")).taglist
-        )
+        taglist = CONLLU(
+            data_config.get("train")
+        ).taglist.union(CONLLU(data_config.get("dev")).taglist)
 
         # --- create embedding and encoding objects
         embedding = FastText(
@@ -165,7 +169,25 @@ def init_population(
     config: dict,
     size: int,
 ) -> dict:
-    return {model_CLS(config).to(get_device()): 0.0 for _ in range(size)}
+    return {
+        model_CLS(config).to(get_device()): 0.0
+        for _ in range(size)
+    }
+
+
+#
+#
+#  -------- population_from_model -----------
+#
+def population_from_model(
+    model_CLS: object,
+    model: Model,
+    size: int,
+) -> dict:
+    return {
+        model_CLS.copy(model).to(get_device()): 0.0
+        for _ in range(size)
+    }
 
 
 #

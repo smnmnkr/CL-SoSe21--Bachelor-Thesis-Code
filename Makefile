@@ -7,7 +7,7 @@ data_config := config_example/data.json
 descent_config := config_example/train_descent.json
 evolve_config := config_example/train_evolution.json
 swarm_config := config_example/train_swarm.json
-amoeba_config := config_example/train_amoeba.json
+simplex_config := config_example/train_simplex.json
 orchestra_config := config_example/train_orchestra.json
 
 
@@ -23,8 +23,8 @@ evolve:
 swarm:
 	@python3 -m ${module} -M ${model_config} -T ${swarm_config} -D ${data_config}
 
-amoeba:
-	@python3 -m ${module} -M ${model_config} -T ${amoeba_config} -D ${data_config}
+simplex:
+	@python3 -m ${module} -M ${model_config} -T ${simplex_config} -D ${data_config}
 
 orchestra:
 	@python3 -m ${module} -M ${model_config} -T ${orchestra_config} -D ${data_config}

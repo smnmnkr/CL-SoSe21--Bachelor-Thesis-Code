@@ -21,6 +21,7 @@ def evolve(
     population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
+    mutation_rate: float = 0.02,
     selection_rate: int = 10,
     crossover_rate: float = 0.5,
     epoch_num: int = 200,
@@ -38,6 +39,10 @@ def evolve(
 
     evaluate_linear(population, train_loader)
 
+    # count plateau length with last best model
+    last_best_score: float = 0.0
+    plateau_length: int = 0
+
     # --
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
@@ -49,6 +54,7 @@ def evolve(
                 population,
                 batch,
                 selection_rate=selection_rate,
+                mutation_rate=mutation_rate,
                 crossover_rate=crossover_rate,
             )
 
@@ -60,6 +66,17 @@ def evolve(
 
             # --- find best model and corresponding score
             best, score = dict_max(population)
+
+            if score <= last_best_score:
+                plateau_length += report_rate
+
+            else:
+                plateau_length = 0
+                last_best_score = score
+
+            if plateau_length == 100:
+                mutation_rate /= 2
+                plateau_length = 0
 
             # load dev set as batched loader
             dev_loader = batch_loader(
