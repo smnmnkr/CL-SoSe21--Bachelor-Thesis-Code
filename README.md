@@ -72,7 +72,7 @@ It is possible to orchestrate the tasks individually in the training process.
   "tasks": [
     {
       "type": "string", // Supports: [descent, evolve, swarm, simplex]
-      "population_size": 200, // Only: [evolve, swarm, simplex]
+      "population_size": 200, // Only: [evolve, simplex]
       "parameters": {
         "learning_rate": 5e-2, // Only: [descent, evolve, swarm]
         "weight_decay": 1e-6, // Only: [descent]
@@ -80,8 +80,12 @@ It is possible to orchestrate the tasks individually in the training process.
         "batch_double": 100, // Only: [descent]
         "selection_rate": 4, // Only: [evolve]
         "crossover_rate": 1.0, // Only: [evolve]
+        "expansion_rate": 2.0, // Only: [simplex]
+        "contraction_rate": 0.5, // Only: [simplex]
+        "shrink_rate": 0.02, // Only: [simplex]
         "noise_std": 0.75, // Only: [swarm]
-        "optimizer": "custom", // Only: [swarm]
+        "num_offspring": 1000, // Only: [swarm]
+        "filter_offspring": false, // Only: [swarm]
         "epoch_num": 5,
         "report_rate": 1,
         "batch_size": 32
