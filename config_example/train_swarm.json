@@ -5,10 +5,10 @@
       "parameters": {
         "noise_std": 0.02,
         "learning_rate": 0.001,
-        "num_offspring": 1000,
+        "num_offspring": 50,
         "filter_offspring": false,
-        "epoch_num": 500,
-        "report_rate": 10,
+        "epoch_num": 50,
+        "report_rate": 1,
         "batch_size": 96
       }
     }
