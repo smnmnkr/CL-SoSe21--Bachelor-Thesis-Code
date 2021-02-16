@@ -17,6 +17,7 @@ def optimize(
     filter: bool = True,
 ):
 
+    # --- filter by higher scoring noise tensors (optional)
     if filter:
         noise_tensors_w_score: list = [
             (noise_tensors, score)
@@ -24,7 +25,8 @@ def optimize(
             if score > model_score
         ]
 
-        print(len(noise_tensors_w_score))
+        if len(noise_tensors_w_score) == 0:
+            return model
 
     #
     for p_id, m_param in enumerate(model.parameters()):
@@ -33,16 +35,14 @@ def optimize(
 
         sigma += sum(
             [
-                noise_tensors[p_id] * score
+                noise_tensors[p_id]
+                * score  # center score: (score - model_score)
                 for (
                     noise_tensors,
                     score,
                 ) in noise_tensors_w_score
             ]
         )
-
-        if len(noise_tensors_w_score) == 0:
-            return
 
         step = learning_rate * (
             (1 / (len(noise_tensors_w_score) * noise_std ** 2))
