@@ -133,4 +133,4 @@ dmypy.json
 
 # data files
 /data
-/config
+**config
