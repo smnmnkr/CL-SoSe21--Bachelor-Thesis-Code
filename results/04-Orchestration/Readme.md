@@ -1,6 +1,8 @@
-# Orchestration Experiment
+# Orchestration Experiment (ONGOING)
 
-Results of baseline gradient training on the POS-Tagger, chained with the derivative-free algorithms.
+Results of baseline gradient training on the POS-Tagger, chained with the derivative-free algorithms. _(currently only evolution approach)_
+To fully reproduce these results it is necessary to run the experiment `00-Baseline-Gradient-Training at` first 
+and use the resulting model as a `baseline_model.pickle`.
 
 ## Baseline:
 
@@ -32,6 +34,8 @@ Full training logs can be found in `full.baseline.txt`.
 ## Results
 
 ### Evolution
+
+The retrained model improves __0.4%__ in accuracy given the test set.
 
 Full training logs can be found in `full.evolve.txt`.
 
@@ -105,6 +109,7 @@ Full training logs can be found in `full.evolve.txt`.
   "train": "./data/en_partut-ud-train.conllu",
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
-  "test": "./.../model"
+  "load_model": "/baseline_model.pickle",
+  "save_model": null
 }
 ```
