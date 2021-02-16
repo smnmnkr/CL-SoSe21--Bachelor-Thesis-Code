@@ -20,9 +20,9 @@ def swarm(
     model: nn.Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
-    noise_std: float = 0.1,
+    noise_std: float = 0.02,
     learning_rate: float = 0.001,
-    population_size: int = 200,
+    num_offspring: int = 500,
     filter_offspring: bool = False,
     epoch_num: int = 200,
     report_rate: int = 10,
@@ -46,7 +46,7 @@ def swarm(
             noise_tensors_w_score: list = []
 
             # --- fill new population
-            for _ in range(population_size):
+            for _ in range(num_offspring):
 
                 # created mutated pseudo child
                 pseudo_offspring, noise_tensors = mutate(
@@ -64,9 +64,10 @@ def swarm(
             # --- update model, using optimizer proposed in Zhang et al. (with optional filtering)
             model = optimize(
                 model,
+                model.accuracy(batch),
                 noise_tensors_w_score,
-                noise_std,
-                learning_rate,
+                noise_std=noise_std,
+                learning_rate=learning_rate,
                 filter=filter_offspring,
             )
 
