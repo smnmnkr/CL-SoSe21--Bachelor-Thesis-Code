@@ -41,6 +41,7 @@ download:
 	@wget  ${data_server}/data/en_partut-ud-train.conllu -P ./data
 	@wget  ${data_server}/data/en_partut-ud-dev.conllu -P ./data
 	@wget  ${data_server}/data/en_partut-ud-test.conllu -P ./data
+	@wget  ${data_server}/data/en_proof_of_concept.conllu -P ./data
 
 lint:
 	@pre-commit run --all-files

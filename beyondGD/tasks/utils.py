@@ -192,20 +192,6 @@ def population_from_model(
 
 #
 #
-#  -------- population_from_model -----------
-#
-def population_from_model(
-    model_CLS: object,
-    model: Model,
-    size: int,
-) -> dict:
-    return {
-        model_CLS.copy(model).to(get_device()): 0.0 for _ in range(size)
-    }
-
-
-#
-#
 #  -------- evaluate -----------
 #
 def evaluate(
