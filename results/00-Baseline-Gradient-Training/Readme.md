@@ -90,6 +90,6 @@ Full training logs can be found in `full.txt`.
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
   "load_model": null,
-  "save_model": "./.../model"
+  "save_model": "/model"
 }
 ```
