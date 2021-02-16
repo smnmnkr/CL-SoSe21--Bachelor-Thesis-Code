@@ -73,14 +73,14 @@ def process_linear(
     crossover_rate: int,
 ):
 
+    # create empty new generation
+    new_population: dict = {}
+
     # --- select by elite
     selection: dict = elitism(population, selection_rate)
 
-    # --- fill new population with selection
-    new_population: dict = selection.copy()
-
     # --- fill new population with mutated, crossed entities
-    while len(new_population) < len(population):
+    for _ in range(len(population)):
 
         # get random players from selection
         rnd_entity, score = random.choice(
