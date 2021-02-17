@@ -2,12 +2,10 @@
   "tasks": [
     {
       "type": "swarm",
+      "population_size": 200,
       "parameters": {
-        "noise_std": 0.02,
-        "learning_rate": 0.001,
-        "num_offspring": 50,
-        "filter_offspring": false,
-        "epoch_num": 50,
+        "learning_rate": 0.01,
+        "epoch_num": 10,
         "report_rate": 1,
         "batch_size": 96
       }

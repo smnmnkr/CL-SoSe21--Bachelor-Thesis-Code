@@ -52,7 +52,7 @@ def do_train(args: dict) -> None:
 
         # --- init population, if is first task and not gradient descent
         if (
-            task.get("type") not in ("descent", "swarm")
+            task.get("type") not in ("descent")
             and not last_return_type
         ):
             population = init_population(
@@ -76,7 +76,7 @@ def do_train(args: dict) -> None:
         print(f"\n[--- {task.get('type').upper()} ---]")
 
         # handle task, which take and return population
-        if task.get("type") in ("evolve", "simplex"):
+        if task.get("type") in ("evolve", "simplex", "swarm"):
             population = tasks.get(task.get("type"))(
                 population,
                 data.get("train"),
@@ -87,7 +87,7 @@ def do_train(args: dict) -> None:
             last_return_type = "population"
 
         # handle task, which take and return model
-        elif task.get("type") in ("descent", "swarm"):
+        elif task.get("type") in ("descent"):
 
             # if last task has returned a population, extract the best model
             if last_return_type == "population":
