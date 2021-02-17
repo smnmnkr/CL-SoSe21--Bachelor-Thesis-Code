@@ -1,0 +1,9 @@
+{
+  "embedding": "./data/cc.en.32.bin",
+  "preprocess": true,
+  "train": "./data/en_partut-ud-train.conllu",
+  "dev": "./data/en_partut-ud-dev.conllu",
+  "test": "./data/en_partut-ud-test.conllu",
+  "load_model": null,
+  "save_model": "./model_baseline_evolve"
+}

@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "type": "evolve",
+      "population_size": 200,
+      "parameters": {
+        "mutation_rate": 0.02,
+        "selection_rate": 10,
+        "crossover_rate": 0.5,
+        "epoch_num": 500,
+        "report_rate": 50,
+        "batch_size": 96
+      }
+    }
+  ]
+}
