@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class Embedding(ABC):

@@ -2,7 +2,7 @@ from conllu import parse_incr
 
 import torch.utils.data as data
 
-from beyondGD.utils.types import Token
+from beyondGD.utils.type import Token
 
 
 class CONLLU(data.IterableDataset):
@@ -16,7 +16,9 @@ class CONLLU(data.IterableDataset):
 
         # save data, taglist
         self.data = list(self.load_data(data_path))
-        self.taglist: set = {tok.pos for sent in self.data for tok in sent}
+        self.taglist: set = {
+            tok.pos for sent in self.data for tok in sent
+        }
 
     #
     #

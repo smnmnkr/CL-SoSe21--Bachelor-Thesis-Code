@@ -1,7 +1,7 @@
-from beyondGD.neural import descent, evolve, swarm, simplex
+from beyondGD.optimizer import descent, evolve, swarm, simplex
 
 from beyondGD.utils import time_track, dict_max
-from beyondGD.tasks.utils import (
+from beyondGD.runner.util import (
     setup,
     init_population,
     population_from_model,
@@ -18,10 +18,10 @@ tasks: dict = {
 
 #
 #
-#  -------- do_train -----------
+#  -------- do_optimize -----------
 #
 @time_track
-def do_train(args: dict) -> None:
+def do_optimize(args: dict) -> None:
 
     # --- setup experiment
     model, data, utils = setup(args)

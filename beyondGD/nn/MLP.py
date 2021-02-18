@@ -1,9 +1,14 @@
 import torch.nn as nn
 
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class MLP(nn.Module):
+
+    #
+    #
+    #  -------- __init__ -----------
+    #
     def __init__(
         self,
         in_size: int,
@@ -18,25 +23,6 @@ class MLP(nn.Module):
             nn.Dropout(p=dropout, inplace=True),
             nn.LeakyReLU(inplace=True),
         )
-
-        self.init_weights()
-
-    #
-    #
-    #  -------- init_weights -----------
-    #
-    def init_weights(self):
-
-        for name, param in self.net.named_parameters():
-
-            if "weight_ih" in name:
-                nn.init.xavier_uniform_(param.data)
-
-            elif "weight_hh" in name:
-                nn.init.orthogonal_(param.data)
-
-            elif "bias" in name:
-                param.data.uniform_()
 
     #
     #

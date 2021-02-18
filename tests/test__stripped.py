@@ -3,7 +3,7 @@ import pytest
 import torch
 
 
-from beyondGD.models.postagger import POSstripped
+from beyondGD.model import POSstripped
 
 config: dict = {
     "lstm": {

@@ -1,8 +1,11 @@
-from beyondGD.models import Model
-from beyondGD.models.postagger import POSstripped, POSfull
+from beyondGD.model import (
+    POSinterface,
+    POSstripped,
+    POSfull,
+)
 
 from beyondGD.encoding import Encoding
-from beyondGD.embeddings import FastText
+from beyondGD.embedding import FastText
 
 from beyondGD.data import PreProcessed, CONLLU, batch_loader
 from beyondGD.utils import load_json, time_track, get_device
@@ -71,7 +74,7 @@ def load_tagger(
     data_config: dict,
     embedding: FastText,
     encoding: Encoding,
-) -> Model:
+) -> POSinterface:
 
     # --- add data dependent model config
     model_config["lstm"]["in_size"] = embedding.dimension
@@ -79,12 +82,12 @@ def load_tagger(
 
     # --- set, load stripped model
     if data_config.get("preprocess"):
-        CLS: Model = POSstripped
+        CLS: POSinterface = POSstripped
         model = CLS(model_config).to(get_device())
 
     # --- set, load full model
     else:
-        CLS: Model = POSfull
+        CLS: POSinterface = POSfull
         model = CLS(model_config, embedding, encoding).to(
             get_device()
         )
@@ -117,9 +120,12 @@ def load_resources(
         encoding = Encoding(taglist)
 
         # --- load and preprocess train and dev data
-        if data_config.get("preprocess"):
+        if data_config.get("preprocess", False):
             data_train = PreProcessed(
-                data_config.get("train"), embedding, encoding
+                data_config.get("train"),
+                embedding,
+                encoding,
+                reduction=data_config.get("reduce_train", 0.0),
             )
             data_dev = PreProcessed(
                 data_config.get("dev"), embedding, encoding
@@ -181,7 +187,7 @@ def init_population(
 #
 def population_from_model(
     model_CLS: object,
-    model: Model,
+    model: POSinterface,
     size: int,
 ) -> dict:
     return {
@@ -195,7 +201,7 @@ def population_from_model(
 #  -------- evaluate -----------
 #
 def evaluate(
-    model: Model,
+    model: POSinterface,
     encoding: Encoding,
     data_set,
 ) -> None:

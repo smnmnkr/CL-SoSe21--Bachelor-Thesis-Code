@@ -1,6 +1,6 @@
 import torch
 
-from beyondGD.neural.nn import MLP, BILSTM
+from beyondGD.nn import MLP, BILSTM
 
 # config
 in_size: int = 16
@@ -12,7 +12,9 @@ batch_len: int = 48
 # inputs
 x_vec: torch.Tensor = torch.randn(in_size)
 x_mat: torch.Tensor = torch.randn(sent_len, in_size)
-x_bat: list = [torch.randn(sent_len, in_size) for _ in range(batch_len)]
+x_bat: list = [
+    torch.randn(sent_len, in_size) for _ in range(batch_len)
+]
 
 
 def test_BILSTM():

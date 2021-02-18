@@ -1,5 +1,5 @@
 # __init__.py
-from .methods import (
+from .functional import (
     time_track,
     get_device,
     unpack,

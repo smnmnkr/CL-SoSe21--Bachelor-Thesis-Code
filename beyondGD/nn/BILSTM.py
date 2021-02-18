@@ -3,7 +3,7 @@ from typing import Sequence
 import torch.nn as nn
 import torch.nn.utils.rnn as rnn
 
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class BILSTM(nn.Module):
@@ -31,32 +31,14 @@ class BILSTM(nn.Module):
         )
         self.acf = nn.LeakyReLU()
 
-        # custom init weights
-        self.init_weights()
-
-    #
-    #
-    #  -------- init_weights -----------
-    #
-    def init_weights(self):
-
-        for name, param in self.net.named_parameters():
-
-            if "weight_ih" in name:
-                nn.init.xavier_uniform_(param.data)
-
-            elif "weight_hh" in name:
-                nn.init.orthogonal_(param.data)
-
-            elif "bias" in name:
-                param.data.uniform_()
-
     #
     #
     #  -------- forward -----------
     #
-    def forward(self, batch: Sequence[TT]) -> rnn.PackedSequence:
-        """Contextualize the embeddings for each sentence in the batch.
+    def forward(
+        self, batch: Sequence[TT]
+    ) -> rnn.PackedSequence:
+        """Contextualize the embedding for each sentence in the batch.
 
         The method takes on input a list of tensors with shape N x *,
         where N is the dynamic sentence length (i.e. can be different
@@ -68,9 +50,11 @@ class BILSTM(nn.Module):
         self.net.flatten_parameters()
 
         # Pack sentence vectors as a packed sequence
-        packed_batch = rnn.pack_sequence(batch, enforce_sorted=False)
+        packed_batch = rnn.pack_sequence(
+            batch, enforce_sorted=False
+        )
 
-        # Apply LSTM to the packed sequence of word embeddings
+        # Apply LSTM to the packed sequence of word embedding
         packed_hidden, _ = self.net(packed_batch)
 
         # Convert packed representation to a padded representation

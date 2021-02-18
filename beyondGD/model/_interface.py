@@ -5,7 +5,7 @@ import torch.utils.data as data
 from abc import ABC, abstractmethod
 
 
-class Model(ABC):
+class POSinterface(ABC):
     """
     Abstract model interface for neural networks.
 

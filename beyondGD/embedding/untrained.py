@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
 
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class Untrained(nn.Module):
-    """Module for untrained Token Embeddings"""
+    """Module for untrained Token Embedding"""
 
     def __init__(
         self,

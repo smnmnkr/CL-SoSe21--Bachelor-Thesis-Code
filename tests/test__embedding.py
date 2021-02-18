@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from beyondGD.embeddings import FastText, Untrained
+from beyondGD.embedding import FastText, Untrained
 
 # NOTE: user dependent file
 fasttext_file: str = "./data/cc.en.32.bin"
@@ -35,7 +35,7 @@ def ut_fixture():
 
 
 def test_FastText_init(fs_fixture):
-    # check dimensionality of the embeddings
+    # check dimensionality of the embedding
     assert fs_fixture.dimension == dimension
 
 
@@ -57,7 +57,7 @@ def test_FastText_fordward_sentence(fs_fixture):
 
 
 def test_Untrained_init(ut_fixture):
-    # check dimensionality of the embeddings
+    # check dimensionality of the embedding
     assert ut_fixture.dimension == dimension
 
 

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from beyondGD.neural.nn import MLP, BILSTM
+from beyondGD.nn import MLP, BILSTM
 
 from beyondGD.metric import Metric
 from beyondGD.utils import unpad, flatten, get_device
@@ -20,7 +20,7 @@ class POSstripped(nn.Module):
         self.config = config
         self.metric = Metric()
 
-        # BILSTM to calculate contextualized word embeddings
+        # BILSTM to calculate contextualized word embedding
         self.context = BILSTM(
             in_size=config["lstm"]["in_size"],
             hid_size=config["lstm"]["hid_size"],
@@ -41,7 +41,7 @@ class POSstripped(nn.Module):
     #
     def forward(self, embed_batch: list) -> list:
 
-        # Contextualize embeddings with BiLSTM
+        # Contextualize embedding with BiLSTM
         pad_context, mask = self.context(embed_batch)
 
         # Calculate the POS-Tag scores
@@ -75,7 +75,9 @@ class POSstripped(nn.Module):
 
         return nn.CrossEntropyLoss()(
             torch.cat(predictions),
-            torch.LongTensor(flatten(target_ids)).to(get_device()),
+            torch.LongTensor(flatten(target_ids)).to(
+                get_device()
+            ),
         )
 
     #
@@ -154,6 +156,8 @@ class POSstripped(nn.Module):
 
         return model
 
+    #  -------- copy -----------
+    #
     @classmethod
     def copy(cls, model: nn.Module) -> nn.Module:
 
