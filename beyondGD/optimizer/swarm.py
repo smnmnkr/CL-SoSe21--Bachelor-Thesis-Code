@@ -2,13 +2,17 @@ from datetime import datetime
 from typing import Generator
 
 import torch
-import copy
-import random
 
 from beyondGD.data import batch_loader
-from beyondGD.utils import get_device
 
-from beyondGD.utils.type import IterableDataset
+from beyondGD.optimizer.util import (
+    get_normal_TT,
+    get_rnd_prob,
+    copy_model,
+    copy_parameters,
+)
+
+from beyondGD.utils.type import IterableDataset, Module
 
 
 #
@@ -43,9 +47,7 @@ def swarm(
             "model": model,
             "velocity": list(create_velocity(model)),
             "best_score": model.evaluate(train_loader),
-            "best_params": copy.deepcopy(
-                list(model.parameters())
-            ),
+            "best_params": copy_parameters(model),
         }
         for id, (model, _) in enumerate(population.items())
     ]
@@ -73,27 +75,24 @@ def swarm(
                 )
 
                 if particle == global_best:
-                    particle["best_score"] = particle[
-                        "model"
-                    ].accuracy(batch)
+                    particle["best_score"] = particle["model"].accuracy(
+                        batch
+                    )
 
                 if (
                     particle["model"].accuracy(batch)
                     > particle["best_score"]
                 ):
 
-                    particle["best_score"] = particle[
-                        "model"
-                    ].accuracy(batch)
-
-                    particle["best_params"] = copy.deepcopy(
-                        list(particle["model"].parameters())
+                    particle["best_score"] = particle["model"].accuracy(
+                        batch
                     )
 
-                    if (
-                        particle["best_score"]
-                        > global_best["best_score"]
-                    ):
+                    particle["best_params"] = copy_parameters(
+                        particle["model"]
+                    )
+
+                    if particle["best_score"] > global_best["best_score"]:
                         global_best = particle
 
         # --- report
@@ -116,9 +115,7 @@ def swarm(
 
     # --- return population
     return {
-        particle["model"]: particle["model"].evaluate(
-            train_loader
-        )
+        particle["model"]: particle["model"].evaluate(train_loader)
         for particle in swarm
     }
 
@@ -133,14 +130,11 @@ def create_velocity(
 ) -> Generator:
 
     for param in network.parameters():
-
         yield (
-            torch.empty(param.shape)
-            .normal_(
-                mean=0,
-                std=boundary,
+            get_normal_TT(
+                param.shape,
+                boundary,
             )
-            .to(get_device())
         )
 
 
@@ -157,7 +151,7 @@ def update_position(
     global_weight: float = 1.0,
 ) -> dict:
 
-    updated_model = copy.deepcopy(particle["model"])
+    updated_model: Module = copy_model(particle["model"])
     updated_vecolity: list = []
 
     for param, velo, pers, glob in zip(
@@ -169,16 +163,8 @@ def update_position(
 
         updated_vecolity.append(
             velocity_weight * velo
-            + (
-                personal_weight
-                * random.uniform(0, 1)
-                * (pers - param.data)
-            )
-            + (
-                global_weight
-                * random.uniform(0, 1)
-                * (glob - param.data)
-            )
+            + (personal_weight * get_rnd_prob() * (pers - param.data))
+            + (global_weight * get_rnd_prob() * (glob - param.data))
         )
 
         param.data += learning_rate * updated_vecolity[-1]
@@ -192,7 +178,7 @@ def update_position(
 #
 def get_best(swarm: list) -> int:
 
-    best = None
+    best: dict = None
     score: float = -1.0
 
     for particle in swarm:

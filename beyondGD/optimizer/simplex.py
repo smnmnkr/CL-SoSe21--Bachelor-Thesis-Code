@@ -3,12 +3,20 @@ from datetime import datetime
 import torch
 
 from beyondGD.data import batch_loader
-from beyondGD.utils import dict_max, dict_min
 
-from beyondGD.optimizer.ga.utils import evaluate_linear
+from beyondGD.optimizer.util import (
+    evaluate_on_loader,
+    accuracy_on_batch,
+    copy_model,
+)
 
-from beyondGD.utils import get_device, smooth_gradient
-from beyondGD.utils.type import IterableDataset
+from beyondGD.utils import (
+    dict_max,
+    dict_min,
+    get_device,
+    smooth_gradient,
+)
+from beyondGD.utils.type import IterableDataset, Module
 
 
 #
@@ -42,9 +50,8 @@ def simplex(
         # -- batch loop
         for batch in train_loader:
 
-            # calculate score of each particle in population
-            for particle, _ in population.items():
-                population[particle] = particle.accuracy(batch)
+            # --- calculate accuracy on batch
+            accuracy_on_batch(population, batch)
 
             # get the best, worst particle
             p_best, b_score = dict_max(population)
@@ -70,9 +77,7 @@ def simplex(
 
             # Expansion Case: Reflection Particle is the new best
             elif p_ref.accuracy(batch) > b_score:
-                p_new = expansion(
-                    p_worst, p_ref, C, batch, expansion_rate
-                )
+                p_new = expansion(p_worst, p_ref, C, batch, expansion_rate)
 
             # Outside Contraction Case: Reflection Particle performs as the second worst
             elif sec_w_score >= p_ref.accuracy(batch) > w_score:
@@ -88,9 +93,7 @@ def simplex(
 
             # Shrinkage Case: Inside Contracted Particle performs worst
             if p_new is None:
-                population = shrinkage(
-                    population, p_best, shrink_rate
-                )
+                population = shrinkage(population, p_best, shrink_rate)
 
             else:
                 population[p_new] = 0.0
@@ -100,7 +103,7 @@ def simplex(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_linear(population, train_loader)
+            evaluate_on_loader(population, train_loader)
 
             # --- find best model and corresponding score
             best, score = dict_max(population)
@@ -116,7 +119,7 @@ def simplex(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
                     sum(population.values()) / len(population),
-                    best.evaluate(train_loader),
+                    score,
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
@@ -133,20 +136,15 @@ def centroid(population: dict) -> list:
     C: list = []
 
     # get the score (mass) of each model in $P$
-    P_mass = torch.tensor(list(population.values())).to(
-        get_device()
-    )
+    P_mass = torch.tensor(list(population.values())).to(get_device())
 
     # get the parameters $param$ as tensors (coordinates) in $P$
     P_params: list = [
-        [param for param in entity.parameters()]
-        for entity in population
+        [param for param in entity.parameters()] for entity in population
     ]
 
     # calcuate the center of mass $R$ for every parameter $param$ in every particle in $P$
-    for w_id, w_param in enumerate(
-        next(iter(population)).parameters()
-    ):
+    for w_id, w_param in enumerate(next(iter(population)).parameters()):
 
         # where $R$ is the center of mass
         # calculate: (1/M) * sum_{i=1}^{n} m_i*r_i
@@ -158,9 +156,7 @@ def centroid(population: dict) -> list:
 
         # where $n$ is the id of the particle,
         # and $r$ the values (coordinates) as a tensor
-        for n, r in enumerate(
-            [param[w_id] for param in P_params]
-        ):
+        for n, r in enumerate([param[w_id] for param in P_params]):
 
             # add the values $r$ with respect to the mass $m$, here P_mass[n]
             R += r * P_mass[n]
@@ -181,7 +177,7 @@ def centroid(population: dict) -> list:
 #
 def reflect(p, C, reflection_param: float = 1):
 
-    p_ref = p.copy(p)
+    p_ref: Module = copy_model(p)
 
     for param_ref, param_c in zip(p_ref.parameters(), C):
 
