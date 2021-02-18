@@ -1,5 +1,8 @@
-from beyondGD.models import Model
-from beyondGD.models.postagger import POSstripped, POSfull
+from beyondGD.models.postagger import (
+    POSinterface,
+    POSstripped,
+    POSfull,
+)
 
 from beyondGD.encoding import Encoding
 from beyondGD.embeddings import FastText
@@ -71,7 +74,7 @@ def load_tagger(
     data_config: dict,
     embedding: FastText,
     encoding: Encoding,
-) -> Model:
+) -> POSinterface:
 
     # --- add data dependent model config
     model_config["lstm"]["in_size"] = embedding.dimension
@@ -79,12 +82,12 @@ def load_tagger(
 
     # --- set, load stripped model
     if data_config.get("preprocess"):
-        CLS: Model = POSstripped
+        CLS: POSinterface = POSstripped
         model = CLS(model_config).to(get_device())
 
     # --- set, load full model
     else:
-        CLS: Model = POSfull
+        CLS: POSinterface = POSfull
         model = CLS(model_config, embedding, encoding).to(
             get_device()
         )
@@ -184,7 +187,7 @@ def init_population(
 #
 def population_from_model(
     model_CLS: object,
-    model: Model,
+    model: POSinterface,
     size: int,
 ) -> dict:
     return {
@@ -198,7 +201,7 @@ def population_from_model(
 #  -------- evaluate -----------
 #
 def evaluate(
-    model: Model,
+    model: POSinterface,
     encoding: Encoding,
     data_set,
 ) -> None:
