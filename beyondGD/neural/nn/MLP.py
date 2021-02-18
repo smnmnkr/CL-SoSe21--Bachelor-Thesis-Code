@@ -32,7 +32,10 @@ class MLP(nn.Module):
             if "weight_ih" in name:
                 nn.init.xavier_uniform_(param.data)
 
-            elif "weight_hh" or "bias" in name:
+            elif "weight_hh" in name:
+                nn.init.orthogonal_(param.data)
+
+            elif "bias" in name:
                 param.data.uniform_()
 
     #
