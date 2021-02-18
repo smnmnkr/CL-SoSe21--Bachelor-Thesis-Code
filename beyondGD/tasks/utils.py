@@ -1,4 +1,4 @@
-from beyondGD.model.postagger import (
+from beyondGD.model import (
     POSinterface,
     POSstripped,
     POSfull,

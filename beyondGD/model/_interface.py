@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 
 class POSinterface(ABC):
     """
-    Abstract model interface for POS Tagger.
+    Abstract model interface for neural networks.
 
     Methods
     ----------
