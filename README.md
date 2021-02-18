@@ -142,3 +142,4 @@ make clean
 - 4.0 Reworked into orchestrated training process
 - 4.1 Added model load/save function
 - 4.2 Reworked simplex optimization
+- 5.0 Added new PSO optimizer, discard old swarm approach
