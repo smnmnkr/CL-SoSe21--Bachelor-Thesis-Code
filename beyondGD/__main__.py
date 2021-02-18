@@ -3,7 +3,7 @@ import argparse
 import torch
 import random
 
-from beyondGD.tasks import do_train
+from beyondGD.runner import do_optimize
 
 
 # make pytorch computations deterministic
@@ -57,9 +57,11 @@ if __name__ == "__main__":
         # get console arguments
         args = parser.parse_args()
 
-        # run task
-        do_train(args)
+        # run optimize task
+        do_optimize(args)
 
     except KeyboardInterrupt:
-        print("[-- Process was interrupted by user, aborting. --]")
+        print(
+            "[-- Process was interrupted by user, aborting. --]"
+        )
         exit()
