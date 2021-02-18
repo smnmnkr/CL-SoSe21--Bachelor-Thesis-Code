@@ -63,7 +63,9 @@ def descent(
 
             # scaling the gradients down, places a limit on the size of the parameter updates
             # https://pytorch.org/docs/stable/nn.html#clip-grad-norm
-            nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
+            nn.utils.clip_grad_norm_(
+                model.parameters(), gradient_clip
+            )
 
             # optimize
             optimizer.step()
