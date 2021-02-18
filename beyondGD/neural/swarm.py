@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Generator
 
 import torch
 import copy
@@ -32,8 +33,8 @@ def swarm(
         batch_size=batch_size,
     )
 
-    # -- initial setup
-    particles: list = [
+    # -- initial swarm setup
+    swarm: list = [
         {
             "id": id,
             "model": model,
@@ -46,39 +47,40 @@ def swarm(
         for id, (model, _) in enumerate(population.items())
     ]
 
-    # get the best
-    global_best = get_best(particles)
+    # save the best particle
+    global_best = get_best(swarm)
 
-    # --
+    # -- epoch loop
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
+        # -- batch loop
         for batch in train_loader:
 
-            # calculate score of each particle in population
-            for part in particles:
+            # -- particle loop
+            for particle in swarm:
 
-                part = update_position(
-                    part,
+                particle = update_position(
+                    particle,
                     global_best,
                     learning_rate=learning_rate,
                 )
 
                 if (
-                    part["model"].accuracy(batch)
-                    > part["score"]
+                    particle["model"].accuracy(batch)
+                    > particle["score"]
                 ):
 
-                    part["score"] = part["model"].accuracy(
-                        batch
+                    particle["score"] = particle[
+                        "model"
+                    ].accuracy(batch)
+
+                    particle["best_params"] = copy.deepcopy(
+                        list(particle["model"].parameters())
                     )
 
-                    part["best_params"] = copy.deepcopy(
-                        list(part["model"].parameters())
-                    )
-
-                    if part["score"] > global_best["score"]:
-                        global_best = part
+                    if particle["score"] > global_best["score"]:
+                        global_best = particle
 
         # --- report
         if epoch % report_rate == 0:
@@ -99,7 +101,10 @@ def swarm(
             )
 
     # --- return population
-    return population
+    return {
+        particle["model"]: particle["score"]
+        for particle in swarm
+    }
 
 
 #
@@ -108,8 +113,8 @@ def swarm(
 #
 def create_velocity(
     network,
-    mutation_rate: float = 0.02,
-):
+    boundary: float = 0.2,
+) -> Generator:
 
     for param in network.parameters():
 
@@ -117,7 +122,7 @@ def create_velocity(
             torch.empty(param.shape)
             .normal_(
                 mean=0,
-                std=mutation_rate,
+                std=boundary,
             )
             .to(get_device())
         )
@@ -128,15 +133,16 @@ def create_velocity(
 #  -------- update_position -----------
 #
 def update_position(
-    particle,
-    global_best,
+    particle: dict,
+    global_best: dict,
     learning_rate: float = 0.001,
     velocity_weight: float = 1.0,
     personal_weight: float = 1.0,
     global_weight: float = 1.0,
-):
+) -> dict:
 
     updated_model = copy.deepcopy(particle["model"])
+    updated_vecolity: list = []
 
     for param, vel, par, glo in zip(
         updated_model.parameters(),
@@ -145,7 +151,7 @@ def update_position(
         global_best["best_params"],
     ):
 
-        param.data += learning_rate * (
+        updated_vecolity.append(
             velocity_weight * vel
             + (
                 personal_weight
@@ -159,22 +165,24 @@ def update_position(
             )
         )
 
-    particle["model"] = updated_model
+        param.data += learning_rate * updated_vecolity[-1]
+
+    particle["velocity"] = updated_vecolity
     particle["model"] = updated_model
     return particle
 
 
 #  -------- get_best -----------
 #
-def get_best(particles) -> int:
+def get_best(swarm: list) -> int:
 
     best = None
     score: float = -1.0
 
-    for p in particles:
+    for particle in swarm:
 
-        if p["score"] > score:
-            score = p["score"]
-            best = p
+        if particle["score"] > score:
+            score = particle["score"]
+            best = particle
 
     return best
