@@ -20,6 +20,9 @@ def swarm(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     learning_rate: float = 0.001,
+    velocity_weight: float = 1.0,
+    personal_weight: float = 1.0,
+    global_weight: float = 1.0,
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -39,7 +42,7 @@ def swarm(
             "id": id,
             "model": model,
             "velocity": list(create_velocity(model)),
-            "score": model.evaluate(train_loader),
+            "best_score": model.evaluate(train_loader),
             "best_params": copy.deepcopy(
                 list(model.parameters())
             ),
@@ -64,14 +67,22 @@ def swarm(
                     particle,
                     global_best,
                     learning_rate=learning_rate,
+                    velocity_weight=velocity_weight,
+                    personal_weight=personal_weight,
+                    global_weight=global_weight,
                 )
+
+                if particle == global_best:
+                    particle["best_score"] = particle[
+                        "model"
+                    ].accuracy(batch)
 
                 if (
                     particle["model"].accuracy(batch)
-                    > particle["score"]
+                    > particle["best_score"]
                 ):
 
-                    particle["score"] = particle[
+                    particle["best_score"] = particle[
                         "model"
                     ].accuracy(batch)
 
@@ -79,7 +90,10 @@ def swarm(
                         list(particle["model"].parameters())
                     )
 
-                    if particle["score"] > global_best["score"]:
+                    if (
+                        particle["best_score"]
+                        > global_best["best_score"]
+                    ):
                         global_best = particle
 
         # --- report
@@ -102,7 +116,9 @@ def swarm(
 
     # --- return population
     return {
-        particle["model"]: particle["score"]
+        particle["model"]: particle["model"].evaluate(
+            train_loader
+        )
         for particle in swarm
     }
 
@@ -113,7 +129,7 @@ def swarm(
 #
 def create_velocity(
     network,
-    boundary: float = 0.2,
+    boundary: float = 1.0,
 ) -> Generator:
 
     for param in network.parameters():
@@ -144,7 +160,7 @@ def update_position(
     updated_model = copy.deepcopy(particle["model"])
     updated_vecolity: list = []
 
-    for param, vel, par, glo in zip(
+    for param, velo, pers, glob in zip(
         updated_model.parameters(),
         particle["velocity"],
         particle["best_params"],
@@ -152,16 +168,16 @@ def update_position(
     ):
 
         updated_vecolity.append(
-            velocity_weight * vel
+            velocity_weight * velo
             + (
                 personal_weight
                 * random.uniform(0, 1)
-                * (par - param.data)
+                * (pers - param.data)
             )
             + (
                 global_weight
                 * random.uniform(0, 1)
-                * (glo - param.data)
+                * (glob - param.data)
             )
         )
 
@@ -181,8 +197,8 @@ def get_best(swarm: list) -> int:
 
     for particle in swarm:
 
-        if particle["score"] > score:
-            score = particle["score"]
+        if particle["best_score"] > score:
+            score = particle["best_score"]
             best = particle
 
     return best
