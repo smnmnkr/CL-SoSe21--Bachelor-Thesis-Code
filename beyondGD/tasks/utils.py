@@ -117,12 +117,12 @@ def load_resources(
         encoding = Encoding(taglist)
 
         # --- load and preprocess train and dev data
-        if data_config.get("preprocess"):
+        if data_config.get("preprocess", False):
             data_train = PreProcessed(
                 data_config.get("train"),
                 embedding,
                 encoding,
-                reduction=data_config.get("reduce_train"),
+                reduction=data_config.get("reduce_train", 0.0),
             )
             data_dev = PreProcessed(
                 data_config.get("dev"), embedding, encoding
