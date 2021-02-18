@@ -1,6 +1,6 @@
 import torch
 
-from beyondGD.models.components import MLP, BILSTM
+from beyondGD.model.components import MLP, BILSTM
 
 # config
 in_size: int = 16

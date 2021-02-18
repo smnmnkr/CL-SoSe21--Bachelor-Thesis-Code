@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from beyondGD.models.components import MLP, BILSTM
+from beyondGD.model.components import MLP, BILSTM
 
 from beyondGD.metric import Metric
 from beyondGD.utils import unpad, flatten, get_device
