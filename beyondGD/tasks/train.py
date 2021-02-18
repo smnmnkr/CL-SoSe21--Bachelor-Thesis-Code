@@ -1,4 +1,4 @@
-from beyondGD.neural import descent, evolve, swarm, simplex
+from beyondGD.optimizer import descent, evolve, swarm, simplex
 
 from beyondGD.utils import time_track, dict_max
 from beyondGD.tasks.utils import (

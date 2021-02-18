@@ -1,7 +1,7 @@
 import random, multiprocessing
 import torch.multiprocessing as mp
 
-from beyondGD.neural.ga import mutate, cross, elitism
+from beyondGD.optimizer.ga import mutate, cross, elitism
 
 from beyondGD.utils.types import IterableDataset
 

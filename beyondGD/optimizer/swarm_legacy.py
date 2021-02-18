@@ -5,8 +5,8 @@ import torch.nn as nn
 
 from beyondGD.data import batch_loader
 
-from beyondGD.neural.ga import mutate
-from beyondGD.neural.ga.swarm import optimize
+from beyondGD.optimizer.ga import mutate
+from beyondGD.optimizer.ga.swarm import optimize
 
 
 from beyondGD.utils.types import IterableDataset
