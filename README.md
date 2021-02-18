@@ -74,19 +74,26 @@ It is possible to orchestrate the tasks individually in the training process.
       "type": "string", // Supports: [descent, evolve, swarm, simplex]
       "population_size": 200, // Only: [evolve, swarm, simplex]
       "parameters": {
-        "learning_rate": 5e-2, // Only: [descent, evolve, swarm]
-        "weight_decay": 1e-6, // Only: [descent]
-        "gradient_clip": 60.0, // Only: [descent]
-        "selection_rate": 4, // Only: [evolve]
-        "crossover_rate": 1.0, // Only: [evolve]
-        "expansion_rate": 2.0, // Only: [simplex]
-        "contraction_rate": 0.5, // Only: [simplex]
-        "shrink_rate": 0.02, // Only: [simplex]
-        "noise_std": 0.75, // Only: [swarm]
-        "num_offspring": 1000, // Only: [swarm]
-        "filter_offspring": false, // Only: [swarm]
-        "epoch_num": 5,
-        "report_rate": 1,
+        // Descent:
+        "learning_rate": 5e-2,
+        "weight_decay": 1e-6,
+        "gradient_clip": 60.0,
+        /// Evolve:
+        "mutation_rate": 0.02,
+        "selection_rate": 10,
+        "crossover_rate": 0.5,
+        // Simplex:
+        "expansion_rate": 2.0,
+        "contraction_rate": 0.5,
+        "shrink_rate": 0.02,
+        // Swarm:
+        "learning_rate": 0.02,
+        "velocity_weight": 1.0,
+        "personal_weight": 0.5,
+        "global_weight": 0.75,
+        // General:
+        "epoch_num": 50,
+        "report_rate": 5,
         "batch_size": 32
       }
     }

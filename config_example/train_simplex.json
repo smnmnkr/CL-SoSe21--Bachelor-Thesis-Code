@@ -2,13 +2,13 @@
   "tasks": [
     {
       "type": "simplex",
-      "population_size": 50,
+      "population_size": 200,
       "parameters": {
-        "epoch_num": 1000,
         "expansion_rate": 2.0,
         "contraction_rate": 0.5,
         "shrink_rate": 0.02,
-        "report_rate": 10,
+        "epoch_num": 50,
+        "report_rate": 5,
         "batch_size": 96
       }
     }
