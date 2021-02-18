@@ -64,7 +64,7 @@ python3 -m beyondGD -M ${tagger_config.json} -T ${train_config.json} -D ${data_c
 
 ### Training
 
-Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimiziation _(PSO)_, and the Nelder–Mead method _(Simplex)_.
+Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimization _(PSO)_, and the Nelder–Mead method _(Simplex)_.
 It is possible to orchestrate the tasks individually in the training process.
 
 ```jsonc
