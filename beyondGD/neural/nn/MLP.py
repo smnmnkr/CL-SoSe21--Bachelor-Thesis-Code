@@ -19,7 +19,7 @@ class MLP(nn.Module):
             nn.LeakyReLU(inplace=True),
         )
 
-        self.init_weights()
+        # self.init_weights()
 
     #
     #

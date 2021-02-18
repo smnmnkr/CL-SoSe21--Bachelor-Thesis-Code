@@ -31,8 +31,7 @@ class BILSTM(nn.Module):
         )
         self.acf = nn.LeakyReLU()
 
-        # custom init weights
-        self.init_weights()
+        # self.init_weights()
 
     #
     #
@@ -55,7 +54,9 @@ class BILSTM(nn.Module):
     #
     #  -------- forward -----------
     #
-    def forward(self, batch: Sequence[TT]) -> rnn.PackedSequence:
+    def forward(
+        self, batch: Sequence[TT]
+    ) -> rnn.PackedSequence:
         """Contextualize the embeddings for each sentence in the batch.
 
         The method takes on input a list of tensors with shape N x *,
@@ -68,7 +69,9 @@ class BILSTM(nn.Module):
         self.net.flatten_parameters()
 
         # Pack sentence vectors as a packed sequence
-        packed_batch = rnn.pack_sequence(batch, enforce_sorted=False)
+        packed_batch = rnn.pack_sequence(
+            batch, enforce_sorted=False
+        )
 
         # Apply LSTM to the packed sequence of word embeddings
         packed_hidden, _ = self.net(packed_batch)
