@@ -38,7 +38,7 @@ class BILSTM(nn.Module):
     def forward(
         self, batch: Sequence[TT]
     ) -> rnn.PackedSequence:
-        """Contextualize the embeddings for each sentence in the batch.
+        """Contextualize the embedding for each sentence in the batch.
 
         The method takes on input a list of tensors with shape N x *,
         where N is the dynamic sentence length (i.e. can be different
@@ -54,7 +54,7 @@ class BILSTM(nn.Module):
             batch, enforce_sorted=False
         )
 
-        # Apply LSTM to the packed sequence of word embeddings
+        # Apply LSTM to the packed sequence of word embedding
         packed_hidden, _ = self.net(packed_batch)
 
         # Convert packed representation to a padded representation

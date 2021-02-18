@@ -5,7 +5,7 @@ from beyondGD.models.postagger import (
 )
 
 from beyondGD.encoding import Encoding
-from beyondGD.embeddings import FastText
+from beyondGD.embedding import FastText
 
 from beyondGD.data import PreProcessed, CONLLU, batch_loader
 from beyondGD.utils import load_json, time_track, get_device

@@ -20,7 +20,7 @@ class POSstripped(nn.Module):
         self.config = config
         self.metric = Metric()
 
-        # BILSTM to calculate contextualized word embeddings
+        # BILSTM to calculate contextualized word embedding
         self.context = BILSTM(
             in_size=config["lstm"]["in_size"],
             hid_size=config["lstm"]["hid_size"],
@@ -41,7 +41,7 @@ class POSstripped(nn.Module):
     #
     def forward(self, embed_batch: list) -> list:
 
-        # Contextualize embeddings with BiLSTM
+        # Contextualize embedding with BiLSTM
         pad_context, mask = self.context(embed_batch)
 
         # Calculate the POS-Tag scores
