@@ -129,7 +129,7 @@ def swarm(
 #
 def create_velocity(
     network,
-    boundary: float = 1.0,
+    boundary: float = 0.05,
 ) -> Generator:
 
     for param in network.parameters():
