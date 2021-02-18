@@ -3,9 +3,7 @@ import torch.multiprocessing as mp
 
 from beyondGD.optimizer.ga import mutate, cross, elitism
 
-from beyondGD.utils.types import IterableDataset
-
-from beyondGD.utils import inverse_logistic
+from beyondGD.utils.type import IterableDataset
 
 
 # prevent MAC OSX multiprocessing bug

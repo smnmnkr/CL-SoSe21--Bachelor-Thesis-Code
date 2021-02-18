@@ -10,7 +10,7 @@ from beyondGD.optimizer.ga.utils import (
     process_linear,
 )
 
-from beyondGD.utils.types import IterableDataset
+from beyondGD.utils.type import IterableDataset
 
 
 #

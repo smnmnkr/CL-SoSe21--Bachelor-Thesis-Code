@@ -3,7 +3,7 @@ from typing import Sequence
 import torch.nn as nn
 import torch.nn.utils.rnn as rnn
 
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class BILSTM(nn.Module):

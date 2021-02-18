@@ -8,7 +8,7 @@ from beyondGD.utils import dict_max, dict_min
 from beyondGD.optimizer.ga.utils import evaluate_linear
 
 from beyondGD.utils import get_device, smooth_gradient
-from beyondGD.utils.types import IterableDataset
+from beyondGD.utils.type import IterableDataset
 
 
 #

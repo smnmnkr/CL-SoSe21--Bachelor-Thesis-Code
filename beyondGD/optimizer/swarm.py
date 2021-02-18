@@ -6,9 +6,9 @@ import copy
 import random
 
 from beyondGD.data import batch_loader
-from beyondGD.utils import dict_max, get_device
+from beyondGD.utils import get_device
 
-from beyondGD.utils.types import IterableDataset
+from beyondGD.utils.type import IterableDataset
 
 
 #

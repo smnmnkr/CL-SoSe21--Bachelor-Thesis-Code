@@ -9,7 +9,7 @@ from beyondGD.optimizer.ga import mutate
 from beyondGD.optimizer.ga.swarm import optimize
 
 
-from beyondGD.utils.types import IterableDataset
+from beyondGD.utils.type import IterableDataset
 
 
 #

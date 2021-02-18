@@ -7,7 +7,7 @@ import torch.nn as nn
 from beyondGD.embedding import Embedding
 
 from beyondGD.utils import get_device
-from beyondGD.utils.types import TT
+from beyondGD.utils.type import TT
 
 
 class FastText(Embedding):

@@ -2,7 +2,7 @@ from conllu import parse_incr
 
 import torch.utils.data as data
 
-from beyondGD.utils.types import Token
+from beyondGD.utils.type import Token
 
 
 class CONLLU(data.IterableDataset):
