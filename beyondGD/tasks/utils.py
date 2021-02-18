@@ -119,7 +119,10 @@ def load_resources(
         # --- load and preprocess train and dev data
         if data_config.get("preprocess"):
             data_train = PreProcessed(
-                data_config.get("train"), embedding, encoding
+                data_config.get("train"),
+                embedding,
+                encoding,
+                reduction=data_config.get("reduce_train"),
             )
             data_dev = PreProcessed(
                 data_config.get("dev"), embedding, encoding
