@@ -4,17 +4,16 @@ import torch
 import torch.nn as nn
 
 from torch.optim import Adam
-from torch.utils.data import IterableDataset
 
 from beyondGD.data import batch_loader, adpative_batch_loader
-
+from beyondGD.utils.type import IterableDataset, Module
 
 #
 #
 #  -------- train -----------
 #
 def descent(
-    model: nn.Module,
+    model: Module,
     train_set: IterableDataset,
     dev_set: IterableDataset,
     learning_rate: float = 1e-2,
