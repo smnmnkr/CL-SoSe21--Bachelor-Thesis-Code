@@ -72,8 +72,7 @@ Full training logs can be found in `full.txt`.
         "gradient_clip": 60.0,
         "epoch_num": 500,
         "report_rate": 50,
-        "batch_size": 32,
-        "batch_double": 100
+        "batch_size": 32
       }
     }
   ]

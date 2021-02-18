@@ -2,4 +2,4 @@
 from .conllu import CONLLU
 from .preprocessed import PreProcessed
 
-from .loader import batch_loader, adpative_batch_loader
+from .loader import batch_loader

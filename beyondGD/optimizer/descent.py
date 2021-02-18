@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from torch.optim import Adam
 
-from beyondGD.data import batch_loader, adpative_batch_loader
+from beyondGD.data import batch_loader
 from beyondGD.utils.type import IterableDataset, Module
 
 #
@@ -22,7 +22,6 @@ def descent(
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
-    batch_double: float = 40,
 ):
 
     # enable gradients
@@ -36,19 +35,17 @@ def descent(
         weight_decay=weight_decay,
     )
 
+    # load train set as batched loader
+    train_loader = batch_loader(
+        train_set,
+        batch_size=batch_size,
+    )
+
     # --- perform SGD in a loop
     for epoch in range(1, epoch_num + 1):
         time_begin = datetime.now()
 
         train_loss: float = 0.0
-
-        # create apdative batched loader
-        train_loader = adpative_batch_loader(
-            train_set,
-            epoch,
-            batch_size=batch_size,
-            batch_double=batch_double,
-        )
 
         for batch in train_loader:
             model.train()

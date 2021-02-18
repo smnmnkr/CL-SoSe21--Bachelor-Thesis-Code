@@ -27,26 +27,3 @@ def batch_loader(
         shuffle=shuffle,
         num_workers=num_workers,
     )
-
-
-#
-#
-#  -------- adpative_batch_loader -----------
-#
-def adpative_batch_loader(
-    data_set: Union[IterableDataset, Dataset],
-    epoch: int,
-    batch_size: int = 32,
-    batch_double: int = 20,
-) -> DataLoader:
-
-    # handle aptative batch size
-    batch_size: int = max(
-        batch_size, batch_size * int(epoch / batch_double)
-    )
-
-    # return batched loader
-    return batch_loader(
-        data_set,
-        batch_size=batch_size,
-    )
