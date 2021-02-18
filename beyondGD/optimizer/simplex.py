@@ -116,7 +116,7 @@ def simplex(
                 "[--- @{:02}: \t avg(train)={:2.4f} \t best(train)={:2.4f} \t best(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
                     sum(population.values()) / len(population),
-                    score,
+                    best.evaluate(train_loader),
                     best.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
