@@ -4,6 +4,11 @@ from beyondGD.utils.type import TT
 
 
 class MLP(nn.Module):
+
+    #
+    #
+    #  -------- __init__ -----------
+    #
     def __init__(
         self,
         in_size: int,
