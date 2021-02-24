@@ -74,6 +74,11 @@ def swarm(
                     global_weight=global_weight,
                 )
 
+                if particle == global_best:
+                    particle["best_score"] = particle["model"].accuracy(
+                        batch
+                    )
+
                 if (
                     particle["model"].accuracy(batch)
                     > particle["best_score"]

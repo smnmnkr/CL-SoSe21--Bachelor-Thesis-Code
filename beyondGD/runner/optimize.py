@@ -51,7 +51,10 @@ def do_optimize(args: dict) -> None:
     for task in utils.get("train_config").get("tasks"):
 
         # --- init population, if is first task and not gradient descent
-        if task.get("type") not in ("descent") and not last_return_type:
+        if (
+            task.get("type") not in ("descent")
+            and not last_return_type
+        ):
             population = init_population(
                 utils.get("model_class"),
                 utils.get("model_config"),

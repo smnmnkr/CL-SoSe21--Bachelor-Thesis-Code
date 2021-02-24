@@ -87,7 +87,9 @@ def load_tagger(
     # --- set, load full model
     else:
         CLS: POSinterface = POSfull
-        model = CLS(model_config, embedding, encoding).to(get_device())
+        model = CLS(model_config, embedding, encoding).to(
+            get_device()
+        )
 
     # --- return model and updated config
     return (model, CLS, model_config)

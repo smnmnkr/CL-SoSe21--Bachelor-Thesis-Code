@@ -1,25 +1,24 @@
 {
   "tasks": [
     {
-      "type": "evolve",
-      "population_size": 400,
+      "type": "descent",
       "parameters": {
-        "mutation_rate": 0.02,
-        "selection_rate": 20,
-        "crossover_rate": 0.5,
-        "epoch_num": 50,
-        "report_rate": 5,
+        "learning_rate": 5e-2,
+        "weight_decay": 1e-6,
+        "gradient_clip": 60.0,
+        "epoch_num": 500,
+        "report_rate": 50,
         "batch_size": 96
       }
     },
     {
       "type": "swarm",
-      "population_size": 400,
+      "population_size": 200,
       "parameters": {
-        "learning_rate": 1.0,
+        "learning_rate": 0.02,
         "velocity_weight": 1.0,
-        "personal_weight": 1.0,
-        "global_weight": 1.0,
+        "personal_weight": 0.5,
+        "global_weight": 0.75,
         "epoch_num": 50,
         "report_rate": 5,
         "batch_size": 96
