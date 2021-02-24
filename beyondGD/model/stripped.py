@@ -75,9 +75,7 @@ class POSstripped(nn.Module):
 
         return nn.CrossEntropyLoss()(
             torch.cat(predictions),
-            torch.LongTensor(flatten(target_ids)).to(
-                get_device()
-            ),
+            torch.LongTensor(flatten(target_ids)).to(get_device()),
         )
 
     #
@@ -111,7 +109,7 @@ class POSstripped(nn.Module):
                     self.metric.add_fp(p_idx)
                     self.metric.add_fn(g)
 
-        return self.metric.accuracy(class_name=category)
+        return self.metric.f_score(class_name=category)
 
     #
     #
@@ -129,7 +127,7 @@ class POSstripped(nn.Module):
         for batch in data_loader:
             _ = self.accuracy(batch, reset=False)
 
-        return self.metric.accuracy(class_name=category)
+        return self.metric.f_score(class_name=category)
 
     #  -------- save -----------
     #

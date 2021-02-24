@@ -19,10 +19,9 @@ class Metric:
     #  -------- precision -----------
     #
     def precision(self, class_name=None):
-        if self.get_tp(class_name) + self.get_fp(class_name) > 0:
-            return self.get_tp(class_name) / (
-                self.get_tp(class_name) + self.get_fp(class_name)
-            )
+        if self.get_predicted(class_name) > 0:
+            return self.get_tp(class_name) / self.get_predicted(class_name)
+
         return 0.0
 
     #
@@ -30,10 +29,9 @@ class Metric:
     #  -------- recall -----------
     #
     def recall(self, class_name=None):
-        if self.get_tp(class_name) + self.get_fn(class_name) > 0:
-            return self.get_tp(class_name) / (
-                self.get_tp(class_name) + self.get_fn(class_name)
-            )
+        if self.get_actual(class_name) > 0:
+            return self.get_tp(class_name) / (self.get_actual(class_name))
+
         return 0.0
 
     #
@@ -47,25 +45,7 @@ class Metric:
                 * (self.precision(class_name) * self.recall(class_name))
                 / (self.precision(class_name) + self.recall(class_name))
             )
-        return 0.0
 
-    #
-    #
-    #  -------- accuracy -----------
-    #
-    def accuracy(self, class_name=None):
-        if (
-            self.get_tp(class_name)
-            # + self.get_fp(class_name)
-            + self.get_fn(class_name) + self.get_tn(class_name)
-            > 0
-        ):
-            return (self.get_tp(class_name) + self.get_tn(class_name)) / (
-                self.get_tp(class_name)
-                # + self.get_fp(class_name)
-                + self.get_fn(class_name)
-                + self.get_tn(class_name)
-            )
         return 0.0
 
     #
@@ -81,7 +61,6 @@ class Metric:
                     for keys in [
                         self._tps.keys(),
                         self._fps.keys(),
-                        self._tns.keys(),
                         self._fns.keys(),
                     ]
                 ]
@@ -115,15 +94,13 @@ class Metric:
         all_classes = self.get_classes()
         all_classes = [None] + all_classes
         all_lines = [
-            "[--- {:8}\t tp: {:5} \t fp: {:5} \t fn: {:5} \t tn: {:5} \t prec={:.3f} \t rec={:.3f} \t acc={:.3f} \t f1={:.3f} ---]".format(
+            "[--- {:8}\t tp: {:5} \t fp: {:5} \t fn: {:5} \t prec={:.3f} \t rec={:.3f} \t f1={:.3f} ---]".format(
                 "_AVG_" if class_name is None else encode(class_name),
                 self.get_tp(class_name),
                 self.get_fp(class_name),
                 self.get_fn(class_name),
-                self.get_tn(class_name),
                 self.precision(class_name),
                 self.recall(class_name),
-                self.accuracy(class_name),
                 self.f_score(class_name),
             )
             for class_name in all_classes
@@ -135,18 +112,12 @@ class Metric:
     def reset(self):
         self._tps = defaultdict(int)
         self._fps = defaultdict(int)
-        self._tns = defaultdict(int)
         self._fns = defaultdict(int)
 
     #  -------- add_tp -----------
     #
     def add_tp(self, class_name):
         self._tps[class_name] += 1
-
-    #  -------- add_tn -----------
-    #
-    def add_tn(self, class_name):
-        self._tns[class_name] += 1
 
     #  -------- add_fp -----------
     #
@@ -172,11 +143,6 @@ class Metric:
     def get_tp(self, class_name=None):
         return self._get(self._tps, class_name)
 
-    #  -------- get_tn -----------
-    #
-    def get_tn(self, class_name=None):
-        return self._get(self._tns, class_name)
-
     #  -------- get_fp -----------
     #
     def get_fp(self, class_name=None):
@@ -186,3 +152,13 @@ class Metric:
     #
     def get_fn(self, class_name=None):
         return self._get(self._fns, class_name)
+
+    #  -------- get_actual -----------
+    #
+    def get_actual(self, class_name=None):
+        return self.get_tp(class_name) + self.get_fn(class_name)
+
+    #  -------- get_predicted -----------
+    #
+    def get_predicted(self, class_name=None):
+        return self.get_tp(class_name) + self.get_fp(class_name)
