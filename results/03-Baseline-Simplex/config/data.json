@@ -6,5 +6,5 @@
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
   "load_model": null,
-  "save_model": "./results/01-Baseline-Evolve/model"
+  "save_model": "./results/03-Baseline-Simplex/model"
 }

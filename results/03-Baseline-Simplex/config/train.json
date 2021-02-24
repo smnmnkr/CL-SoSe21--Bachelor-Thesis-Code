@@ -1,12 +1,12 @@
 {
   "tasks": [
     {
-      "type": "evolve",
+      "type": "simplex",
       "population_size": 400,
       "parameters": {
-        "mutation_rate": 0.02,
-        "selection_rate": 20,
-        "crossover_rate": 0.5,
+        "expansion_rate": 2.0,
+        "contraction_rate": 0.5,
+        "shrink_rate": 0.02,
         "epoch_num": 500,
         "report_rate": 50,
         "batch_size": 96
