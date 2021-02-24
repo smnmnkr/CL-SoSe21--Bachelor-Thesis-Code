@@ -8,7 +8,7 @@
         "gradient_clip": 60.0,
         "epoch_num": 500,
         "report_rate": 50,
-        "batch_size": 32
+        "batch_size": 96
       }
     }
   ]
