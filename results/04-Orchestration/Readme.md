@@ -1,65 +1,71 @@
 # Orchestration Experiment (ONGOING)
 
 Results of baseline gradient training on the POS-Tagger, chained with the derivative-free algorithms. _(currently only evolution approach)_
-To fully reproduce these results it is necessary to run the experiment `00-Baseline-Gradient-Training at` first
-and use the resulting model as a `baseline_model.pickle`.
+To fully reproduce these results it is necessary to run the experiment `00-Baseline-Gradient-Training` at first using `make exp0`.
+Then run `make exp4` to start this experiment.
 
 ## Baseline:
 
-Full training logs can be found in `full.baseline.txt`.
+Full training logs can be found in `00-Baseline-Gradient-Training`.
 
 ```
-[--- @500:       loss(train)=0.0092      acc(train)=0.9345       acc(dev)=0.8832         time(epoch)=0:00:01.844635 ---]
+[--- @500:       loss(train)=0.0164      acc(train)=0.9567       acc(dev)=0.7954         time(epoch)=0:00:00.192108 ---]
 
-[--- _AVG_       tp:  3071       fp:   341       fn:   341       tn:     0       prec=0.900      rec=0.900       acc=0.900       f1=0.900 ---]
-[--- ADJ         tp:   132       fp:    29       fn:    92       tn:     0       prec=0.820      rec=0.589       acc=0.589       f1=0.686 ---]
-[--- ADP         tp:   464       fp:    27       fn:    24       tn:     0       prec=0.945      rec=0.951       acc=0.951       f1=0.948 ---]
-[--- ADV         tp:    82       fp:    24       fn:    46       tn:     0       prec=0.774      rec=0.641       acc=0.641       f1=0.701 ---]
-[--- AUX         tp:   224       fp:     3       fn:    10       tn:     0       prec=0.987      rec=0.957       acc=0.957       f1=0.972 ---]
-[--- CCONJ       tp:    85       fp:     0       fn:    11       tn:     0       prec=1.000      rec=0.885       acc=0.885       f1=0.939 ---]
-[--- DET         tp:   425       fp:     5       fn:    14       tn:     0       prec=0.988      rec=0.968       acc=0.968       f1=0.978 ---]
-[--- INTJ        tp:     0       fp:     0       fn:     2       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
-[--- NOUN        tp:   710       fp:   107       fn:    43       tn:     0       prec=0.869      rec=0.943       acc=0.943       f1=0.904 ---]
-[--- NUM         tp:    57       fp:     1       fn:     4       tn:     0       prec=0.983      rec=0.934       acc=0.934       f1=0.958 ---]
-[--- PART        tp:    63       fp:     7       fn:     3       tn:     0       prec=0.900      rec=0.955       acc=0.955       f1=0.926 ---]
-[--- PRON        tp:   102       fp:    10       fn:     7       tn:     0       prec=0.911      rec=0.936       acc=0.936       f1=0.923 ---]
-[--- PROPN       tp:    75       fp:    22       fn:    15       tn:     0       prec=0.773      rec=0.833       acc=0.833       f1=0.802 ---]
-[--- PUNCT       tp:   339       fp:     6       fn:     0       tn:     0       prec=0.983      rec=1.000       acc=1.000       f1=0.991 ---]
-[--- SCONJ       tp:    28       fp:     4       fn:    23       tn:     0       prec=0.875      rec=0.549       acc=0.549       f1=0.675 ---]
-[--- VERB        tp:   285       fp:    96       fn:    41       tn:     0       prec=0.748      rec=0.874       acc=0.874       f1=0.806 ---]
-[--- X           tp:     0       fp:     0       fn:     2       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
-[--- _           tp:     0       fp:     0       fn:     4       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
+[--- _AVG_       tp:  2751       fp:   661       fn:   661       prec=0.806      rec=0.806       f1=0.806 ---]
+[--- ADJ         tp:   124       fp:   100       fn:   100       prec=0.554      rec=0.554       f1=0.554 ---]
+[--- ADP         tp:   441       fp:    44       fn:    47       prec=0.909      rec=0.904       f1=0.906 ---]
+[--- ADV         tp:    38       fp:    57       fn:    90       prec=0.400      rec=0.297       f1=0.341 ---]
+[--- AUX         tp:   221       fp:    37       fn:    13       prec=0.857      rec=0.944       f1=0.898 ---]
+[--- CCONJ       tp:    74       fp:     1       fn:    22       prec=0.987      rec=0.771       f1=0.865 ---]
+[--- DET         tp:   403       fp:    27       fn:    36       prec=0.937      rec=0.918       f1=0.928 ---]
+[--- INTJ        tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
+[--- NOUN        tp:   651       fp:   164       fn:   102       prec=0.799      rec=0.865       f1=0.830 ---]
+[--- NUM         tp:    37       fp:     1       fn:    24       prec=0.974      rec=0.607       f1=0.747 ---]
+[--- PART        tp:    40       fp:     7       fn:    26       prec=0.851      rec=0.606       f1=0.708 ---]
+[--- PRON        tp:    78       fp:    27       fn:    31       prec=0.743      rec=0.716       f1=0.729 ---]
+[--- PROPN       tp:    58       fp:    54       fn:    32       prec=0.518      rec=0.644       f1=0.574 ---]
+[--- PUNCT       tp:   338       fp:    20       fn:     1       prec=0.944      rec=0.997       f1=0.970 ---]
+[--- SCONJ       tp:    17       fp:    23       fn:    34       prec=0.425      rec=0.333       f1=0.374 ---]
+[--- VERB        tp:   231       fp:    99       fn:    95       prec=0.700      rec=0.709       f1=0.704 ---]
+[--- X           tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
+[--- _           tp:     0       fp:     0       fn:     4       prec=0.000      rec=0.000       f1=0.000 ---]
 ```
 
 ## Results
 
 ### Evolution
 
-The retrained model improves **0.4%** in accuracy given the test set.
+The retrained model improves **0.3%** in accuracy given the test set.
 
 Full training logs can be found in `full.evolve.txt`.
 
 ```
-[--- @01:        avg(train)=0.9493       best(train)=0.9506      best(dev)=0.8964        time(epoch)=0:01:03.637501 ---]
+[--- EVOLVE ---]
+[--- @01:        avg(train)=0.9562       best(train)=0.9577      best(dev)=0.7954        time(epoch)=0:00:23.314061 ---]
+[--- @02:        avg(train)=0.9562       best(train)=0.9577      best(dev)=0.7943        time(epoch)=0:00:23.407711 ---]
+[--- @03:        avg(train)=0.9563       best(train)=0.9580      best(dev)=0.7988        time(epoch)=0:00:23.295533 ---]
+[--- @04:        avg(train)=0.9562       best(train)=0.9577      best(dev)=0.7947        time(epoch)=0:00:23.557220 ---]
+[--- @05:        avg(train)=0.9559       best(train)=0.9582      best(dev)=0.7936        time(epoch)=0:00:23.476055 ---]
 
-[--- _AVG_       tp:  3083       fp:   329       fn:   329       tn:     0       prec=0.904      rec=0.904       acc=0.904       f1=0.904 ---]
-[--- ADJ         tp:   167       fp:    66       fn:    57       tn:     0       prec=0.717      rec=0.746       acc=0.746       f1=0.731 ---]
-[--- ADP         tp:   466       fp:    22       fn:    22       tn:     0       prec=0.955      rec=0.955       acc=0.955       f1=0.955 ---]
-[--- ADV         tp:    79       fp:    24       fn:    49       tn:     0       prec=0.767      rec=0.617       acc=0.617       f1=0.684 ---]
-[--- AUX         tp:   229       fp:     6       fn:     5       tn:     0       prec=0.974      rec=0.979       acc=0.979       f1=0.977 ---]
-[--- CCONJ       tp:    86       fp:     1       fn:    10       tn:     0       prec=0.989      rec=0.896       acc=0.896       f1=0.940 ---]
-[--- DET         tp:   429       fp:     7       fn:    10       tn:     0       prec=0.984      rec=0.977       acc=0.977       f1=0.981 ---]
-[--- INTJ        tp:     0       fp:     0       fn:     2       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
-[--- NOUN        tp:   689       fp:    68       fn:    64       tn:     0       prec=0.910      rec=0.915       acc=0.915       f1=0.913 ---]
-[--- NUM         tp:    57       fp:     2       fn:     4       tn:     0       prec=0.966      rec=0.934       acc=0.934       f1=0.950 ---]
-[--- PART        tp:    64       fp:     9       fn:     2       tn:     0       prec=0.877      rec=0.970       acc=0.970       f1=0.921 ---]
-[--- PRON        tp:    98       fp:    11       fn:    11       tn:     0       prec=0.899      rec=0.899       acc=0.899       f1=0.899 ---]
-[--- PROPN       tp:    75       fp:    35       fn:    15       tn:     0       prec=0.682      rec=0.833       acc=0.833       f1=0.750 ---]
-[--- PUNCT       tp:   339       fp:    12       fn:     0       tn:     0       prec=0.966      rec=1.000       acc=1.000       f1=0.983 ---]
-[--- SCONJ       tp:    31       fp:     4       fn:    20       tn:     0       prec=0.886      rec=0.608       acc=0.608       f1=0.721 ---]
-[--- VERB        tp:   274       fp:    62       fn:    52       tn:     0       prec=0.815      rec=0.840       acc=0.840       f1=0.828 ---]
-[--- X           tp:     0       fp:     0       fn:     2       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
-[--- _           tp:     0       fp:     0       fn:     4       tn:     0       prec=0.000      rec=0.000       acc=0.000       f1=0.000 ---]
+[--- EVALUATION ---]
+[--- _AVG_       tp:  2759       fp:   653       fn:   653       prec=0.809      rec=0.809       f1=0.809 ---]
+[--- ADJ         tp:   122       fp:   101       fn:   102       prec=0.547      rec=0.545       f1=0.546 ---]
+[--- ADP         tp:   447       fp:    48       fn:    41       prec=0.903      rec=0.916       f1=0.909 ---]
+[--- ADV         tp:    39       fp:    50       fn:    89       prec=0.438      rec=0.305       f1=0.359 ---]
+[--- AUX         tp:   220       fp:    34       fn:    14       prec=0.866      rec=0.940       f1=0.902 ---]
+[--- CCONJ       tp:    75       fp:     2       fn:    21       prec=0.974      rec=0.781       f1=0.867 ---]
+[--- DET         tp:   402       fp:    27       fn:    37       prec=0.937      rec=0.916       f1=0.926 ---]
+[--- INTJ        tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
+[--- NOUN        tp:   644       fp:   160       fn:   109       prec=0.801      rec=0.855       f1=0.827 ---]
+[--- NUM         tp:    38       fp:     1       fn:    23       prec=0.974      rec=0.623       f1=0.760 ---]
+[--- PART        tp:    38       fp:     7       fn:    28       prec=0.844      rec=0.576       f1=0.685 ---]
+[--- PRON        tp:    86       fp:    30       fn:    23       prec=0.741      rec=0.789       f1=0.764 ---]
+[--- PROPN       tp:    60       fp:    64       fn:    30       prec=0.484      rec=0.667       f1=0.561 ---]
+[--- PUNCT       tp:   338       fp:    18       fn:     1       prec=0.949      rec=0.997       f1=0.973 ---]
+[--- SCONJ       tp:    18       fp:    19       fn:    33       prec=0.486      rec=0.353       f1=0.409 ---]
+[--- VERB        tp:   232       fp:    92       fn:    94       prec=0.716      rec=0.712       f1=0.714 ---]
+[--- X           tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
+[--- _           tp:     0       fp:     0       fn:     4       prec=0.000      rec=0.000       f1=0.000 ---]
 ```
 
 ## Config
@@ -87,16 +93,20 @@ Full training logs can be found in `full.evolve.txt`.
 
 ```json
 {
-  "type": "evolve",
-  "population_size": 50,
-  "parameters": {
-    "mutation_rate": 0.02,
-    "selection_rate": 5,
-    "crossover_rate": 0.5,
-    "epoch_num": 1,
-    "report_rate": 1,
-    "batch_size": 96
-  }
+  "tasks": [
+    {
+      "type": "evolve",
+      "population_size": 200,
+      "parameters": {
+        "mutation_rate": 0.02,
+        "selection_rate": 20,
+        "crossover_rate": 1,
+        "epoch_num": 5,
+        "report_rate": 1,
+        "batch_size": 96
+      }
+    }
+  ]
 }
 ```
 
@@ -106,10 +116,11 @@ Full training logs can be found in `full.evolve.txt`.
 {
   "embedding": "./data/cc.en.32.bin",
   "preprocess": true,
+  "reduce_train": 0.9,
   "train": "./data/en_partut-ud-train.conllu",
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
-  "load_model": "/baseline_model",
-  "save_model": null
+  "load_model": "./results/00-Baseline-Gradient/model",
+  "save_model": "./results/04-Orchestration/model"
 }
 ```

@@ -62,10 +62,7 @@ def do_optimize(args: dict) -> None:
             )
 
         # --- create population from last task model
-        elif (
-            task.get("type") != "descent"
-            and last_return_type == "model"
-        ):
+        elif task.get("type") != "descent" and last_return_type == "model":
             population = population_from_model(
                 utils.get("model_class"),
                 model,
@@ -107,20 +104,20 @@ def do_optimize(args: dict) -> None:
 
             last_return_type = "model"
 
-    # --- get best model from population
-    if last_return_type == "population":
-        best, _ = dict_max(population)
+        # --- get best model from population
+        if last_return_type == "population":
+            best, _ = dict_max(population)
 
-    # --- last model equals best model
-    else:
-        best = model
+        # --- last model equals best model
+        else:
+            best = model
 
-    # --- run metric
-    evaluate(
-        best,
-        utils.get("encoding"),
-        data.get("test"),
-    )
+        # --- run metric
+        evaluate(
+            best,
+            utils.get("encoding"),
+            data.get("test"),
+        )
 
     # --- save model
     if utils["data_config"].get("save_model"):
