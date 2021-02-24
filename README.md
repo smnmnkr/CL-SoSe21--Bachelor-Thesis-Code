@@ -115,6 +115,27 @@ It is possible to orchestrate the tasks individually in the training process.
 }
 ```
 
+## Experiments
+
+The experiments located in the results directory, can be reproduced with the following make commands:
+
+```bash
+# 00-Baseline-Gradient
+make exp0
+
+# 01-Baseline-Evolve
+make exp1
+
+# 02-Baseline-Swarm
+make exp2
+
+# 03-Baseline-Simplex
+make exp3
+
+# 04-Orchestration
+make exp4
+```
+
 ## Testing, Linting, Cleaning
 
 ```bash
