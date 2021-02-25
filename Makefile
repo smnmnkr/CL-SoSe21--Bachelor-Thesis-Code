@@ -79,4 +79,6 @@ exp3:
 	@python3 -m ${module} -M ${exp3_path}/model.json -T ${exp3_path}/train.json -D ${exp3_path}/data.json
 
 exp4:
-	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train.json -D ${exp4_path}/data.json
+	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_evolve.json -D ${exp4_path}/data.json
+	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_swarm.json -D ${exp4_path}/data.json
+	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_simplex.json -D ${exp4_path}/data.json

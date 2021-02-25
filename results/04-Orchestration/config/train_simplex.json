@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "type": "simplex",
+      "population_size": 400,
+      "parameters": {
+        "expansion_rate": 2.0,
+        "contraction_rate": 0.5,
+        "shrink_rate": 0.02,
+        "epoch_num": 5,
+        "report_rate": 1,
+        "batch_size": 96
+      }
+    }
+  ]
+}
