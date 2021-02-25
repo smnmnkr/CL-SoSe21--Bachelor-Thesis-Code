@@ -27,4 +27,4 @@
 [--- X           tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
 [--- _           tp:     0       fp:     0       fn:     4       prec=0.000      rec=0.000       f1=0.000 ---]
 
-[--- TIMETRACK || method: do_train -- time: 0:01:43.057719 ---]
+[--- TIMETRACK || method: do_optimize -- time: 0:02:03.958545 ---]

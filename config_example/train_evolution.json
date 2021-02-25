@@ -2,10 +2,10 @@
   "tasks": [
     {
       "type": "evolve",
-      "population_size": 200,
+      "population_size": 400,
       "parameters": {
         "mutation_rate": 0.02,
-        "selection_rate": 10,
+        "selection_rate": 20,
         "crossover_rate": 0.5,
         "epoch_num": 50,
         "report_rate": 5,

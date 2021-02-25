@@ -75,9 +75,7 @@ class POSstripped(nn.Module):
 
         return nn.CrossEntropyLoss()(
             torch.cat(predictions),
-            torch.LongTensor(flatten(target_ids)).to(
-                get_device()
-            ),
+            torch.LongTensor(flatten(target_ids)).to(get_device()),
         )
 
     #

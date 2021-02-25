@@ -2,12 +2,12 @@
   "tasks": [
     {
       "type": "swarm",
-      "population_size": 200,
+      "population_size": 400,
       "parameters": {
-        "learning_rate": 0.02,
+        "learning_rate": 1.0,
         "velocity_weight": 1.0,
-        "personal_weight": 0.5,
-        "global_weight": 0.75,
+        "personal_weight": 1.0,
+        "global_weight": 1.0,
         "epoch_num": 50,
         "report_rate": 5,
         "batch_size": 96
