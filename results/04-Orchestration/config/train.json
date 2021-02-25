@@ -5,10 +5,10 @@
       "population_size": 200,
       "parameters": {
         "mutation_rate": 0.02,
-        "selection_rate": 10,
-        "crossover_rate": 0.5,
-        "epoch_num": 500,
-        "report_rate": 50,
+        "selection_rate": 20,
+        "crossover_rate": 1,
+        "epoch_num": 5,
+        "report_rate": 1,
         "batch_size": 96
       }
     }

@@ -1,9 +1,10 @@
 {
   "embedding": "./data/cc.en.32.bin",
   "preprocess": true,
+  "reduce_train": 0.9,
   "train": "./data/en_partut-ud-train.conllu",
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
   "load_model": null,
-  "save_model": "./model_baseline_evolve"
+  "save_model": "./results/00-Baseline-Gradient/model"
 }

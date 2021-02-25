@@ -2,7 +2,7 @@
   "tasks": [
     {
       "type": "simplex",
-      "population_size": 200,
+      "population_size": 400,
       "parameters": {
         "expansion_rate": 2.0,
         "contraction_rate": 0.5,
