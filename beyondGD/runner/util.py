@@ -87,9 +87,7 @@ def load_tagger(
     # --- set, load full model
     else:
         CLS: POSinterface = POSfull
-        model = CLS(model_config, embedding, encoding).to(
-            get_device()
-        )
+        model = CLS(model_config, embedding, encoding).to(get_device())
 
     # --- return model and updated config
     return (model, CLS, model_config)
@@ -185,9 +183,10 @@ def population_from_model(
     model_CLS: object,
     model: POSinterface,
     size: int,
+    variance: float = 0.002,
 ) -> dict:
     return {
-        mutate(model_CLS.copy(model).to(get_device())): 0.0
+        mutate(model_CLS.copy(model).to(get_device()), variance): 0.0
         for _ in range(size)
     }
 
