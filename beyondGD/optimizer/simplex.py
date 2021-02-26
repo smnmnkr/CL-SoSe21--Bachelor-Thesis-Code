@@ -103,7 +103,7 @@ def simplex(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            evaluate_on_loader(population, train_loader)
+            population = evaluate_on_loader(population, train_loader)
 
             # --- find best model and corresponding score
             best, score = dict_max(population)

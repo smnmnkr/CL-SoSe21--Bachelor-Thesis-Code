@@ -17,19 +17,18 @@ from beyondGD.utils.type import TT, IterableDataset, Module
 def evaluate_on_loader(
     population: dict,
     data_loader: IterableDataset,
-) -> None:
+) -> dict:
 
-    for entity, _ in population.items():
-        population[entity] = entity.evaluate(data_loader)
-
-    return None
+    return {
+        entity: entity.evaluate(data_loader)
+        for entity, _ in population.items()
+    }
 
 
 #
 #
 #  -------- accuracy_on_batch -----------
 #
-@time_track
 def accuracy_on_batch(
     population: dict,
     batch: list,
@@ -57,7 +56,6 @@ def accuracy_on_batch(
 
     # calculate accuracy linear
     else:
-
         return {
             entity: entity.accuracy(batch)
             for entity, _ in population.items()
