@@ -5,7 +5,7 @@ import multiprocessing as mp
 
 import torch
 
-from beyondGD.utils import get_device, time_track
+from beyondGD.utils import get_device
 from beyondGD.utils.type import TT, IterableDataset, Module
 
 
