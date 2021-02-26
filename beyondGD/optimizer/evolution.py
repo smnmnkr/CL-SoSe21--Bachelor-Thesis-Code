@@ -53,12 +53,10 @@ def evolve(
         for batch in train_loader:
 
             # --- calculate accuracy on batch
-            accuracy_on_batch(population, batch)
+            population = accuracy_on_batch(population, batch)
 
             # --- select by elite
-            selection: dict = elitism(
-                population, selection_rate
-            )
+            selection: dict = elitism(population, selection_rate)
 
             # delete old population
             population.clear()
@@ -72,9 +70,7 @@ def evolve(
                 # (optionally) cross random players
                 if crossover_rate > get_rnd_prob():
 
-                    entity = crossover(
-                        entity, get_rnd_entity(selection)
-                    )
+                    entity = crossover(entity, get_rnd_entity(selection))
 
                 # mutate random selected
                 mut_entity = mutate(entity, mutation_rate)
@@ -119,16 +115,10 @@ def elitism(generation: dict, n: int):
 
     ranking: dict = {
         k: v
-        for k, v in sorted(
-            generation.items(), key=lambda item: item[1]
-        )
+        for k, v in sorted(generation.items(), key=lambda item: item[1])
     }
 
-    return dict(
-        itertools.islice(
-            ranking.items(), len(ranking) - n, None
-        )
-    )
+    return dict(itertools.islice(ranking.items(), len(ranking) - n, None))
 
 
 #
@@ -173,22 +163,15 @@ def crossover(
 
         # create mask, which determines the retained weights
         mask_positive = (
-            (
-                torch.FloatTensor(c_layer.shape).uniform_()
-                > dominance
-            )
+            (torch.FloatTensor(c_layer.shape).uniform_() > dominance)
             .int()
             .to(get_device())
         )
 
         # create inverted mask
-        mask_negativ = torch.abs(mask_positive - 1).to(
-            get_device()
-        )
+        mask_negativ = torch.abs(mask_positive - 1).to(get_device())
 
         # combine the two layers
-        c_layer.data = (
-            c_layer * mask_positive + r_layer * mask_negativ
-        )
+        c_layer.data = c_layer * mask_positive + r_layer * mask_negativ
 
     return child_network

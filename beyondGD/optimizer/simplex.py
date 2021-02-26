@@ -51,7 +51,7 @@ def simplex(
         for batch in train_loader:
 
             # --- calculate accuracy on batch
-            accuracy_on_batch(population, batch)
+            population = accuracy_on_batch(population, batch)
 
             # get the best, worst particle
             p_best, b_score = dict_max(population)

@@ -1,9 +1,11 @@
 import random
 import copy
 
+import multiprocessing as mp
+
 import torch
 
-from beyondGD.utils import get_device
+from beyondGD.utils import get_device, time_track
 from beyondGD.utils.type import TT, IterableDataset, Module
 
 
@@ -26,17 +28,40 @@ def evaluate_on_loader(
 #
 #
 #  -------- accuracy_on_batch -----------
-#  !!! mutable object population !!!
 #
+@time_track
 def accuracy_on_batch(
     population: dict,
     batch: list,
-) -> None:
+    mutliprocess: bool = True,
+) -> dict:
 
-    for entity, _ in population.items():
-        population[entity] = entity.accuracy(batch)
+    # calculate accuracy using pool multiprocess
+    if mutliprocess:
 
-    return None
+        pool = mp.Pool(mp.cpu_count())
+
+        return_async = [
+            (entity, pool.apply_async(entity.accuracy, args=(batch,)))
+            for entity, _ in population.items()
+        ]
+
+        processed_population = {
+            row[0]: row[1].get() for row in return_async
+        }
+
+        pool.close()
+        pool.join()
+
+        return processed_population
+
+    # calculate accuracy linear
+    else:
+
+        return {
+            entity: entity.accuracy(batch)
+            for entity, _ in population.items()
+        }
 
 
 #
