@@ -6,7 +6,7 @@ import torch.nn as nn
 from torch.optim import Adam
 
 from beyondGD.data import batch_loader
-from beyondGD.utils.type import IterableDataset, Module
+from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
 
 #
 #
@@ -36,14 +36,14 @@ def descent(
     )
 
     # load train set as batched loader
-    train_loader = batch_loader(
+    train_loader: DataLoader = batch_loader(
         train_set,
         batch_size=batch_size,
     )
 
     # --- perform SGD in a loop
     for epoch in range(1, epoch_num + 1):
-        time_begin = datetime.now()
+        time_begin: datetime = datetime.now()
 
         train_loss: float = 0.0
 
@@ -54,14 +54,12 @@ def descent(
             optimizer.zero_grad()
 
             # compute loss, backward
-            loss = model.loss(batch)
+            loss: TT = model.loss(batch)
             loss.backward()
 
             # scaling the gradients down, places a limit on the size of the parameter updates
             # https://pytorch.org/docs/stable/nn.html#clip-grad-norm
-            nn.utils.clip_grad_norm_(
-                model.parameters(), gradient_clip
-            )
+            nn.utils.clip_grad_norm_(model.parameters(), gradient_clip)
 
             # optimize
             optimizer.step()
@@ -77,7 +75,7 @@ def descent(
         if epoch % report_rate == 0:
 
             # create dev loader
-            dev_loader = batch_loader(
+            dev_loader: DataLoader = batch_loader(
                 dev_set,
                 batch_size=batch_size,
             )

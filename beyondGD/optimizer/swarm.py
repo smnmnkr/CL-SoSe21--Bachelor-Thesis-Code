@@ -12,7 +12,7 @@ from beyondGD.optimizer.util import (
     copy_parameters,
 )
 
-from beyondGD.utils.type import IterableDataset, Module
+from beyondGD.utils.type import IterableDataset, Module, DataLoader
 
 
 #
@@ -35,7 +35,7 @@ def swarm(
     torch.set_grad_enabled(False)
 
     # load train set as batched loader
-    train_loader = batch_loader(
+    train_loader: DataLoader = batch_loader(
         train_set,
         batch_size=batch_size,
     )
@@ -53,11 +53,11 @@ def swarm(
     ]
 
     # save the best particle
-    global_best = get_best(swarm)
+    global_best: dict = get_best(swarm)
 
     # -- epoch loop
     for epoch in range(1, epoch_num + 1):
-        time_begin = datetime.now()
+        time_begin: datetime = datetime.now()
 
         # -- batch loop
         for batch in train_loader:
@@ -65,7 +65,7 @@ def swarm(
             # -- particle loop
             for particle in swarm:
 
-                particle = update_position(
+                particle: dict = update_position(
                     particle,
                     global_best,
                     learning_rate=learning_rate,
@@ -94,7 +94,7 @@ def swarm(
         if epoch % report_rate == 0:
 
             # load dev set as batched loader
-            dev_loader = batch_loader(
+            dev_loader: DataLoader = batch_loader(
                 dev_set,
                 batch_size=batch_size,
             )
@@ -120,7 +120,7 @@ def swarm(
 #  -------- create_velocity -----------
 #
 def create_velocity(
-    network,
+    network: Module,
     boundary: float = 0.05,
 ) -> Generator:
 

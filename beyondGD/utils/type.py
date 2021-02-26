@@ -22,4 +22,8 @@ from torch.nn import Module
 
 #  -------- Dataset -----------
 #
-from torch.utils.data import IterableDataset
+from torch.utils.data import (
+    Dataset,
+    IterableDataset,
+    DataLoader,
+)

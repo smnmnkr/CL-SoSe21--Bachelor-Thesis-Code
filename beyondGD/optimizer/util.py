@@ -38,14 +38,14 @@ def accuracy_on_batch(
     # calculate accuracy using pool multiprocess
     if mutliprocess:
 
-        pool = mp.Pool(mp.cpu_count())
+        pool: mp.Pool = mp.Pool(mp.cpu_count())
 
-        return_async = [
+        return_async: list = [
             (entity, pool.apply_async(entity.accuracy, args=(batch,)))
             for entity, _ in population.items()
         ]
 
-        processed_population = {
+        processed_population: dict = {
             row[0]: row[1].get() for row in return_async
         }
 

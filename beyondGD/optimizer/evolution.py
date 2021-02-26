@@ -16,7 +16,7 @@ from beyondGD.optimizer.util import (
 )
 
 from beyondGD.utils import get_device
-from beyondGD.utils.type import IterableDataset, Module
+from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
 
 
 #
@@ -41,19 +41,19 @@ def evolve(
     population_size: int = len(population)
 
     # load train set as batched loader
-    train_loader = batch_loader(
+    train_loader: DataLoader = batch_loader(
         train_set,
         batch_size=batch_size,
     )
 
     # --
     for epoch in range(1, epoch_num + 1):
-        time_begin = datetime.now()
+        time_begin: datetime = datetime.now()
 
         for batch in train_loader:
 
             # --- calculate accuracy on batch
-            population = accuracy_on_batch(population, batch)
+            population: dict = accuracy_on_batch(population, batch)
 
             # --- select by elite
             selection: dict = elitism(population, selection_rate)
@@ -65,15 +65,16 @@ def evolve(
             for _ in range(population_size):
 
                 # get random players from selection
-                entity = get_rnd_entity(selection)
+                entity: Module = get_rnd_entity(selection)
 
                 # (optionally) cross random players
                 if crossover_rate > get_rnd_prob():
-
-                    entity = crossover(entity, get_rnd_entity(selection))
+                    entity: Module = crossover(
+                        entity, get_rnd_entity(selection)
+                    )
 
                 # mutate random selected
-                mut_entity = mutate(entity, mutation_rate)
+                mut_entity: Module = mutate(entity, mutation_rate)
 
                 # add to next generation
                 population[mut_entity] = 0.0
@@ -82,13 +83,13 @@ def evolve(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            population = evaluate_on_loader(population, train_loader)
+            population: dict = evaluate_on_loader(population, train_loader)
 
             # --- find best model and corresponding score
             best, train_score = dict_max(population)
 
             # load dev set as batched loader
-            dev_loader = batch_loader(
+            dev_loader: DataLoader = batch_loader(
                 dev_set,
                 batch_size=batch_size,
                 num_workers=0,
@@ -111,7 +112,7 @@ def evolve(
 #
 #  -------- elitism -----------
 #
-def elitism(generation: dict, n: int):
+def elitism(generation: dict, n: int) -> dict:
 
     ranking: dict = {
         k: v
@@ -128,8 +129,8 @@ def elitism(generation: dict, n: int):
 @torch.no_grad()
 def mutate(
     parent_network: Module,
-    mutation_rate: float = 0.02,
-):
+    mutation_rate: float,
+) -> Module:
 
     child_network: Module = copy_model(parent_network)
 
@@ -152,7 +153,7 @@ def crossover(
     dom_network: Module,
     rec_network: Module,
     dominance: float = 0.5,
-):
+) -> Module:
 
     child_network: Module = copy_model(dom_network)
 
@@ -162,14 +163,14 @@ def crossover(
     ):
 
         # create mask, which determines the retained weights
-        mask_positive = (
+        mask_positive: TT = (
             (torch.FloatTensor(c_layer.shape).uniform_() > dominance)
             .int()
             .to(get_device())
         )
 
         # create inverted mask
-        mask_negativ = torch.abs(mask_positive - 1).to(get_device())
+        mask_negativ: TT = torch.abs(mask_positive - 1).to(get_device())
 
         # combine the two layers
         c_layer.data = c_layer * mask_positive + r_layer * mask_negativ

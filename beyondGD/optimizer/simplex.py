@@ -16,7 +16,7 @@ from beyondGD.utils import (
     get_device,
     smooth_gradient,
 )
-from beyondGD.utils.type import IterableDataset, Module
+from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
 
 
 #
@@ -38,20 +38,20 @@ def simplex(
     torch.set_grad_enabled(False)
 
     # load train set as batched loader
-    train_loader = batch_loader(
+    train_loader: DataLoader = batch_loader(
         train_set,
         batch_size=batch_size,
     )
 
     # -- train loop
     for epoch in range(1, epoch_num + 1):
-        time_begin = datetime.now()
+        time_begin: datetime = datetime.now()
 
         # -- batch loop
         for batch in train_loader:
 
             # --- calculate accuracy on batch
-            population = accuracy_on_batch(population, batch)
+            population: dict = accuracy_on_batch(population, batch)
 
             # get the best, worst particle
             p_best, b_score = dict_max(population)
@@ -65,35 +65,39 @@ def simplex(
             # calculate center of mass
             C: list = centroid(population)
 
-            p_ref = reflect(p_worst, C)
-            p_new = None
+            p_ref: Module = reflect(p_worst, C)
+            p_new: Module = None
 
             #
             # --- Case Handling
 
             # Reflect Case: Reflection Particle performs better then the worst
             if b_score >= p_ref.accuracy(batch) > sec_w_score:
-                p_new = p_ref
+                p_new: Module = p_ref
 
             # Expansion Case: Reflection Particle is the new best
             elif p_ref.accuracy(batch) > b_score:
-                p_new = expansion(p_worst, p_ref, C, batch, expansion_rate)
+                p_new: Module = expansion(
+                    p_worst, p_ref, C, batch, expansion_rate
+                )
 
             # Outside Contraction Case: Reflection Particle performs as the second worst
             elif sec_w_score >= p_ref.accuracy(batch) > w_score:
-                p_new = outside_contraction(
+                p_new: Module = outside_contraction(
                     p_worst, p_ref, C, batch, contraction_rate
                 )
 
             # Inside Contraction Case: Reflection Particle performs worst
             elif w_score >= p_ref.accuracy(batch):
-                p_new = inside_contraction(
+                p_new: Module = inside_contraction(
                     p_worst, p_ref, C, batch, -contraction_rate
                 )
 
             # Shrinkage Case: Inside Contracted Particle performs worst
             if p_new is None:
-                population = shrinkage(population, p_best, shrink_rate)
+                population: dict = shrinkage(
+                    population, p_best, shrink_rate
+                )
 
             else:
                 population[p_new] = 0.0
@@ -103,13 +107,13 @@ def simplex(
         if epoch % report_rate == 0:
 
             # --- evaluate all models on train set
-            population = evaluate_on_loader(population, train_loader)
+            population: dict = evaluate_on_loader(population, train_loader)
 
             # --- find best model and corresponding score
             best, score = dict_max(population)
 
             # load dev set as batched loader
-            dev_loader = batch_loader(
+            dev_loader: DataLoader = batch_loader(
                 dev_set,
                 batch_size=batch_size,
                 num_workers=0,
@@ -136,7 +140,7 @@ def centroid(population: dict) -> list:
     C: list = []
 
     # get the score (mass) of each model in $P$
-    P_mass = torch.tensor(list(population.values())).to(get_device())
+    P_mass: TT = torch.tensor(list(population.values())).to(get_device())
 
     # get the parameters $param$ as tensors (coordinates) in $P$
     P_params: list = [
@@ -148,11 +152,11 @@ def centroid(population: dict) -> list:
 
         # where $R$ is the center of mass
         # calculate: (1/M) * sum_{i=1}^{n} m_i*r_i
-        R = torch.empty(w_param.shape).to(get_device())
+        R: TT = torch.empty(w_param.shape).to(get_device())
 
         # where M is the total mass
         # calculate: sum_{i=1}^{n} m
-        M = torch.empty(w_param.shape).to(get_device())
+        M: TT = torch.empty(w_param.shape).to(get_device())
 
         # where $n$ is the id of the particle,
         # and $r$ the values (coordinates) as a tensor
@@ -175,13 +179,13 @@ def centroid(population: dict) -> list:
 
 #  -------- reflect -----------
 #
-def reflect(p, C, reflection_param: float = 1):
+def reflect(p: Module, C: list, reflection_param: float = 1.0) -> Module:
 
     p_ref: Module = copy_model(p)
 
     for param_ref, param_c in zip(p_ref.parameters(), C):
 
-        param_c_smoothed = smooth_gradient(param_c).data
+        param_c_smoothed: TT = smooth_gradient(param_c).data
 
         param_ref.data = param_c_smoothed + reflection_param * (
             param_c_smoothed - param_ref.data
@@ -193,10 +197,10 @@ def reflect(p, C, reflection_param: float = 1):
 #  -------- expansion -----------
 #
 def expansion(
-    p_worst,
-    p_ref,
-    C,
-    batch,
+    p_worst: Module,
+    p_ref: Module,
+    C: list,
+    batch: list,
     expansion_rate: float = 2.0,
 ):
 
@@ -212,10 +216,10 @@ def expansion(
 #  -------- outside_contraction -----------
 #
 def outside_contraction(
-    p_worst,
-    p_ref,
-    C,
-    batch,
+    p_worst: Module,
+    p_ref: Module,
+    C: list,
+    batch: list,
     outside_contraction_rate: float = 0.5,
 ):
 
@@ -231,10 +235,10 @@ def outside_contraction(
 #  -------- inside_contraction -----------
 #
 def inside_contraction(
-    p_worst,
-    p_ref,
-    C,
-    batch,
+    p_worst: Module,
+    p_ref: Module,
+    C: list,
+    batch: list,
     inside_contraction_rate: float = -0.5,
 ):
 
@@ -251,7 +255,7 @@ def inside_contraction(
 #
 def shrinkage(
     population: dict,
-    p_best,
+    p_best: Module,
     shrink_rate: float = 0.02,
 ) -> dict:
 
@@ -259,7 +263,7 @@ def shrinkage(
 
     for p in population:
 
-        p_new = reflect(p, p_best.parameters(), shrink_rate)
+        p_new: Module = reflect(p, p_best.parameters(), shrink_rate)
 
         new_population[p_new] = 0.0
 
