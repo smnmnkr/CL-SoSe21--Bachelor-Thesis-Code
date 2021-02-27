@@ -15,7 +15,6 @@ from beyondGD.optimizer.util import (
     copy_model,
 )
 
-from beyondGD.utils import get_device
 from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
 
 
@@ -166,11 +165,11 @@ def crossover(
         mask_positive: TT = (
             (torch.FloatTensor(c_layer.shape).uniform_() > dominance)
             .int()
-            .to(get_device())
+            .to("cpu")
         )
 
         # create inverted mask
-        mask_negativ: TT = torch.abs(mask_positive - 1).to(get_device())
+        mask_negativ: TT = torch.abs(mask_positive - 1).to("cpu")
 
         # combine the two layers
         c_layer.data = c_layer * mask_positive + r_layer * mask_negativ

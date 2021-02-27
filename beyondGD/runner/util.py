@@ -172,7 +172,7 @@ def init_population(
     config: dict,
     size: int,
 ) -> dict:
-    return {model_CLS(config).to(get_device()): 0.0 for _ in range(size)}
+    return {model_CLS(config).to("cpu"): 0.0 for _ in range(size)}
 
 
 #
@@ -186,7 +186,7 @@ def population_from_model(
     variance: float = 0.002,
 ) -> dict:
     return {
-        mutate(model_CLS.copy(model).to(get_device()), variance): 0.0
+        mutate(model_CLS.copy(model).to("cpu"), variance): 0.0
         for _ in range(size)
     }
 
