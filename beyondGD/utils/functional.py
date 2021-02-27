@@ -39,7 +39,8 @@ def time_track(func):
 #  -------- get_device -----------
 #
 def get_device() -> str:
-    return "cuda" if torch.cuda.is_available() else "cpu"
+    return "cpu"
+    # return "cuda" if torch.cuda.is_available() else "cpu"
 
 
 #

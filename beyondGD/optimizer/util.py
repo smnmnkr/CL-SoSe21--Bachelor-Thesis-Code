@@ -5,6 +5,7 @@ import multiprocessing as mp
 
 import torch
 
+from beyondGD.utils import get_device
 from beyondGD.utils.type import TT, IterableDataset, Module
 
 
@@ -75,7 +76,7 @@ def get_normal_TT(
             mean=0,
             std=variance,
         )
-        .to("cpu")
+        .to(get_device())
     )
 
 

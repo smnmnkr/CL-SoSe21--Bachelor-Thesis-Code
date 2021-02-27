@@ -13,6 +13,7 @@ from beyondGD.optimizer.util import (
 from beyondGD.utils import (
     dict_max,
     dict_min,
+    get_device,
     smooth_gradient,
 )
 from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
@@ -139,7 +140,7 @@ def centroid(population: dict) -> list:
     C: list = []
 
     # get the score (mass) of each model in $P$
-    P_mass: TT = torch.tensor(list(population.values())).to("cpu")
+    P_mass: TT = torch.tensor(list(population.values())).to(get_device())
 
     # get the parameters $param$ as tensors (coordinates) in $P$
     P_params: list = [
@@ -151,11 +152,11 @@ def centroid(population: dict) -> list:
 
         # where $R$ is the center of mass
         # calculate: (1/M) * sum_{i=1}^{n} m_i*r_i
-        R: TT = torch.empty(w_param.shape).to("cpu")
+        R: TT = torch.empty(w_param.shape).to(get_device())
 
         # where M is the total mass
         # calculate: sum_{i=1}^{n} m
-        M: TT = torch.empty(w_param.shape).to("cpu")
+        M: TT = torch.empty(w_param.shape).to(get_device())
 
         # where $n$ is the id of the particle,
         # and $r$ the values (coordinates) as a tensor
