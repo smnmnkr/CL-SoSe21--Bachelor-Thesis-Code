@@ -32,7 +32,7 @@ def evaluate_on_loader(
 def accuracy_on_batch(
     population: dict,
     batch: list,
-    mutliprocess: bool = True,
+    mutliprocess: bool = False,
 ) -> dict:
 
     # calculate accuracy using pool multiprocess
