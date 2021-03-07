@@ -4,7 +4,7 @@
       "type": "swarm",
       "population_size": 400,
       "parameters": {
-        "learning_rate": 1.0,
+        "learning_rate": 1e-2,
         "velocity_weight": 1.0,
         "personal_weight": 1.0,
         "global_weight": 1.0,
