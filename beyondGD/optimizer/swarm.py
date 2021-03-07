@@ -9,7 +9,6 @@ from beyondGD.optimizer.util import (
     get_normal_TT,
     get_rnd_prob,
     copy_model,
-    copy_parameters,
 )
 
 from beyondGD.utils.type import IterableDataset, Module, DataLoader
@@ -24,6 +23,7 @@ def swarm(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     learning_rate: float = 0.001,
+    initial_velocity_rate: float = 0.02,
     velocity_weight: float = 1.0,
     personal_weight: float = 1.0,
     global_weight: float = 1.0,
@@ -42,18 +42,9 @@ def swarm(
 
     # -- initial swarm setup
     swarm: list = [
-        {
-            "id": id,
-            "model": model,
-            "velocity": list(create_velocity(model)),
-            "best_score": model.evaluate(train_loader),
-            "best_params": copy_parameters(model),
-        }
-        for id, (model, _) in enumerate(population.items())
+        Particle(model, initial_velocity_rate)
+        for (model, _) in population.items()
     ]
-
-    # save the best particle
-    global_best: dict = get_best(swarm)
 
     # -- epoch loop
     for epoch in range(1, epoch_num + 1):
@@ -62,33 +53,33 @@ def swarm(
         # -- batch loop
         for batch in train_loader:
 
-            # -- particle loop
-            for particle in swarm:
+            # get the best particle
+            if epoch == 1:
+                gbest: Particle = get_best(swarm, batch)
 
-                particle: dict = update_position(
-                    particle,
-                    global_best,
+            # -- particle update loop
+            for i in range(len(swarm)):
+
+                if gbest == swarm[i]:
+                    continue
+
+                swarm[i].update_position(
+                    gbest,
                     learning_rate=learning_rate,
                     velocity_weight=velocity_weight,
                     personal_weight=personal_weight,
                     global_weight=global_weight,
                 )
 
-                if (
-                    particle["model"].accuracy(batch)
-                    > particle["best_score"]
+            # -- particle evaluate loop
+            for i in range(len(swarm)):
+                if swarm[i].fitness(batch) >= swarm[i].fitness(
+                    batch, best=True
                 ):
+                    swarm[i].update_best()
 
-                    particle["best_score"] = particle["model"].accuracy(
-                        batch
-                    )
-
-                    particle["best_params"] = copy_parameters(
-                        particle["model"]
-                    )
-
-                    if particle["best_score"] > global_best["best_score"]:
-                        global_best = particle
+                    if swarm[i].fitness(batch) >= gbest.fitness(batch):
+                        gbest = swarm[i]
 
         # --- report
         if epoch % report_rate == 0:
@@ -102,84 +93,124 @@ def swarm(
             print(
                 "[--- @{:02}: \t acc(train)={:2.4f} \t acc(dev)={:2.4f} \t time(epoch)={} ---]".format(
                     epoch,
-                    global_best["model"].evaluate(train_loader),
-                    global_best["model"].evaluate(dev_loader),
+                    gbest.network.evaluate(train_loader),
+                    gbest.network.evaluate(dev_loader),
                     datetime.now() - time_begin,
                 )
             )
 
     # --- return population
     return {
-        particle["model"]: particle["model"].evaluate(train_loader)
+        particle.network: particle.network.evaluate(train_loader)
         for particle in swarm
     }
 
 
-#
-#
-#  -------- create_velocity -----------
-#
-def create_velocity(
-    network: Module,
-    boundary: float = 0.05,
-) -> Generator:
-
-    for param in network.parameters():
-        yield (
-            get_normal_TT(
-                param.shape,
-                boundary,
-            )
-        )
-
-
-#
-#
-#  -------- update_position -----------
-#
-def update_position(
-    particle: dict,
-    global_best: dict,
-    learning_rate: float = 0.001,
-    velocity_weight: float = 1.0,
-    personal_weight: float = 1.0,
-    global_weight: float = 1.0,
-) -> dict:
-
-    updated_model: Module = copy_model(particle["model"])
-    updated_vecolity: list = []
-
-    for param, velo, pers, glob in zip(
-        updated_model.parameters(),
-        particle["velocity"],
-        particle["best_params"],
-        global_best["best_params"],
-    ):
-
-        updated_vecolity.append(
-            velocity_weight * velo
-            + (personal_weight * get_rnd_prob() * (pers - param.data))
-            + (global_weight * get_rnd_prob() * (glob - param.data))
-        )
-
-        param.data += learning_rate * updated_vecolity[-1]
-
-    particle["velocity"] = updated_vecolity
-    particle["model"] = updated_model
-    return particle
-
-
 #  -------- get_best -----------
 #
-def get_best(swarm: list) -> int:
+def get_best(swarm: list, batch: list) -> int:
 
     best: dict = None
-    score: float = -1.0
+    gscore: float = 0.0
 
     for particle in swarm:
+        pscore: float = particle.fitness(batch)
 
-        if particle["best_score"] > score:
-            score = particle["best_score"]
+        if pscore >= gscore:
             best = particle
+            gscore = pscore
 
     return best
+
+
+#
+#
+#  -------- Particle -----------
+#
+class Particle:
+
+    network: Module
+    best: Module
+    velocity: list
+
+    #
+    #
+    #  -------- __init__ -----------
+    #
+    def __init__(
+        self,
+        model: Module,
+        velocity: float,
+    ) -> None:
+
+        self.network = model
+        self.best = copy_model(model)
+        self.velocity = list(self.init_velocity(velocity))
+
+    #
+    #
+    #  -------- init_velocity -----------
+    #
+    def init_velocity(
+        self,
+        velocity: float = 0.02,
+    ) -> Generator:
+
+        for param in self.network.parameters():
+            yield (
+                get_normal_TT(
+                    param.shape,
+                    velocity,
+                )
+            )
+
+    #
+    #
+    #  -------- update_position -----------
+    #
+    def update_position(
+        self,
+        gbest: "Particle",
+        learning_rate: float = 0.001,
+        velocity_weight: float = 1.0,
+        personal_weight: float = 1.0,
+        global_weight: float = 1.0,
+    ) -> None:
+
+        updated_velocity: list = []
+
+        for param, vel, p, g in zip(
+            self.network.parameters(),
+            self.velocity,
+            self.best.parameters(),
+            gbest.network.parameters(),
+        ):
+
+            updated_velocity.append(
+                velocity_weight * vel
+                + (personal_weight * get_rnd_prob() * (p.data - param.data))
+                + (global_weight * get_rnd_prob() * (g.data - param.data))
+            )
+
+            param.data += learning_rate * updated_velocity[-1]
+
+        self.velocity = updated_velocity
+
+    #
+    #
+    #  -------- update_best -----------
+    #
+    def update_best(self) -> None:
+        self.best = copy_model(self.network)
+
+    #
+    #
+    #  -------- fitness -----------
+    #
+    def fitness(self, batch: list, best: bool = False) -> None:
+
+        if not best:
+            return self.network.accuracy(batch)
+
+        else:
+            return self.best.accuracy(batch)

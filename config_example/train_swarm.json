@@ -4,12 +4,13 @@
       "type": "swarm",
       "population_size": 400,
       "parameters": {
-        "learning_rate": 1e-2,
+        "learning_rate": 1.0,
+        "initial_velocity_rate": 0.02,
         "velocity_weight": 1.0,
         "personal_weight": 1.0,
         "global_weight": 1.0,
-        "epoch_num": 50,
-        "report_rate": 5,
+        "epoch_num": 5,
+        "report_rate": 1,
         "batch_size": 96
       }
     }
