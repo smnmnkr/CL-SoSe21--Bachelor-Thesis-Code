@@ -72,7 +72,7 @@ It is possible to orchestrate the tasks individually in the training process.
   "tasks": [
     {
       "type": "string", // Supports: [descent, evolve, swarm, simplex]
-      "population_size": 200, // Only: [evolve, swarm, simplex]
+      "population_size": 400, // Only: [evolve, swarm, simplex]
       "parameters": {
         // Descent:
         "learning_rate": 5e-2,
@@ -80,21 +80,22 @@ It is possible to orchestrate the tasks individually in the training process.
         "gradient_clip": 60.0,
         /// Evolve:
         "mutation_rate": 0.02,
-        "selection_rate": 10,
+        "selection_rate": 20,
         "crossover_rate": 0.5,
         // Simplex:
         "expansion_rate": 2.0,
         "contraction_rate": 0.5,
         "shrink_rate": 0.02,
         // Swarm:
-        "learning_rate": 0.02,
+        "learning_rate": 0.05,
         "velocity_weight": 1.0,
-        "personal_weight": 0.5,
-        "global_weight": 0.75,
+        "initial_velocity_rate": 0.02,
+        "personal_weight": 2.0,
+        "global_weight": 2.0,
         // General:
         "epoch_num": 50,
         "report_rate": 5,
-        "batch_size": 32
+        "batch_size": 96
       }
     }
   ]
@@ -106,7 +107,8 @@ It is possible to orchestrate the tasks individually in the training process.
 ```jsonc
 {
   "embedding": "path/to/fasttext-data.bin",
-  "preprocess": true,
+  "preprocess": true, // pre embed and encode training data
+  "reduce_train": 0.995, // reduce amount train data in percent
   "train": "path/to/train.conllu",
   "dev": "path/to/dev.conllu",
   "test": "path/to/test.conllu",
