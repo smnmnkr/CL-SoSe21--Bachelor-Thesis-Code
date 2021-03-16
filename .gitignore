@@ -134,3 +134,6 @@ dmypy.json
 # data files
 /data
 /config
+
+# visual studio code project settings
+.vscode
