@@ -9,7 +9,7 @@
         "velocity_weight": 1.0,
         "personal_weight": 2.0,
         "global_weight": 2.0,
-        "epoch_num": 500,
+        "epoch_num": 2000,
         "report_rate": 50,
         "batch_size": 96
       }
