@@ -9,6 +9,7 @@ descent_config := config_example/train_descent.json
 evolve_config := config_example/train_evolution.json
 swarm_config := config_example/train_swarm.json
 simplex_config := config_example/train_simplex.json
+gadam_config := config_example/train_gadam.json
 orchestra_config := config_example/train_orchestra.json
 
 #
@@ -28,6 +29,9 @@ swarm:
 
 simplex:
 	@python3 -m ${module} -M ${model_config} -T ${simplex_config} -D ${data_config}
+
+gadam:
+	@python3 -m ${module} -M ${model_config} -T ${gadam_config} -D ${data_config}
 
 orchestra:
 	@python3 -m ${module} -M ${model_config} -T ${orchestra_config} -D ${data_config}
@@ -64,7 +68,8 @@ exp0_path := results/00-Baseline-Gradient/config
 exp1_path := results/01-Baseline-Evolve/config
 exp2_path := results/02-Baseline-Swarm/config
 exp3_path := results/03-Baseline-Simplex/config
-exp4_path := results/04-Orchestration/config
+exp4_path := results/04-Baseline-Gadam/config
+exp5_path := results/05-Orchestration/config
 
 exp0:
 	@python3 -m ${module} -M ${exp0_path}/model.json -T ${exp0_path}/train.json -D ${exp0_path}/data.json
@@ -79,6 +84,9 @@ exp3:
 	@python3 -m ${module} -M ${exp3_path}/model.json -T ${exp3_path}/train.json -D ${exp3_path}/data.json
 
 exp4:
-	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_evolve.json -D ${exp4_path}/data.json
-	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_swarm.json -D ${exp4_path}/data.json
-	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train_simplex.json -D ${exp4_path}/data.json
+	@python3 -m ${module} -M ${exp4_path}/model.json -T ${exp4_path}/train.json -D ${exp4_path}/data.json
+
+exp5:
+	@python3 -m ${module} -M ${exp5_path}/model.json -T ${exp5_path}/train_evolve.json -D ${exp5_path}/data.json
+	@python3 -m ${module} -M ${exp5_path}/model.json -T ${exp5_path}/train_swarm.json -D ${exp5_path}/data.json
+	@python3 -m ${module} -M ${exp5_path}/model.json -T ${exp5_path}/train_simplex.json -D ${exp5_path}/data.json
