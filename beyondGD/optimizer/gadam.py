@@ -2,6 +2,7 @@ from datetime import datetime
 import itertools
 
 import torch
+from torch.optim import Adam
 
 from beyondGD.data import batch_loader
 from beyondGD.utils import dict_max
@@ -11,7 +12,6 @@ from beyondGD.optimizer.util import (
     accuracy_on_batch,
     get_rnd_entity,
     get_rnd_prob,
-    get_normal_TT,
     copy_model,
 )
 
@@ -21,12 +21,14 @@ from beyondGD.utils.type import TT, IterableDataset, Module, DataLoader
 
 #
 #
-#  -------- evolve -----------
+#  -------- gadam -----------
 #
-def evolve(
+def gadam(
     population: dict,
     train_set: IterableDataset,
     dev_set: IterableDataset,
+    learning_rate: float = 1e-2,
+    weight_decay: float = 1e-6,
     mutation_rate: float = 0.02,
     selection_rate: int = 10,
     crossover_rate: float = 0.5,
@@ -34,8 +36,8 @@ def evolve(
     report_rate: int = 10,
     batch_size: int = 32,
 ):
-    # disable gradients
-    torch.set_grad_enabled(False)
+    # enable gradients
+    torch.set_grad_enabled(True)
 
     # save population size
     population_size: int = len(population)
@@ -73,11 +75,28 @@ def evolve(
                         entity, get_rnd_entity(selection)
                     )
 
-                # mutate random selected
-                mut_entity: Module = mutate(entity, mutation_rate)
+                # choose Adam for optimization
+                # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
+                optimizer = Adam(
+                    entity.parameters(),
+                    lr=learning_rate,
+                    weight_decay=weight_decay,
+                )
+                optimizer.zero_grad()
+
+                # compute loss, backward
+                loss: TT = entity.loss(batch)
+                loss.backward()
+
+                # optimize
+                optimizer.step()
+
+                # reduce memory usage by deleting loss after calculation
+                # https://discuss.pytorch.org/t/calling-loss-backward-reduce-memory-usage/2735
+                del loss
 
                 # add to next generation
-                population[mut_entity] = 0.0
+                population[entity] = 0.0
 
         # --- report
         if epoch % report_rate == 0:
@@ -120,28 +139,6 @@ def elitism(generation: dict, n: int) -> dict:
     }
 
     return dict(itertools.islice(ranking.items(), len(ranking) - n, None))
-
-
-#
-#
-#  -------- mutate -----------
-#
-@torch.no_grad()
-def mutate(
-    parent_network: Module,
-    mutation_rate: float,
-) -> Module:
-
-    child_network: Module = copy_model(parent_network)
-
-    for param in child_network.parameters():
-
-        param.data += get_normal_TT(
-            param.shape,
-            mutation_rate,
-        )
-
-    return child_network
 
 
 #

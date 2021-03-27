@@ -9,6 +9,7 @@ descent_config := config_example/train_descent.json
 evolve_config := config_example/train_evolution.json
 swarm_config := config_example/train_swarm.json
 simplex_config := config_example/train_simplex.json
+gadam_config := config_example/train_gadam.json
 orchestra_config := config_example/train_orchestra.json
 
 #
@@ -28,6 +29,9 @@ swarm:
 
 simplex:
 	@python3 -m ${module} -M ${model_config} -T ${simplex_config} -D ${data_config}
+
+gadam:
+	@python3 -m ${module} -M ${model_config} -T ${gadam_config} -D ${data_config}
 
 orchestra:
 	@python3 -m ${module} -M ${model_config} -T ${orchestra_config} -D ${data_config}

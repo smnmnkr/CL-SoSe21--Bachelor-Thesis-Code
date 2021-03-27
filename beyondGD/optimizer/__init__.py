@@ -3,3 +3,4 @@ from .descent import descent
 from .evolution import evolve
 from .swarm import swarm
 from .simplex import simplex
+from .gadam import gadam
