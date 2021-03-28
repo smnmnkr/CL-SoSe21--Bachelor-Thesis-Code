@@ -1,4 +1,4 @@
-from beyondGD.optimizer import descent, evolve, swarm, simplex
+from beyondGD.optimizer import descent, evolve, swarm, simplex, gadam
 
 from beyondGD.utils import time_track, dict_max
 from beyondGD.runner.util import (
@@ -14,7 +14,9 @@ tasks: dict = {
     "evolve": evolve,
     "swarm": swarm,
     "simplex": simplex,
+    "gadam": gadam,
 }
+
 
 #
 #
@@ -70,7 +72,7 @@ def do_optimize(args: dict) -> None:
         print(f"\n[--- {task.get('type').upper()} ---]")
 
         # handle task, which take and return population
-        if task.get("type") in ("evolve", "simplex", "swarm"):
+        if task.get("type") in ("evolve", "simplex", "swarm", "gadam"):
             population = tasks.get(task.get("type"))(
                 population,
                 data.get("train"),

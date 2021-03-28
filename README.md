@@ -30,6 +30,9 @@ make swarm
 # run demo simplex
 make simplex
 
+# run demo gadam
+make gadam
+
 # run demo orchestra
 make orchestra
 ```
@@ -64,7 +67,7 @@ python3 -m beyondGD -M ${tagger_config.json} -T ${train_config.json} -D ${data_c
 
 ### Training
 
-Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimization _(PSO)_, and the Nelder–Mead method _(Simplex)_.
+Supports the following optimization algorithms: Gradient Descent, Evolution _(ES)_, Swarm Based Optimization _(PSO)_, Nelder–Mead method _(Simplex)_, and Gadam _(Genetic-Evolutionary Adam)_.
 It is possible to orchestrate the tasks individually in the training process.
 
 ```jsonc
@@ -82,16 +85,22 @@ It is possible to orchestrate the tasks individually in the training process.
         "mutation_rate": 0.02,
         "selection_rate": 20,
         "crossover_rate": 0.5,
-        // Simplex:
-        "expansion_rate": 2.0,
-        "contraction_rate": 0.5,
-        "shrink_rate": 0.02,
         // Swarm:
         "learning_rate": 0.05,
         "velocity_weight": 1.0,
         "initial_velocity_rate": 0.02,
         "personal_weight": 2.0,
         "global_weight": 2.0,
+        // Simplex:
+        "expansion_rate": 2.0,
+        "contraction_rate": 0.5,
+        "shrink_rate": 0.02,
+        // Gadam:
+        "learning_rate": 5e-2,
+        "weight_decay": 1e-6,
+        "mutation_rate": 0.02,
+        "selection_rate": 10,
+        "crossover_rate": 0.5,
         // General:
         "epoch_num": 50,
         "report_rate": 5,
@@ -134,8 +143,11 @@ make exp2
 # 03-Baseline-Simplex
 make exp3
 
-# 04-Orchestration
+# 04-Baseline-Gadam
 make exp4
+
+# 04-Orchestration
+make exp5
 ```
 
 ## Testing, Linting, Cleaning
@@ -166,3 +178,4 @@ make clean
 - 4.1 Added model load/save function
 - 4.2 Reworked simplex optimization
 - 5.0 Added new PSO optimizer, discard old swarm approach
+- 6.0 Added new Gadam optimizer
