@@ -71,8 +71,8 @@ Full training logs can be found in `full.txt`.
         "learning_rate": 5e-2,
         "weight_decay": 1e-6,
         "mutation_rate": 0.02,
-        "selection_rate": 10,
-        "crossover_rate": 0.5,
+        "selection_size": 10,
+        "crossover_prob": 0.5,
         "epoch_num": 2000,
         "report_rate": 50,
         "batch_size": 96

@@ -186,8 +186,8 @@ Full training logs can be found in `full.swarm.txt`.
       "population_size": 200,
       "parameters": {
         "mutation_rate": 0.02,
-        "selection_rate": 20,
-        "crossover_rate": 1,
+        "selection_size": 20,
+        "crossover_prob": 1,
         "epoch_num": 5,
         "report_rate": 1,
         "batch_size": 96
