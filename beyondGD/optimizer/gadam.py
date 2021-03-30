@@ -10,7 +10,7 @@ from beyondGD.optimizer.evolution import elitism, mutate, crossover
 
 from beyondGD.optimizer.util import (
     evaluate_on_loader,
-    # accuracy_on_batch,
+    accuracy_on_batch,
     get_rnd_entity,
     get_rnd_prob,
 )
@@ -27,7 +27,7 @@ def gadam(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     learning_rate: float = 1e-2,
-    weight_decay: float = 1e-6,
+    learning_prob: float = 0.5,
     mutation_rate: float = 0.02,
     mutation_prob: float = 0.5,
     crossover_prob: float = 0.5,
@@ -61,10 +61,8 @@ def gadam(
 
         for batch in train_loader:
 
-            population: dict = evaluate_on_loader(population, dev_loader)
-
             # --- calculate accuracy on batch
-            # population: dict = accuracy_on_batch(population, batch)
+            population: dict = accuracy_on_batch(population, batch)
 
             # --- select by elite
             selection: dict = elitism(population, selection_size)
@@ -89,28 +87,30 @@ def gadam(
                 if mutation_prob > get_rnd_prob():
                     entity: Module = mutate(entity, mutation_rate)
 
-                # enable dropout
-                entity.train(True)
+                # (optionally) apply adam
+                if learning_prob > get_rnd_prob():
 
-                # choose Adam for optimization
-                # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
-                optimizer = Adam(
-                    entity.parameters(),
-                    lr=learning_rate,
-                    weight_decay=weight_decay,
-                )
-                optimizer.zero_grad()
+                    # enable dropout
+                    entity.train(True)
 
-                # compute loss, backward
-                loss: TT = entity.loss(batch)
-                loss.backward()
+                    # choose Adam for optimization
+                    # https://pytorch.org/docs/stable/optim.html#torch.optim.Adam
+                    optimizer = Adam(
+                        entity.parameters(),
+                        lr=learning_rate,
+                    )
+                    optimizer.zero_grad()
 
-                # optimize
-                optimizer.step()
+                    # compute loss, backward
+                    loss: TT = entity.loss(batch)
+                    loss.backward()
 
-                # reduce memory usage by deleting loss after calculation
-                # https://discuss.pytorch.org/t/calling-loss-backward-reduce-memory-usage/2735
-                del loss
+                    # optimize
+                    optimizer.step()
+
+                    # reduce memory usage by deleting loss after calculation
+                    # https://discuss.pytorch.org/t/calling-loss-backward-reduce-memory-usage/2735
+                    del loss
 
                 # add to next generation
                 population[entity] = 0.0
