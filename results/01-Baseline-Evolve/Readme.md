@@ -6,7 +6,7 @@ Results of baseline evolution training on POS-Tagger. Replicate with `make exp1`
 
 Full training logs can be found in `full.txt`.
 
-```
+```java
 [--- @200:       avg(train)=0.4989       best(train)=0.5217      best(dev)=0.4991        time(epoch)=0:00:56.180032 ---]
 [--- @400:       avg(train)=0.6403       best(train)=0.6622      best(dev)=0.6155        time(epoch)=0:00:55.578147 ---]
 [--- @800:       avg(train)=0.6964       best(train)=0.7081      best(dev)=0.6508        time(epoch)=0:00:55.556195 ---]

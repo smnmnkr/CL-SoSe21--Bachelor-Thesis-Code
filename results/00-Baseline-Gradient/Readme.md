@@ -6,7 +6,7 @@ Results of baseline gradient training on POS-Tagger. Replicate with `make exp0`.
 
 Full training logs can be found in `full.txt`.
 
-```
+```java
 [--- @200:       loss(train)=0.0167      acc(train)=0.9395       acc(dev)=0.7885         time(epoch)=0:00:00.192740 ---]
 [--- @400:       loss(train)=0.0166      acc(train)=0.9526       acc(dev)=0.7918         time(epoch)=0:00:00.192238 ---]
 [--- @600:       loss(train)=0.0161      acc(train)=0.9604       acc(dev)=0.8032         time(epoch)=0:00:00.234703 ---]

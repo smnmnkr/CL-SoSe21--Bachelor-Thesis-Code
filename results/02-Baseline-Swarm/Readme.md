@@ -6,7 +6,7 @@ Results of baseline PSO training on POS-Tagger. Replicate with `make exp2`.
 
 Full training logs can be found in `full.txt`.
 
-```
+```java
 [--- @200:       acc(train)=0.3711       acc(dev)=0.3772         time(epoch)=0:01:16.913411 ---]
 [--- @400:       acc(train)=0.3920       acc(dev)=0.3790         time(epoch)=0:00:58.401214 ---]
 [--- @600:       acc(train)=0.4143       acc(dev)=0.4025         time(epoch)=0:00:57.375155 ---]
