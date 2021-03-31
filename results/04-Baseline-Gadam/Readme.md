@@ -7,35 +7,36 @@ Results of baseline Gadam training on POS-Tagger. Replicate with `make exp4`.
 Full training logs can be found in `full.txt`.
 
 ```
-[--- @200:       avg(train)=0.9957       best(train)=0.9990      best(dev)=0.7866        time(epoch)=0:00:20.794647 ---]
-[--- @400:       avg(train)=0.9968       best(train)=0.9990      best(dev)=0.7921        time(epoch)=0:00:20.248109 ---]
-[--- @600:       avg(train)=0.9974       best(train)=0.9998      best(dev)=0.7837        time(epoch)=0:00:20.851611 ---]
-[--- @800:       avg(train)=0.9974       best(train)=1.0000      best(dev)=0.7925        time(epoch)=0:00:19.937526 ---]
-[--- @1000:      avg(train)=0.9975       best(train)=0.9995      best(dev)=0.7984        time(epoch)=0:00:20.497028 ---]
-[--- @1200:      avg(train)=0.9978       best(train)=0.9998      best(dev)=0.7863        time(epoch)=0:00:20.681123 ---]
-[--- @1400:      avg(train)=0.9984       best(train)=1.0000      best(dev)=0.7988        time(epoch)=0:00:21.411053 ---]
-[--- @1600:      avg(train)=0.9984       best(train)=1.0000      best(dev)=0.7899        time(epoch)=0:00:20.692275 ---]
-[--- @1800:      avg(train)=0.9980       best(train)=1.0000      best(dev)=0.7999        time(epoch)=0:00:20.385787 ---]
-[--- @2000:      avg(train)=0.9982       best(train)=1.0000      best(dev)=0.7951        time(epoch)=0:00:20.040778 ---]
+[--- @200:       avg(train)=0.7795       best(train)=0.9354      best(dev)=0.7943        time(epoch)=0:00:42.942030 ---]
+[--- @400:       avg(train)=0.7867       best(train)=0.9674      best(dev)=0.7965        time(epoch)=0:00:41.894200 ---]
+[--- @600:       avg(train)=0.7932       best(train)=0.9730      best(dev)=0.8054        time(epoch)=0:00:43.787698 ---]
+[--- @800:       avg(train)=0.7992       best(train)=0.9791      best(dev)=0.8109        time(epoch)=0:00:42.300379 ---]
+[--- @1000:      avg(train)=0.8054       best(train)=0.9825      best(dev)=0.8149        time(epoch)=0:00:43.584458 ---]
+[--- @1200:      avg(train)=0.8019       best(train)=0.9832      best(dev)=0.8142        time(epoch)=0:00:41.762770 ---]
+[--- @1400:      avg(train)=0.8037       best(train)=0.9861      best(dev)=0.8123        time(epoch)=0:00:41.908117 ---]
+[--- @1600:      avg(train)=0.7993       best(train)=0.9837      best(dev)=0.8087        time(epoch)=0:00:42.303976 ---]
+[--- @1800:      avg(train)=0.7978       best(train)=0.9883      best(dev)=0.8076        time(epoch)=0:00:44.229272 ---]
+[--- @2000:      avg(train)=0.7979       best(train)=0.9886      best(dev)=0.8087        time(epoch)=0:00:42.849146 ---]
 
-[--- _AVG_       tp:  2776       fp:   636       fn:   636       prec=0.814      rec=0.814       f1=0.814 ---]
-[--- ADJ         tp:   119       fp:   105       fn:   105       prec=0.531      rec=0.531       f1=0.531 ---]
-[--- ADP         tp:   448       fp:    50       fn:    40       prec=0.900      rec=0.918       f1=0.909 ---]
-[--- ADV         tp:    40       fp:    50       fn:    88       prec=0.444      rec=0.312       f1=0.367 ---]
-[--- AUX         tp:   214       fp:    39       fn:    20       prec=0.846      rec=0.915       f1=0.879 ---]
-[--- CCONJ       tp:    81       fp:     1       fn:    15       prec=0.988      rec=0.844       f1=0.910 ---]
-[--- DET         tp:   415       fp:    30       fn:    24       prec=0.933      rec=0.945       f1=0.939 ---]
+[--- EVALUATION ---]
+[--- _AVG_       tp:  2812       fp:   600       fn:   600       prec=0.824      rec=0.824       f1=0.824 ---]
+[--- ADJ         tp:   124       fp:   108       fn:   100       prec=0.534      rec=0.554       f1=0.544 ---]
+[--- ADP         tp:   435       fp:    33       fn:    53       prec=0.929      rec=0.891       f1=0.910 ---]
+[--- ADV         tp:    66       fp:    55       fn:    62       prec=0.545      rec=0.516       f1=0.530 ---]
+[--- AUX         tp:   218       fp:    19       fn:    16       prec=0.920      rec=0.932       f1=0.926 ---]
+[--- CCONJ       tp:    77       fp:     1       fn:    19       prec=0.987      rec=0.802       f1=0.885 ---]
+[--- DET         tp:   403       fp:    13       fn:    36       prec=0.969      rec=0.918       f1=0.943 ---]
 [--- INTJ        tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
-[--- NOUN        tp:   640       fp:   140       fn:   113       prec=0.821      rec=0.850       f1=0.835 ---]
-[--- NUM         tp:    46       fp:     7       fn:    15       prec=0.868      rec=0.754       f1=0.807 ---]
-[--- PART        tp:    53       fp:    22       fn:    13       prec=0.707      rec=0.803       f1=0.752 ---]
-[--- PRON        tp:    77       fp:    25       fn:    32       prec=0.755      rec=0.706       f1=0.730 ---]
-[--- PROPN       tp:    53       fp:    43       fn:    37       prec=0.552      rec=0.589       f1=0.570 ---]
-[--- PUNCT       tp:   339       fp:    13       fn:     0       prec=0.963      rec=1.000       f1=0.981 ---]
-[--- SCONJ       tp:    28       fp:    20       fn:    23       prec=0.583      rec=0.549       f1=0.566 ---]
-[--- VERB        tp:   223       fp:    91       fn:   103       prec=0.710      rec=0.684       f1=0.697 ---]
-[--- X           tp:     0       fp:     0       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
-[--- _    
+[--- NOUN        tp:   662       fp:   164       fn:    91       prec=0.801      rec=0.879       f1=0.839 ---]
+[--- NUM         tp:    42       fp:     0       fn:    19       prec=1.000      rec=0.689       f1=0.816 ---]
+[--- PART        tp:    54       fp:    16       fn:    12       prec=0.771      rec=0.818       f1=0.794 ---]
+[--- PRON        tp:    88       fp:    37       fn:    21       prec=0.704      rec=0.807       f1=0.752 ---]
+[--- PROPN       tp:    44       fp:    20       fn:    46       prec=0.688      rec=0.489       f1=0.571 ---]
+[--- PUNCT       tp:   339       fp:    16       fn:     0       prec=0.955      rec=1.000       f1=0.977 ---]
+[--- SCONJ       tp:    22       fp:    13       fn:    29       prec=0.629      rec=0.431       f1=0.512 ---]
+[--- VERB        tp:   238       fp:   104       fn:    88       prec=0.696      rec=0.730       f1=0.713 ---]
+[--- X           tp:     0       fp:     1       fn:     2       prec=0.000      rec=0.000       f1=0.000 ---]
+[--- _           tp:     0       fp:     0       fn:     4       prec=0.000      rec=0.000       f1=0.000 ---]   
 ```
 
 ## Config
@@ -66,13 +67,14 @@ Full training logs can be found in `full.txt`.
   "tasks": [
     {
       "type": "gadam",
-      "population_size": 100,
+      "population_size": 200,
       "parameters": {
         "learning_rate": 5e-2,
-        "weight_decay": 1e-6,
+        "learning_prob": 0.8,
         "mutation_rate": 0.02,
-        "selection_size": 10,
-        "crossover_prob": 0.5,
+        "mutation_prob": 0.6,
+        "crossover_prob": 0.6,
+        "selection_size": 20,
         "epoch_num": 2000,
         "report_rate": 50,
         "batch_size": 96
