@@ -9,6 +9,7 @@ Full training logs can be found in `full.txt`.
 ```java
 [--- @200:       avg(train)=0.4989       best(train)=0.5217      best(dev)=0.4991        time(epoch)=0:00:56.180032 ---]
 [--- @400:       avg(train)=0.6403       best(train)=0.6622      best(dev)=0.6155        time(epoch)=0:00:55.578147 ---]
+[--- @600:       avg(train)=0.6801       best(train)=0.6940      best(dev)=0.6577        time(epoch)=0:00:55.536646 ---]
 [--- @800:       avg(train)=0.6964       best(train)=0.7081      best(dev)=0.6508        time(epoch)=0:00:55.556195 ---]
 [--- @1000:      avg(train)=0.7154       best(train)=0.7310      best(dev)=0.6603        time(epoch)=0:00:55.548262 ---]
 [--- @1200:      avg(train)=0.7363       best(train)=0.7470      best(dev)=0.6798        time(epoch)=0:00:55.576461 ---]
