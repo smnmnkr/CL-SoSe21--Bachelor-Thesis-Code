@@ -2,14 +2,14 @@
   "tasks": [
     {
       "type": "gadam",
-      "population_size": 200,
+      "population_size": 100,
       "parameters": {
         "learning_rate": 5e-2,
-        "learning_prob": 0.8,
+        "learning_prob": 1.0,
         "mutation_rate": 0.02,
-        "mutation_prob": 0.6,
+        "mutation_prob": 0.8,
         "crossover_prob": 0.6,
-        "selection_size": 20,
+        "selection_size": 10,
         "epoch_num": 50,
         "report_rate": 5,
         "batch_size": 96

@@ -73,19 +73,8 @@ def gadam(
             # --- fill new population with mutated, crossed entities
             for _ in range(population_size):
 
-                # get random players from selection, disable dropout
+                # get random players from selection
                 entity: Module = get_rnd_entity(selection)
-                entity.train(False)
-
-                # (optionally) cross random players
-                if crossover_prob > get_rnd_prob():
-                    entity: Module = crossover(
-                        entity, get_rnd_entity(selection)
-                    )
-
-                # (optionally) mutate random players
-                if mutation_prob > get_rnd_prob():
-                    entity: Module = mutate(entity, mutation_rate)
 
                 # (optionally) apply adam
                 if learning_prob > get_rnd_prob():
@@ -111,6 +100,18 @@ def gadam(
                     # reduce memory usage by deleting loss after calculation
                     # https://discuss.pytorch.org/t/calling-loss-backward-reduce-memory-usage/2735
                     del loss
+
+                # (optionally) cross random players
+                if crossover_prob > get_rnd_prob():
+                    entity.train(False)
+                    entity: Module = crossover(
+                        entity, get_rnd_entity(selection)
+                    )
+
+                # (optionally) mutate random players
+                if mutation_prob > get_rnd_prob():
+                    entity.train(False)
+                    entity: Module = mutate(entity, mutation_rate)
 
                 # add to next generation
                 population[entity] = 0.0
