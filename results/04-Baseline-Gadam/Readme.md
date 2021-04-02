@@ -6,7 +6,7 @@ Results of baseline Gadam training on POS-Tagger. Replicate with `make exp4`.
 
 Full training logs can be found in `full.txt`.
 
-```
+```java
 [--- GADAM ---]
 [--- @200:       avg(train)=0.7986       best(train)=0.9747      best(dev)=0.8101        time(epoch)=0:00:24.173563 ---]
 [--- @400:       avg(train)=0.8010       best(train)=0.9774      best(dev)=0.8120        time(epoch)=0:00:24.162341 ---]
