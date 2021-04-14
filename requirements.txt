@@ -6,3 +6,4 @@ conllu>=4.2.0
 torch>=1.6.0
 numpy>=1.19.0
 matplotlib>=3.3.2
+rich>=10.1.0

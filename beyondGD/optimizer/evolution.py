@@ -28,8 +28,8 @@ def evolve(
     train_set: IterableDataset,
     dev_set: IterableDataset,
     mutation_rate: float = 0.02,
-    selection_rate: int = 10,
-    crossover_rate: float = 0.5,
+    selection_size: int = 10,
+    crossover_prob: float = 0.5,
     epoch_num: int = 200,
     report_rate: int = 10,
     batch_size: int = 32,
@@ -56,7 +56,7 @@ def evolve(
             population: dict = accuracy_on_batch(population, batch)
 
             # --- select by elite
-            selection: dict = elitism(population, selection_rate)
+            selection: dict = elitism(population, selection_size)
 
             # delete old population
             population.clear()
@@ -68,7 +68,7 @@ def evolve(
                 entity: Module = get_rnd_entity(selection)
 
                 # (optionally) cross random players
-                if crossover_rate > get_rnd_prob():
+                if crossover_prob > get_rnd_prob():
                     entity: Module = crossover(
                         entity, get_rnd_entity(selection)
                     )

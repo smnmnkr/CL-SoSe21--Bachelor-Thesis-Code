@@ -5,10 +5,11 @@
       "population_size": 100,
       "parameters": {
         "learning_rate": 5e-2,
-        "weight_decay": 1e-6,
+        "learning_prob": 1.0,
         "mutation_rate": 0.02,
-        "selection_rate": 10,
-        "crossover_rate": 0.5,
+        "mutation_prob": 0.8,
+        "crossover_prob": 0.6,
+        "selection_size": 10,
         "epoch_num": 50,
         "report_rate": 5,
         "batch_size": 96

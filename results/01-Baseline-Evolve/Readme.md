@@ -6,9 +6,10 @@ Results of baseline evolution training on POS-Tagger. Replicate with `make exp1`
 
 Full training logs can be found in `full.txt`.
 
-```
+```java
 [--- @200:       avg(train)=0.4989       best(train)=0.5217      best(dev)=0.4991        time(epoch)=0:00:56.180032 ---]
 [--- @400:       avg(train)=0.6403       best(train)=0.6622      best(dev)=0.6155        time(epoch)=0:00:55.578147 ---]
+[--- @600:       avg(train)=0.6801       best(train)=0.6940      best(dev)=0.6577        time(epoch)=0:00:55.536646 ---]
 [--- @800:       avg(train)=0.6964       best(train)=0.7081      best(dev)=0.6508        time(epoch)=0:00:55.556195 ---]
 [--- @1000:      avg(train)=0.7154       best(train)=0.7310      best(dev)=0.6603        time(epoch)=0:00:55.548262 ---]
 [--- @1200:      avg(train)=0.7363       best(train)=0.7470      best(dev)=0.6798        time(epoch)=0:00:55.576461 ---]
@@ -68,8 +69,8 @@ Full training logs can be found in `full.txt`.
       "population_size": 400,
       "parameters": {
         "mutation_rate": 0.02,
-        "selection_rate": 20,
-        "crossover_rate": 0.5,
+        "crossover_prob": 0.5,
+        "selection_size": 20,
         "epoch_num": 2000,
         "report_rate": 50,
         "batch_size": 96
@@ -90,6 +91,6 @@ Full training logs can be found in `full.txt`.
   "dev": "./data/en_partut-ud-dev.conllu",
   "test": "./data/en_partut-ud-test.conllu",
   "load_model": null,
-  "save_model": "./results/00-Baseline-Gradient/model"
+  "save_model": "./results/01-Baseline-Evolve/model"
 }
 ```

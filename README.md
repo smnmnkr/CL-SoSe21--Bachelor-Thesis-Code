@@ -74,8 +74,8 @@ It is possible to orchestrate the tasks individually in the training process.
 {
   "tasks": [
     {
-      "type": "string", // Supports: [descent, evolve, swarm, simplex]
-      "population_size": 400, // Only: [evolve, swarm, simplex]
+      "type": "string", // Supports: [descent, evolve, swarm, simplex, gadam]
+      "population_size": 400, // Only: [evolve, swarm, simplex, gadam]
       "parameters": {
         // Descent:
         "learning_rate": 5e-2,
@@ -83,8 +83,8 @@ It is possible to orchestrate the tasks individually in the training process.
         "gradient_clip": 60.0,
         /// Evolve:
         "mutation_rate": 0.02,
-        "selection_rate": 20,
-        "crossover_rate": 0.5,
+        "crossover_prob": 0.5,
+        "selection_size": 20,
         // Swarm:
         "learning_rate": 0.05,
         "velocity_weight": 1.0,
@@ -99,8 +99,9 @@ It is possible to orchestrate the tasks individually in the training process.
         "learning_rate": 5e-2,
         "weight_decay": 1e-6,
         "mutation_rate": 0.02,
-        "selection_rate": 10,
-        "crossover_rate": 0.5,
+        "mutation_prob": 0.5,
+        "crossover_prob": 0.5,
+        "selection_size": 10,
         // General:
         "epoch_num": 50,
         "report_rate": 5,
