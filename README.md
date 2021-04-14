@@ -97,10 +97,11 @@ It is possible to orchestrate the tasks individually in the training process.
         "shrink_rate": 0.02,
         // Gadam:
         "learning_rate": 5e-2,
+        "learning_prob": 1.0,
         "weight_decay": 1e-6,
         "mutation_rate": 0.02,
-        "mutation_prob": 0.5,
-        "crossover_prob": 0.5,
+        "mutation_prob": 0.8,
+        "crossover_prob": 0.6,
         "selection_size": 10,
         // General:
         "epoch_num": 50,
@@ -180,3 +181,4 @@ make clean
 - 4.2 Reworked simplex optimization
 - 5.0 Added new PSO optimizer, discard old swarm approach
 - 6.0 Added new Gadam optimizer
+- 6.1 Minor Updates, Code Freeze
