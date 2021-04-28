@@ -15,7 +15,7 @@ make download
 
 ### Demo
 
-Required: `make download`
+Required: `make download` _(only available on Linux)_
 
 ```bash
 # run demo gradient descent
@@ -129,6 +129,8 @@ It is possible to orchestrate the tasks individually in the training process.
 ```
 
 ## Experiments
+
+Required: `make download` _(only available on Linux)_
 
 The experiments located in the results directory, can be reproduced with the following make commands:
 
